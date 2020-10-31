@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.glowanet.maven.parent</groupId>
+    <artifactId>global-pom</artifactId>
+    <version>0.2.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.glowanet.maven.tools</groupId>
+  <artifactId>unit-extension</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+
+  <name>Unit Extension</name>
+  <description>Simplified automatic testing</description>
+  <url>http://www.glowa-net.com</url>
+  <inceptionYear>2020</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git://github.com/ollily/unit-extension.git</connection>
+    <developerConnection>scm:git:git@github.com/ollily/unit-extension.git</developerConnection>
+    <url>https://github.com/ollily/unit-extension</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/ollily/unit-extension/issues</url>
+  </issueManagement>
+
+  <ciManagement>
+    <!-- <system></system> <url></url> -->
+  </ciManagement>
+
+  <properties>
+    <!-- Sonar Properties -->
+    <sonar.projectKey>ollily_unit-extension</sonar.projectKey>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <!-- Test -->
+    <dependency>
+      <groupId>com.glowanet.maven.tools</groupId>
+      <artifactId>hamcrest-extension</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>
