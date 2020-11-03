@@ -1,7 +1,7 @@
-package com.glowanet.tools.unit;
+package com.glowa_net.tools.unit;
 
-import static com.glowanet.tools.random.RandomValueFactory.createLegacyRandomValue;
-import static com.glowanet.tools.random.RandomValueFactory.createRandomValue;
+import static com.glowa_net.tools.random.RandomValueFactory.createLegacyRandomValue;
+import static com.glowa_net.tools.random.RandomValueFactory.createRandomValue;
 import static org.junit.Assert.fail;
 
 import java.beans.PropertyDescriptor;
@@ -28,14 +28,14 @@ import org.junit.rules.ErrorCollector;
 
 public abstract class AbstractBaseUnitTester<T> {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER    = LogManager.getLogger();
 
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
 
-    private final Class<T> typeOfT;
+    private final Class<T>      typeOfT;
 
-    private T entity;
+    private T                   entity;
 
     protected static void setFinalStatic(Class<?> clazz, String fieldName, Object newValue) throws NoSuchFieldException, IllegalAccessException {
         Field field = clazz.getDeclaredField(fieldName);
@@ -157,10 +157,11 @@ public abstract class AbstractBaseUnitTester<T> {
     }
 
     /**
-     * In case we have a "special interpretation" on a number extraction, you can override this method.
+     * In case we have a "special interpretation" on a number extraction, you can
+     * override this method.
      *
      * @param textWithNumber the text with the number
-     * @param numberAsText the currently extracted numeric values from the text
+     * @param numberAsText   the currently extracted numeric values from the text
      * @return the extracted "special" number for this text
      */
     protected String retrieveNumberFromTextSpecialized(String textWithNumber, String numberAsText) {
@@ -210,7 +211,7 @@ public abstract class AbstractBaseUnitTester<T> {
      * Generating a value based on the class-type.
      *
      * @param type the class
-     * @param <V> the type of of the value
+     * @param <V>  the type of of the value
      * @return the generated value or null
      */
     private <V> Object retrieveDefaultValue(Class<V> type) {

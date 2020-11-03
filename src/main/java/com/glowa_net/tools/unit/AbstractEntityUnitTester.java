@@ -1,4 +1,4 @@
-package com.glowanet.tools.unit;
+package com.glowa_net.tools.unit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;

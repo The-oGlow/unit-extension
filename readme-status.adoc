@@ -3,7 +3,7 @@
 :gh_user: ollily
 :gh_org: The-oGlow
 :gh_module: unit-extension
-:gh_group: com.glowanet.maven.tools
+:gh_group: com.glowa-net.maven.tools
 
 // common settings
 :gh_id: {gh_user}/{gh_module}

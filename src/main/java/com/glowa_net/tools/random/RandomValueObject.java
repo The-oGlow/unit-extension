@@ -1,4 +1,4 @@
-package com.glowanet.tools.random;
+package com.glowa_net.tools.random;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

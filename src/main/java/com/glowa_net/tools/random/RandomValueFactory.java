@@ -1,4 +1,4 @@
-package com.glowanet.tools.random;
+package com.glowa_net.tools.random;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 public class RandomValueFactory {
 
     private static final Logger LOGGER         = LogManager.getLogger();
-    private static final String PACKAGE_PREFIX = "com.glowanet.tools.random.RandomValue";
+    private static final String PACKAGE_PREFIX = "com.glowa_net.tools.random.RandomValue";
 
     private RandomValueFactory() {
     }

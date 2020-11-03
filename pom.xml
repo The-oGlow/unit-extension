@@ -4,12 +4,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.glowanet.maven.parent</groupId>
+    <groupId>com.glowa-net.maven.parent</groupId>
     <artifactId>global-pom</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.glowanet.maven.tools</groupId>
+  <groupId>com.glowa-net.maven.tools</groupId>
   <artifactId>unit-extension</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 
@@ -80,7 +80,7 @@
     </dependency>
     <!-- Test -->
     <dependency>
-      <groupId>com.glowanet.maven.tools</groupId>
+      <groupId>com.glowa-net.maven.tools</groupId>
       <artifactId>hamcrest-extension</artifactId>
       <version>0.1.0-SNAPSHOT</version>
       <scope>test</scope>

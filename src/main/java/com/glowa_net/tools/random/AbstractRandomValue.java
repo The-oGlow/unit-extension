@@ -1,4 +1,4 @@
-package com.glowanet.tools.random;
+package com.glowa_net.tools.random;
 
 public abstract class AbstractRandomValue<T> implements IRandomValue<T> {
 
