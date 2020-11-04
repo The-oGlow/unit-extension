@@ -1,0 +1,39 @@
+#
+# Config
+arch: amd64
+os: linux
+dist: xenial
+sudo: true
+
+env:
+  global:
+#    - CACHE_NAME=MAVEN_REPO
+    - SONAR_TOKEN=${travis2sonar}
+cache:
+  directories:
+    - $HOME/.m2
+
+language: java
+jdk: openjdk11
+
+#
+# Steps
+before_install: skip
+
+install:
+  - mvn -B -V dependency:resolve dependency:resolve-plugins 
+
+before_script: skip
+
+script:
+  - mvn -B -V -DskipTests=true -DskipITs=true -Dmaven.javadoc.skip=true clean install
+
+after_script: skip
+#  - mvn -B -DskipTests=true -DskipITs=true -Dmaven.test.failure.ignore=true org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+
+#
+# Finally
+
+after_success: skip
+
+after_failure: skip
