@@ -9,9 +9,13 @@ env:
   global:
 #    - CACHE_NAME=MAVEN_REPO
     - SONAR_TOKEN=${travis2sonar}
+    - DL_DIR=${HOME}/temp
+    - GLOBAL_POM_V=0.2.1
+    - GLOBAL_POM_DIR=${DL_DIR}/global-pom/${GLOBAL_POM_V}
+    - GLOBAL_POM_INSTALL="-DgroupId=com.glowa-net.maven.parent -DartifactId=global-pom -Dversion=${GLOBAL_POM_V} -Dpackaging=pom"
 cache:
   directories:
-    - $HOME/.m2
+    - ${HOME}/.m2
 
 language: java
 jdk: openjdk11
@@ -21,6 +25,9 @@ jdk: openjdk11
 before_install: skip
 
 install:
+  - mkdir -p -v ${GLOBAL_POM_DIR}
+  - wget -v ‐‐directory-prefix=${GLOBAL_POM_DIR} https://github.com/ollily/global-pom/releases/download/${GLOBAL_POM_V}/pom.xml
+  - mvn -B -V install:install-file -Dfile=${GLOBAL_POM_DIR}/pom.xml ${GLOBAL_POM_INSTALL}
   - mvn -B -V dependency:resolve dependency:resolve-plugins 
 
 before_script: skip
