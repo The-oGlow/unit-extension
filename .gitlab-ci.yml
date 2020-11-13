@@ -1,0 +1,32 @@
+default:
+  image: maven:latest
+    
+stages:
+  - validate
+  - build
+  - install
+  - analyze
+  - deploy
+
+variables:
+  TEST_OPTS: "-B -X -DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=true"
+
+  MAVEN_CLI_OPTS: "-B -X -DskipTests -DskipITs"
+
+cache:
+  paths:
+    - ${HOME}/.m2/repository/
+
+validate:
+  stage: validate
+  before_script:
+    - echo "home  ${HOME}"
+    - printenv | sort
+  script:
+    - mvn $MAVEN_CLI_OPTS validate
+
+build:
+  stage: install
+  script:
+    - mvn $MAVEN_CLI_OPTS verify
+    - mvn $MAVEN_CLI_OPTS install

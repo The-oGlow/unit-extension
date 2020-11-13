@@ -1,7 +1,7 @@
 :hide-uri-scheme:
 // project settings
 :gh_user: ollily
-:gh_org: The-oGlow
+:gh_org: ollily
 :gh_module: unit-extension
 :gh_group: com.glowa-net.maven.tools
 
@@ -10,7 +10,7 @@
 :gh_id_org: {gh_org}/{gh_module}
 :gh_gav: {gh_group}/{gh_module}
 :gh_key: {gh_user}_{gh_module}
-:author: https://github.com/ollily[Oliver Glowa]
+:author: https://gitlab.com/ollily[Oliver Glowa]
 :cright: (c) 2020 by {author}
 :img_style: &style=plastic
 :link_back: link:README.adoc[image:https://img.shields.io/badge/%3C%3D%3D%20GO-Back-lightgrey[Go Back]]
@@ -18,11 +18,11 @@
 
 = {gh_module}
 
-link:https://github.com/{gh_id}/releases[image:https://img.shields.io/github/v/release/{gh_id}?include_prereleases&logo=github{img_style}[Latest Version]]
-link:LICENSE[image:https://img.shields.io/github/license/{gh_id}?logo=github{img_style}[Software License]]
+link:https://gitlab.com/{gh_id}/-/releases[image:https://img.shields.io/badge/release-latest-blue?logo=gitlab{img_style}[Latest Version]]
+link:LICENSE[image:https://img.shields.io/badge/license-license-brightgreen?logo=gitlab{img_style}[Software License]]
 link:https://mvnrepository.com/artifact/{gh_gav}[image:https://img.shields.io/maven-central/v/{gh_gav}?logo=apache-maven{img_style}[Maven]]
 
-Dynamically unit-testing for pojos. See link:https://github.com/{gh_id_org}[Homepage].
+Dynamically unit-testing for pojos. See link:https://gitlab.com/{gh_id_org}[Homepage].
 
 == Project Status
 See link:readme-status.adoc[Project Status].
@@ -44,7 +44,7 @@ To use, set in your `pom.xml`:
     <dependency>
       <groupId>com.glowa-net.maven.tools</groupId>
       <artifactId>unit-pojotester</artifactId>
-      <version>0.2.0-SNAPSHOT</version>
+      <version>0.2.0</version>
     </dependency>
     ..
   </dependencies>
@@ -55,8 +55,8 @@ To use, set in your `pom.xml`:
 - {author}
 
 == License
-This project is released under version 2.0 of the link:https://github.com/The-oGlow/global-pom/blob/master/LICENSE[Apache License].
-Please see the link:https://github.com/The-oGlow/global-pom/blob/master/LICENSE[license file] for more information.
+This project is released under version 2.0 of the link:https://gitlab.com/{gh_id}/-/blob/master/LICENSE[Apache License].
+Please see the link:https://gitlab.com/{gh_id}/-/blob/master/LICENSE[license file] for more information.
 
 ''''
 ~{cright}~

@@ -27,15 +27,15 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:git://github.com/ollily/unit-extension.git</connection>
-    <developerConnection>scm:git:git@github.com/ollily/unit-extension.git</developerConnection>
-    <url>https://github.com/ollily/unit-extension</url>
+    <connection>scm:git:git://gitlab.com/ollily/unit-extension.git</connection>
+    <developerConnection>scm:git:git@gitlab.com/ollily/unit-extension.git</developerConnection>
+    <url>https://gitlab.com/ollily/unit-extension</url>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
-    <system>GitHub Issues</system>
-    <url>https://github.com/ollily/unit-extension/issues</url>
+    <system>GitLab Issues</system>
+    <url>https://gitlab.com/ollily/unit-extension/-/issues</url>
   </issueManagement>
 
   <ciManagement>
