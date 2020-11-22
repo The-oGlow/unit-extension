@@ -2,33 +2,48 @@ default:
   image: maven:3-openjdk-11
 
 stages:
-  - validate
+  - .pre
   - build
-  - install
+  - test
   - analyze
   - deploy
+  - .post
 
 variables:
-  TEST_OPTS: "-B -X -DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=true"
-
-  MAVEN_CLI_OPTS: "-B -X -DskipTests -DskipITs"
+  REPO_DIR: $CI_PROJECT_DIR/.repo
+  MVN_TEST_OPTS: -B -fae -s $CI_PROJECT_DIR/.m2/settings.xml -Dmaven.repo.local=$CI_PROJECT_DIR/.repo -DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=true
+  MVN_CLI_OPTS: -B -fae -s $CI_PROJECT_DIR/.m2/settings.xml -Dmaven.repo.local=$CI_PROJECT_DIR/.repo -DskipTests -DskipITs
 
 cache:
-  key: "maven-build-cache"
+  key: $CI_PROJECT_PATH_SLUG
+  when: always
   paths:
-    - ${HOME}/.m2/repository/
-  when: 'always'
+    - $REPO_DIR
+    - target
 
-validate:
-  stage: validate
-  before_script:
-    - echo "home  ${HOME}"
-    - printenv | sort
-  script:
-    - mvn $MAVEN_CLI_OPTS validate
+.show_env: &show_env
+  - echo "show_env"
+  - printenv | sort
+
+.show_build: &show_build
+  - echo "show_build"
+  - find $CI_BUILDS_DIR -type d -print
+
+.show_repo: &show_repo
+  - echo "show_repo"
+  - du --max-depth=1 -h $REPO_DIR
 
 build:
-  stage: install
+  stage: deploy
+  tags:
+    - docker
+  before_script:
+    - *show_env
+    - echo "creating $REPO_DIR"
+    - mkdir -p $REPO_DIR
   script:
-    - mvn $MAVEN_CLI_OPTS verify
-    - mvn $MAVEN_CLI_OPTS install
+    - mvn $MVN_TEST_OPTS verify
+    - mvn $MVN_CLI_OPTS deploy
+  after_script:
+  #- *show_repo
+  #- *show_build
