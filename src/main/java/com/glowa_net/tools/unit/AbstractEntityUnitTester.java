@@ -21,29 +21,35 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hamcrest.BetweenMatcher;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import com.glowa_net.util.reflect.ReflectionTestUtils;
 
 /**
  * Abstract class to use for unit-testing on entities, beans, pojos.
  * However you name your classes with an amount of getter and setter.
  *
- * @param <T>  the type of the class to test
+ * @param <T> the type of the class to test
  */
 public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester<T> {
 
     /**
      * Fieldnames in the class, which should be generally ignored on testing {@link #toString()}.
      */
-    private static final Collection<String> FIELDS_COMMON_IGNORE       = new HashSet<>(List.of("class"));
-    private static final String             SERIAL_VERSION_UID_NAME    = "serialVersionUID";
-    private static final Long               SERIAL_VERSION_UID_DEFAULT = 1L;
-    private static final Logger             LOGGER                     = LogManager.getLogger();
+    private static final Collection<String> FIELDS_COMMON_IGNORE             = new HashSet<>(List.of("class"));
+    private static final String             SERIAL_VERSION_UID_NAME          = "serialVersionUID";
+    private static final Pair<Long, Long>   SERIAL_VERSION_UID_INVALID_RANGE = new ImmutablePair<>(-100L, 100L);
+    private static final Logger             LOGGER                           = LogManager.getLogger();
 
     private Collection<String> allFieldsToIgnoreForToString = FIELDS_COMMON_IGNORE;
     private Collection<String> allFieldsDeniedForToString   = new HashSet<>();
@@ -71,6 +77,7 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
      * Fields in the current class, which should be ignored on testing @toString().
      *
      * @return list of fieldnames
+     *
      * @see #testToString()
      */
     protected List<String> fieldsToIgnoreForToString() {
@@ -81,6 +88,7 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
      * Fields in the current class, which are denied to appear on testing @toString().
      *
      * @return list of fieldnames
+     *
      * @see #testToString()
      */
     protected List<String> fieldsDeniedForToString() {
@@ -91,7 +99,8 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
      * Flag, if @SERIAL_VERSION_UID_NAME should be checked.
      *
      * @return TRUE = will be checked, else FALSE
-     * @see #testSerialVersionUIDIsCorrect()
+     *
+     * @see #testSerialVersionUIDIsCorrectInEntity()
      */
     protected boolean isCheckSVUID() {
         return checkSVUID;
@@ -101,7 +110,8 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
      * Sets the flag, if @SERIAL_VERSION_UID_NAME should be checked.
      *
      * @param checkSVUID TRUE = will be checked, else FALSE
-     * @see #testSerialVersionUIDIsCorrect()
+     *
+     * @see #testSerialVersionUIDIsCorrectInEntity()
      */
     protected void setCheckSVUID(boolean checkSVUID) {
         this.checkSVUID = checkSVUID;
@@ -111,6 +121,7 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
      * Flag, if #testEqualsLogicalAreTheSame expects only logical equalness.
      *
      * @return TRUE = will be checked, else FALSE
+     *
      * @see #testEqualsLogicalAreTheSame()
      */
     protected boolean isCheckLogicalEqualsOnly() {
@@ -121,10 +132,31 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
      * Sets the flag, if #testEqualsLogicalAreTheSame expects only logical equalness.
      *
      * @param checkLogicalEqualsOnly TRUE = will be checked, else FALSE
+     *
      * @see #testEqualsLogicalAreTheSame()
      */
     protected void setCheckLogicalEqualsOnly(boolean checkLogicalEqualsOnly) {
         this.checkLogicalEqualsOnly = checkLogicalEqualsOnly;
+    }
+
+    /**
+     * #see #isCheckSVUID()
+     * #see #setCheckSVUID(boolean)
+     */
+    protected void validateSerialVersionUID(Object instance) {
+        if (checkSVUID && ReflectionTestUtils.hasSerializableIF(instance.getClass())) {
+            Field idField = ReflectionTestUtils.findField(SERIAL_VERSION_UID_NAME, instance);
+
+            Matcher<Class<?>> typeMatcher = typeCompatibleWith(Number.class);
+            Matcher<Long> numberRangeMatcher = Matchers.not(BetweenMatcher.betweenWithBound(SERIAL_VERSION_UID_INVALID_RANGE));
+            String reasonType = "For '" + idField.getName() + "' it must be valid: " + typeMatcher + "!";
+            String reasonRange = "For '" + idField.getName() + "'it must be valid: " + numberRangeMatcher + "!";
+
+            Object idValue = ReflectionTestUtils.readStaticValue(SERIAL_VERSION_UID_NAME, getTypeOfT());
+            assertThat(idValue, notNullValue());
+            assertThat(reasonType, idValue.getClass(), typeMatcher);
+            assertThat(reasonRange, Long.parseLong(idValue.toString()), numberRangeMatcher);
+        }
     }
 
     /**
@@ -261,17 +293,8 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
      * #see #setCheckSVUID(boolean)
      */
     @Test
-    public void testSerialVersionUIDIsCorrect() {
-        if (checkSVUID && hasSerializableIF(getEntity().getClass())) {
-            Field idField = findField(getEntity(), SERIAL_VERSION_UID_NAME);
-            try {
-                Object idValue = FieldUtils.readStaticField(getTypeOfT(), SERIAL_VERSION_UID_NAME, true);
-                assertThat(idValue, notNullValue());
-                assertThat("'" + idField.getName() + "'must not be a numeric value!", idValue.getClass(), typeCompatibleWith(Number.class));
-                assertThat("'" + idField.getName() + "'must not be " + SERIAL_VERSION_UID_DEFAULT + "!", idValue, not(equalTo(SERIAL_VERSION_UID_DEFAULT)));
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                collector.addError(e);
-            }
-        }
+    public void testSerialVersionUIDIsCorrectInEntity() {
+        validateSerialVersionUID(getEntity());
     }
+
 }
