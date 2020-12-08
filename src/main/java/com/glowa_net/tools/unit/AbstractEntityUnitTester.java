@@ -1,39 +1,26 @@
 package com.glowa_net.tools.unit;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.typeCompatibleWith;
-
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.glowa_net.util.reflect.ReflectionHelper;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hamcrest.BetweenMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.glowa_net.util.reflect.ReflectionTestUtils;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Abstract class to use for unit-testing on entities, beans, pojos.
@@ -139,20 +126,27 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
         this.checkLogicalEqualsOnly = checkLogicalEqualsOnly;
     }
 
+
+    private Matcher<Long> inBetween(Pair<Long, Long> numberRange) {
+        Matcher<Long> greater = Matchers.greaterThanOrEqualTo(numberRange.getLeft());
+        Matcher<Long> smaller = Matchers.lessThanOrEqualTo(numberRange.getRight());
+        return Matchers.allOf(greater, smaller);
+    }
+
     /**
      * #see #isCheckSVUID()
      * #see #setCheckSVUID(boolean)
      */
     protected void validateSerialVersionUID(Object instance) {
-        if (checkSVUID && ReflectionTestUtils.hasSerializableIF(instance.getClass())) {
-            Field idField = ReflectionTestUtils.findField(SERIAL_VERSION_UID_NAME, instance);
+        if (checkSVUID && ReflectionHelper.hasSerializableIF(instance.getClass())) {
+            Field idField = ReflectionHelper.findField(SERIAL_VERSION_UID_NAME, instance);
 
             Matcher<Class<?>> typeMatcher = typeCompatibleWith(Number.class);
-            Matcher<Long> numberRangeMatcher = Matchers.not(BetweenMatcher.betweenWithBound(SERIAL_VERSION_UID_INVALID_RANGE));
+            Matcher<Long> numberRangeMatcher = inBetween(SERIAL_VERSION_UID_INVALID_RANGE);
             String reasonType = "For '" + idField.getName() + "' it must be valid: " + typeMatcher + "!";
             String reasonRange = "For '" + idField.getName() + "'it must be valid: " + numberRangeMatcher + "!";
 
-            Object idValue = ReflectionTestUtils.readStaticValue(SERIAL_VERSION_UID_NAME, getTypeOfT());
+            Object idValue = ReflectionHelper.readStaticValue(SERIAL_VERSION_UID_NAME, getTypeOfT());
             assertThat(idValue, notNullValue());
             assertThat(reasonType, idValue.getClass(), typeMatcher);
             assertThat(reasonRange, Long.parseLong(idValue.toString()), numberRangeMatcher);
@@ -211,7 +205,7 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
             Object[] paramValues = new Object[0];
             try {
                 Map<Class<?>, Object> setterParams = retrieveMethodParameters(setter.getWriteMethod());
-                paramTypes = setterParams.keySet().toArray(new Class[] {});
+                paramTypes = setterParams.keySet().toArray(new Class[]{});
                 paramValues = setterParams.values().toArray();
                 MethodUtils.invokeMethod(getEntity(), setter.getWriteMethod().getName(), paramValues, paramTypes);
                 if (verifyValue) {
