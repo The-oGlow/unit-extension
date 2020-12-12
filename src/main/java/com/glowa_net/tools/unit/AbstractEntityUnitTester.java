@@ -16,11 +16,22 @@ import org.junit.Test;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.typeCompatibleWith;
 
 /**
  * Abstract class to use for unit-testing on entities, beans, pojos.
@@ -41,9 +52,9 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
     private Collection<String> allFieldsToIgnoreForToString = FIELDS_COMMON_IGNORE;
     private Collection<String> allFieldsDeniedForToString   = new HashSet<>();
     private boolean            checkSVUID                   = true;
-    private boolean            checkLogicalEqualsOnly       = false;
+    private boolean            checkLogicalEqualsOnly;
 
-    public AbstractEntityUnitTester(Class<T> typeOfT) {
+    protected AbstractEntityUnitTester(Class<T> typeOfT) {
         super(typeOfT);
     }
 
@@ -256,16 +267,16 @@ public abstract class AbstractEntityUnitTester<T> extends AbstractBaseUnitTester
         assertThat("Hashcode must differ from '0'!", getEntity().hashCode(), not(is(0)));
     }
 
+    @SuppressWarnings({"EqualsWithItself", "java:S1764"})
     @Test
     public void testEqualsWithItself() {
-        //noinspection EqualsWithItself
         assertThat(getEntity().equals(getEntity()), is(true));
     }
 
+    @SuppressWarnings({"ConstantConditions", "ObjectEqualsCanBeEquality", "RedundantSuppression"})
     @Test
     public void testEqualsWithNull() {
-        //noinspection ConstantConditions
-        assertThat(getEntity().equals(null), is(false));
+        assertThat(getEntity().equals((T) null), is(false));
     }
 
     /**

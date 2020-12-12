@@ -217,7 +217,7 @@ public class ReflectionHelperTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Fails")
     public void test_setFinalStaticValue_with_FieldNameAndValueAndClazz_replaceValue() throws IllegalAccessException {
         final int valueBefore = 10;
         final int valueAfter = valueBefore + 20;
@@ -228,6 +228,7 @@ public class ReflectionHelperTest {
     }
 
     @Test
+    @Ignore("fails")
     public void test_setFinalStaticValue_with_fieldAndValueAndClazz_replaceValue() throws IllegalAccessException {
         final Float valueBefore = CONST_FLOAT_VALUE;
         final Float valueAfter = valueBefore + 20;

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class RandomValueFactory {
+public final class RandomValueFactory {
 
     private static final Logger LOGGER         = LogManager.getLogger();
     private static final String PACKAGE_PREFIX = "com.glowa_net.tools.random.RandomValue";
@@ -14,10 +14,12 @@ public class RandomValueFactory {
     private RandomValueFactory() {
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> IRandomValue<T> createRandomValue(Class<T> valueClazz) {
-        return createRandomValue(valueClazz, new Class[0]);
+        return createRandomValue(valueClazz, (Class<T>[]) new Class[0]);
     }
 
+    @SuppressWarnings("unchecked")
     private static <T> IRandomValue<T> createRandomValue(Class<T> valueClazz, Class<?>... valueParameters) {
         IRandomValue<T> newRandomValue = null;
         if (valueClazz != null) {

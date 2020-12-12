@@ -14,6 +14,8 @@ import org.apache.commons.lang3.RandomUtils;
 
 public class RandomValueObject<T> extends AbstractRandomValue<T> {
 
+    public static final int COUNT_ALPHA = 5;
+
     RandomValueObject(Class<T> typeOfT) {
         super(typeOfT);
     }
@@ -28,16 +30,46 @@ public class RandomValueObject<T> extends AbstractRandomValue<T> {
     }
 
     private Object retrieveDefaultValueLegacy(Class<?> type) {
-        Object result = null;
+        Object result;
 
         if (Boolean.class.equals(type)) {
             result = RandomUtils.nextBoolean();
         } else if (Number.class.equals(type)) {
             result = RandomUtils.nextInt();
         } else if (String.class.equals(type)) {
-            result = RandomStringUtils.randomAlphanumeric(5);
+            result = RandomStringUtils.randomAlphanumeric(COUNT_ALPHA);
+        } else {
+            result = null;
+        }
 
-        } else if (Boolean.TYPE.equals(type)) {
+        if (result == null) {
+            result = retrieveDefaultBig(type);
+        }
+        if (result == null) {
+            result = retrieveDefaultPrimitive(type);
+        }
+        if (result == null) {
+            result = retrieveDefaultTime(type);
+        }
+        return result;
+    }
+
+
+    private Object retrieveDefaultBig(Class<?> type) {
+        Object result;
+        if (BigInteger.class.equals(type)) {
+            result = BigInteger.valueOf(RandomUtils.nextInt());
+        } else if (BigDecimal.class.equals(type)) {
+            result = BigDecimal.valueOf(RandomUtils.nextInt());
+        } else {
+            result = null;
+        }
+        return result;
+    }
+
+    private Object retrieveDefaultPrimitive(Class<?> type) {
+        Object result;
+        if (Boolean.TYPE.equals(type)) {
             result = RandomUtils.nextBoolean();
         } else if (Integer.TYPE.equals(type)) {
             result = RandomUtils.nextInt();
@@ -49,13 +81,16 @@ public class RandomValueObject<T> extends AbstractRandomValue<T> {
             result = RandomUtils.nextLong();
         } else if (Byte.TYPE.equals(type)) {
             result = RandomUtils.nextBytes(1);
+        } else {
+            result = null;
+        }
+        return result;
 
-        } else if (BigInteger.class.equals(type)) {
-            result = BigInteger.valueOf(RandomUtils.nextInt());
-        } else if (BigDecimal.class.equals(type)) {
-            result = BigDecimal.valueOf(RandomUtils.nextInt());
+    }
 
-        } else if (LocalDateTime.class.equals(type)) {
+    private Object retrieveDefaultTime(Class<?> type) {
+        Object result;
+        if (LocalDateTime.class.equals(type)) {
             result = LocalDateTime.now();
         } else if (LocalDate.class.equals(type)) {
             result = LocalDate.now();
@@ -64,10 +99,10 @@ public class RandomValueObject<T> extends AbstractRandomValue<T> {
         } else if (Date.class.equals(type)) {
             result = Date.from(Instant.now());
         } else if (Time.class.equals(type)) {
-            result = Time.from(Instant.now());
+            result = Date.from(Instant.now());
+        } else {
+            result = null;
         }
-
         return result;
     }
-
 }

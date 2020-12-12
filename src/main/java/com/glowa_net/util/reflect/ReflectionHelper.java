@@ -40,10 +40,12 @@ public final class ReflectionHelper {
             failure(null, null, null);
         } else {
             final BeanInfo beanInfo = handleGetBeanInfo(instance.getClass(), Object.class);
-            final PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
-            for (final PropertyDescriptor pd : props) {
-                if (pd.getReadMethod() != null) {
-                    getterList.add(pd);
+            if (beanInfo != null) {
+                final PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
+                for (final PropertyDescriptor pd : props) {
+                    if (pd.getReadMethod() != null) {
+                        getterList.add(pd);
+                    }
                 }
             }
         }
@@ -55,7 +57,8 @@ public final class ReflectionHelper {
      *
      * @return list of fields, which have a setter, or an empty list
      */
-    protected static List<PropertyDescriptor> findSetter(final Object instance) {
+    @SuppressWarnings("java:S1172")
+    public static List<PropertyDescriptor> findSetter(final Object instance) {
         return List.of();
     }
 
@@ -116,6 +119,7 @@ public final class ReflectionHelper {
     @SuppressWarnings("unchecked")
     public static <V> V readField(final Field field, final Class<?> instanceClazz) {
         isInstanceSet(instanceClazz, field);
+        isParamSet(instanceClazz, field);
         V fieldValue = null;
         try {
             makeFieldAccessible(field, null);
@@ -147,12 +151,13 @@ public final class ReflectionHelper {
     @SuppressWarnings("unchecked")
     public static <V> V readField(final Field field, final Object instance) {
         isInstanceSet(instance, field);
+        isParamSet(instance, field);
         V fieldValue = null;
         try {
             makeFieldAccessible(field, instance);
             fieldValue = (V) field.get(instance);
         } catch (final IllegalAccessException e) {
-            failure(instance.getClass(), field, e);
+            failure(instance == null ? null : instance.getClass(), field, e);
         }
         return fieldValue;
     }
@@ -170,7 +175,9 @@ public final class ReflectionHelper {
      * @param field    the field-object
      * @param instance the instance to investigate
      */
+    @SuppressWarnings({"java:S1166", "java:S1696",})
     public static Field makeFieldAccessible(final Field field, final Object instance) {
+        isParamSet(instance, field);
         if (instance == null) {
             field.trySetAccessible();
         } else {
@@ -203,8 +210,10 @@ public final class ReflectionHelper {
      * @param newValue      the value to set
      * @param instanceClazz the class to check
      */
+    @SuppressWarnings({"java:S1696"})
     public static Field setFinalStaticValue(final Field field, final Object newValue, final Class<?> instanceClazz) {
         isInstanceSet(instanceClazz, field);
+        isParamSet(instanceClazz, field);
         try {
             makeFieldAccessible(field, instanceClazz);
             final Field modifiersField = field.getClass().getDeclaredField("modifiers");
@@ -223,7 +232,7 @@ public final class ReflectionHelper {
      *
      * @return the current value of the constant
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "java:S1696"})
     public static <V> V readStaticValue(final String constantName, final Class<?> instanceClazz) {
         isInstanceSet(instanceClazz, constantName);
         V staticValue = null;
@@ -248,17 +257,18 @@ public final class ReflectionHelper {
         return handleInvokeMethod(getter, instance);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "java:S1696", "java:S2583"})
     static <V> V handleInvokeMethod(final PropertyDescriptor getter, final Object instance) {
         V value = null;
         try {
             value = (V) MethodUtils.invokeMethod(instance, getter.getReadMethod().getName());
         } catch (final NullPointerException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            failure(instance == null ? null : instance.getClass(), getter == null ? null : getter.getName(), e);
+            failure((instance == null ? null : instance.getClass()), (getter == null ? null : getter.getName()), e);
         }
         return value;
     }
 
+    @SuppressWarnings({"java:S1696"})
     static Field handleGetField(final String fieldName, final Class<?> instanceClazz) {
         Field idField = null;
         try {
@@ -295,11 +305,12 @@ public final class ReflectionHelper {
         failure(paramClazz == null ? null : paramClazz.getName(), suffix, errMsg);
     }
 
+    @SuppressWarnings("java:S5960")
     private static void failure(final Object param, final Object suffix, final Throwable errMsg) {
         final String msg = String.format("Can't find or access '%s%s' %s", //
                 (param == null ? "NULL" : param), //
-                (suffix == null || suffix.toString().isEmpty() ? "#NULL" : "#" + suffix), //
-                (errMsg == null ? "!" : ":" + System.lineSeparator() + ExceptionUtils.getStackTrace(errMsg)) //
+                (suffix == null || suffix.toString().isEmpty() ? "#NULL" : ("#" + suffix)), //
+                (errMsg == null ? "!" : (":" + System.lineSeparator() + ExceptionUtils.getStackTrace(errMsg))) //
         );
         fail(msg);
     }

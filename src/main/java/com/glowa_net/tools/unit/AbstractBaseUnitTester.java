@@ -1,8 +1,11 @@
 package com.glowa_net.tools.unit;
 
-import static com.glowa_net.tools.random.RandomValueFactory.createLegacyRandomValue;
-import static com.glowa_net.tools.random.RandomValueFactory.createRandomValue;
-import static org.junit.Assert.fail;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.hamcrest.beans.PropertyUtil;
+import org.junit.Rule;
+import org.junit.rules.ErrorCollector;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
@@ -10,32 +13,30 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.hamcrest.beans.PropertyUtil;
-import org.junit.Rule;
-import org.junit.rules.ErrorCollector;
+import static com.glowa_net.tools.random.RandomValueFactory.createLegacyRandomValue;
+import static com.glowa_net.tools.random.RandomValueFactory.createRandomValue;
+import static org.junit.Assert.fail;
 
 public abstract class AbstractBaseUnitTester<T> {
 
-    private static final Logger LOGGER    = LogManager.getLogger();
 
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
 
-    private final Class<T>      typeOfT;
+    private final Class<T> typeOfT;
 
-    private T                   entity;
+    private T entity;
+
+    protected AbstractBaseUnitTester(Class<T> typeOfT) {
+        this.typeOfT = typeOfT;
+    }
 
     protected static void setFinalStatic(Class<?> clazz, String fieldName, Object newValue) throws NoSuchFieldException, IllegalAccessException {
         Field field = clazz.getDeclaredField(fieldName);
@@ -46,10 +47,6 @@ public abstract class AbstractBaseUnitTester<T> {
         field.set(null, newValue);
     }
 
-    public AbstractBaseUnitTester(Class<T> typeOfT) {
-        this.typeOfT = typeOfT;
-    }
-
     protected void setUp() {
         setEntity(createEntity());
     }
@@ -58,6 +55,7 @@ public abstract class AbstractBaseUnitTester<T> {
      * Create instance (with default constructor, if available).
      *
      * @return instance of the type.
+     *
      * @see #setUp()
      */
     protected abstract T createEntity();
@@ -83,7 +81,7 @@ public abstract class AbstractBaseUnitTester<T> {
      */
     protected List<PropertyDescriptor> findGetter() {
         List<PropertyDescriptor> getterList = new ArrayList<>();
-        getAllPropertyDescriptors(entity).forEach(pd -> {
+        getAllPropertyDescriptors(entity).forEach((PropertyDescriptor pd) -> {
             if (pd.getReadMethod() != null) {
                 getterList.add(pd);
             }
@@ -96,7 +94,7 @@ public abstract class AbstractBaseUnitTester<T> {
      */
     protected List<PropertyDescriptor> findSetter() {
         List<PropertyDescriptor> setterList = new ArrayList<>();
-        getAllPropertyDescriptors(entity).forEach(pd -> {
+        getAllPropertyDescriptors(entity).forEach((PropertyDescriptor pd) -> {
             if (pd.getWriteMethod() != null) {
                 setterList.add(pd);
             }
@@ -116,6 +114,7 @@ public abstract class AbstractBaseUnitTester<T> {
         return hasIt;
     }
 
+    @SuppressWarnings({"java:S1166", "java:S5960"})
     protected Field findField(T instance, String fieldName) {
         Field idField = null;
         try {
@@ -129,6 +128,7 @@ public abstract class AbstractBaseUnitTester<T> {
         return idField;
     }
 
+    @SuppressWarnings("java:S1166")
     protected void makeFieldAccessible(Field idField, T instance) {
         try {
             if (!idField.canAccess(instance)) {
@@ -143,6 +143,7 @@ public abstract class AbstractBaseUnitTester<T> {
      * Retrieves all public constants from a class.
      *
      * @param clazzT the class from which to retrieve the constants
+     *
      * @return a list of constants or an empty list.
      */
     protected List<Field> retrievePublicConstantsfromClass(Class<T> clazzT) {
@@ -162,6 +163,7 @@ public abstract class AbstractBaseUnitTester<T> {
      *
      * @param textWithNumber the text with the number
      * @param numberAsText   the currently extracted numeric values from the text
+     *
      * @return the extracted "special" number for this text
      */
     protected String retrieveNumberFromTextSpecialized(String textWithNumber, String numberAsText) {
@@ -172,6 +174,7 @@ public abstract class AbstractBaseUnitTester<T> {
      * Extracts a number from an string.
      *
      * @param textWithNumber the text with the number
+     *
      * @return the extracted number or NULL
      */
     protected Number retrieveNumberFromText(String textWithNumber) {
@@ -188,6 +191,7 @@ public abstract class AbstractBaseUnitTester<T> {
      * Generating the map of values for the method parameters.
      *
      * @param inspectMethod the method to inspect
+     *
      * @return map of types and values
      */
     protected Map<Class<?>, Object> retrieveMethodParameters(Method inspectMethod) {
@@ -212,10 +216,12 @@ public abstract class AbstractBaseUnitTester<T> {
      *
      * @param type the class
      * @param <V>  the type of of the value
+     *
      * @return the generated value or null
      */
+    @SuppressWarnings({"java:S1696", "java:S1166"})
     private <V> Object retrieveDefaultValue(Class<V> type) {
-        Object result = null;
+        Object result;
         try {
             result = createRandomValue(type).randomValue();
         } catch (NullPointerException e) {
