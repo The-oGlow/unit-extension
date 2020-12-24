@@ -26,6 +26,7 @@ import static org.junit.Assert.fail;
  */
 public final class ReflectionHelper {
 
+
     private ReflectionHelper() {
     }
 
@@ -156,7 +157,7 @@ public final class ReflectionHelper {
         try {
             makeFieldAccessible(field, instance);
             fieldValue = (V) field.get(instance);
-        } catch (final IllegalAccessException e) {
+        } catch (final IllegalArgumentException | IllegalAccessException e) {
             failure(instance == null ? null : instance.getClass(), field, e);
         }
         return fieldValue;
@@ -166,6 +167,7 @@ public final class ReflectionHelper {
      * @param fieldName the name of the field
      * @param instance  the instance to investigate
      */
+    @SuppressWarnings("java:S2259")
     public static Field makeFieldAccessible(final String fieldName, final Object instance) {
         final Field field = findField(fieldName, instance);
         return makeFieldAccessible(field, instance);
@@ -187,8 +189,6 @@ public final class ReflectionHelper {
                 }
             } catch (final IllegalArgumentException e) {
                 field.trySetAccessible();
-            } catch (final NullPointerException e) {
-                failure(instance, field, e);
             }
         }
         return field;

@@ -6,13 +6,24 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThrows;
 
 public class ReflectionHelperTest {
 
@@ -55,7 +66,11 @@ public class ReflectionHelperTest {
         final Matcher<V> expectedMatcher = expected instanceof Matcher ? (Matcher<V>) expected : equalTo(expected);
         assertThat(actual, notNullValue());
         assertThat(actual, instanceOf(actualClazz));
-        assertThat(actual, expectedMatcher);
+        if (actual instanceof Throwable) {
+            assertThat(actual.toString(), (Matcher<String>) expectedMatcher);
+        } else {
+            assertThat(actual, expectedMatcher);
+        }
     }
 
     @Test
@@ -268,4 +283,15 @@ public class ReflectionHelperTest {
         final Object actual = ReflectionHelper.readGetterValue((String) null, pojo);
         assertValid(actual, SIMPLE_STRING_VALUE, SIMPLE_STRING_CLAZZ);
     }
+
+    @Test
+    public void test_handleGetBeanInfo_throws_IntrospectionException() throws IntrospectionException {
+
+        Class<?> instanceClazz = ArrayList.class;
+        Class<?> stopClazz = BigDecimal.class;
+
+        Throwable actual = assertThrows(Throwable.class, () -> com.glowa_net.util.reflect.ReflectionHelper.handleGetBeanInfo(instanceClazz, stopClazz));
+        assertValid(actual, containsString("java.beans.IntrospectionException"), AssertionError.class);
+    }
+
 }
