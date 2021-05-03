@@ -44,6 +44,9 @@
     </ciManagement>
 
     <properties>
+        <!-- Gitlab Properties -->
+        <project.env.CI_PROJECT_ID>22436268</project.env.CI_PROJECT_ID>
+
         <!-- Sonar Properties -->
         <sonar.projectKey>ollily_unit-extension</sonar.projectKey>
     </properties>
@@ -103,8 +106,8 @@
     <repositories>
         <repository>
             <id>coding.read</id>
-            <name>CoDinG jFrog Group</name>
-            <url>https://coding.jfrog.io/artifactory/groups</url>
+            <name>CoDinG Group</name>
+            <url>https://gitlab.com/api/v4/groups/${project.env.CI_GROUP_ID}/packages/maven</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
