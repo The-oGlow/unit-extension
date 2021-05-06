@@ -11,6 +11,7 @@ stages:
 
 variables:
   REPO_DIR: $CI_PROJECT_DIR/.repo
+  MVN_USR_HOME: /root/.m2
   MVN_TEST_OPTS: -B -fae -s $CI_PROJECT_DIR/.m2/settings.xml -Dmaven.repo.local=$CI_PROJECT_DIR/.repo -DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=true
   MVN_CLI_OPTS: -B -fae -s $CI_PROJECT_DIR/.m2/settings.xml -Dmaven.repo.local=$CI_PROJECT_DIR/.repo -DskipTests -DskipITs
 
@@ -27,11 +28,19 @@ cache:
 
 .show_build: &show_build
   - echo "show_build"
-  - find $CI_BUILDS_DIR -type d -print
+  - find $CI_BUILDS_DIR -type d -printverify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
 
 .show_repo: &show_repo
   - echo "show_repo"
   - du --max-depth=1 -h $REPO_DIR
+
+.prep_repo: &prep_repo
+  - echo "creating $REPO_DIR"
+  - mkdir -p $REPO_DIR
+
+.prep_sec: &prep_sec
+  - mkdir -p $MVN_USR_HOME
+  - cp .m2/settings.xml $MVN_USR_HOME
 
 build:
   stage: deploy
@@ -39,8 +48,7 @@ build:
     - docker
   before_script:
     - *show_env
-    - echo "creating $REPO_DIR"
-    - mkdir -p $REPO_DIR
+    - *prep_repo
   script:
     - mvn $MVN_TEST_OPTS verify
     - mvn $MVN_CLI_OPTS deploy
