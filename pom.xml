@@ -108,7 +108,7 @@
         <repository>
             <id>coding.read</id>
             <name>CoDinG Group</name>
-            <url>https://gitlab.com/api/v4/groups/10107405/packages/maven</url>
+            <url>https://gitlab.com/api/v4/groups/10107405/-/packages/maven</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>

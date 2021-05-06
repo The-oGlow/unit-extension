@@ -43,7 +43,7 @@ cache:
   - cp .m2/settings.xml $MVN_USR_HOME
 
 build:
-  stage: deploy
+  stage: build
   tags:
     - docker
   before_script:
