@@ -103,22 +103,4 @@
         </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>coding.read</id>
-            <name>CoDinG Group</name>
-            <url>https://gitlab.com/api/v4/groups/${project.env.CI_GROUP_ID}/packages/maven</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>interval:30</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
 </project>
