@@ -7,6 +7,7 @@
         <groupId>com.glowa-net.maven.parent</groupId>
         <artifactId>global-pom</artifactId>
         <version>0.2.3-SNAPSHOT</version>
+        <relativePath/>
     </parent>
 
     <groupId>com.glowa-net.maven.tools</groupId>
@@ -102,5 +103,23 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>coding.read</id>
+            <name>CoDinG Group</name>
+            <url>https://gitlab.com/api/v4/groups/10107405/packages/maven</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:30</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>
