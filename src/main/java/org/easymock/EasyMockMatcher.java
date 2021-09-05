@@ -1,5 +1,7 @@
 package org.easymock;
 
+import org.easymock.internal.matchers.PrimaryId;
+
 /**
  * Additional EasyMockMatcher class. Contains a list of additional matchers.
  *
@@ -16,9 +18,8 @@ public class EasyMockMatcher {
      *
      * @return {@code null}.
      */
-    @SuppressWarnings("rawtypes")
     public static <T> T eqPrimaryId(final T expectedInstance, final String primIdFieldName) {
-        //        EasyMock.reportMatcher(new PrimaryId(expectedInstance, primIdFieldName));
+        EasyMock.reportMatcher(new PrimaryId(expectedInstance, primIdFieldName));
         return null;
     }
 }

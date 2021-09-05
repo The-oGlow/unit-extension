@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
- * Verifies if an annotation has a specific parameter and paramete-value.
+ * Verifies if an annotation has a specific parameter and parameter-value.
  *
  * @author Oliver Glowa
  * @see org.hamcrest.AnnotationMatchers

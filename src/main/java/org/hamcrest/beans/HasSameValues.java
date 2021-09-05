@@ -62,7 +62,6 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
 
     private void initDescription() {
         DESC_DESCRIPTION.appendText(System.lineSeparator()).appendText("The bean must have the total same content");
-
     }
 
     public static <T> Matcher<T> hasSameValues(final T expectedBean) {

@@ -1,11 +1,8 @@
 package org.hamcrest.beans;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.beans.PropertyUtil.NO_ARGUMENTS;
-import static org.hamcrest.beans.PropertyUtil.propertyDescriptorsFor;
-import static org.hamcrest.core.IsEqual.equalTo;
+import org.hamcrest.Description;
+import org.hamcrest.DiagnosingMatcher;
+import org.hamcrest.Matcher;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
@@ -14,9 +11,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.hamcrest.Description;
-import org.hamcrest.DiagnosingMatcher;
-import org.hamcrest.Matcher;
+import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.beans.PropertyUtil.NO_ARGUMENTS;
+import static org.hamcrest.beans.PropertyUtil.propertyDescriptorsFor;
 
 public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends SamePropertyValuesAs<T> {
 
@@ -166,37 +165,7 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
         return !ignoredFields.contains(propertyDescriptor.getDisplayName());
     }
 
-    @SuppressWarnings("WeakerAccess")
-    private static class PropertyMatcher extends DiagnosingMatcher<Object> {
-        private final Method          readMethod;
-        private final Matcher<Object> matcher;
-        private final String          propertyName;
-
-        public PropertyMatcher(PropertyDescriptor descriptor, Object expectedObject) {
-            this.propertyName = descriptor.getDisplayName();
-            this.readMethod = descriptor.getReadMethod();
-            this.matcher = equalTo(readProperty(readMethod, expectedObject));
-        }
-
-        @Override
-        public boolean matches(Object actual, Description mismatch) {
-            final Object actualValue = readProperty(readMethod, actual);
-            if (!matcher.matches(actualValue)) {
-                mismatch.appendText(propertyName + " ");
-                matcher.describeMismatch(actualValue, mismatch);
-                mismatch.appendText(",").appendText(System.lineSeparator());
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText(propertyName + ": ").appendDescriptionOf(matcher);
-        }
-    }
-
-    private static Object readProperty(Method method, Object target) {
+    static Object readProperty(Method method, Object target) {
         try {
             return method.invoke(target, NO_ARGUMENTS);
         } catch (Exception e) {

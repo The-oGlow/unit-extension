@@ -1,13 +1,14 @@
 package org.easymock.internal.matchers;
 
 import com.glowa_net.util.reflect.ReflectionHelper;
+import org.easymock.IArgumentMatcher;
 import org.mockito.ArgumentMatcher;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
- * An easy-mock matcher to verify, if two object instances have the same primary key (id).
+ * An easy-mock / hamcrest matcher to verify, if two object instances have the same primary key (id).
  *
  * @param <T> type of the method argument to match
  *
@@ -15,8 +16,7 @@ import java.util.Objects;
  * @see org.easymock.EasyMockMatcher
  * @since 0.10.000
  */
-@SuppressWarnings("unchecked")
-public class PrimaryId<T> implements ArgumentMatcher {
+public class PrimaryId<T> implements ArgumentMatcher, IArgumentMatcher {
 
     private final T        expectedInstance;
     private final Field    expectedField;
@@ -54,9 +54,18 @@ public class PrimaryId<T> implements ArgumentMatcher {
     }
 
     public void appendTo(final StringBuffer buffer) {
-        buffer.append("eq").append(expectedInstance == null ? "null" : expectClazz.getSimpleName()).append("(");
-        buffer.append(" with id=<");
-        buffer.append(expectedValue);
-        buffer.append(">)");
+        buffer.append(expectClazz == null ? "null" : expectClazz.getName());
+        buffer.append(" with ").append(expectedField == null ? "null" : expectedField.getName()).append("=<");
+        buffer.append(expectedValue).append(">");
+    }
+
+    @Override
+    public String toString() {
+        return "PrimaryId{" +
+                "expectClazz=" + expectClazz +
+                ", expectedField=" + expectedField +
+                ", expectedInstance=" + expectedInstance +
+                ", expectedValue=" + expectedValue +
+                '}';
     }
 }

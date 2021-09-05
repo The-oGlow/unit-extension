@@ -1,7 +1,11 @@
 package org.hamcrest;
 
 import junit.framework.TestCase;
-import org.junit.Assert;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 public abstract class AbstractMatcherTest extends TestCase {
 
@@ -16,7 +20,7 @@ public abstract class AbstractMatcherTest extends TestCase {
 
     public static <T> void assertMatches(String message, Matcher<T> matcher, Object arg) {
         if (!matcher.matches(arg)) {
-            Assert.fail(message + " because: '" + mismatchDescription(matcher, arg) + "'");
+            fail(message + " because: '" + mismatchDescription(matcher, arg) + "'");
         }
     }
 
@@ -25,25 +29,25 @@ public abstract class AbstractMatcherTest extends TestCase {
     }
 
     public static <T> void assertDoesNotMatch(String message, Matcher<? super T> c, T arg) {
-        Assert.assertFalse(message, c.matches(arg));
+        assertThat(message, c.matches(arg), is(false));
     }
 
-    public static void assertDescription(String expected, Matcher<?> matcher) {
+    public static void assertDescription(String expectedText, Matcher<?> matcher) {
         Description description = new StringDescription();
         description.appendDescriptionOf(matcher);
-        Assert.assertEquals("Expected description", expected, description.toString().trim());
+        assertThat("Expected description", description.toString().trim(), containsString(expectedText));
     }
 
-    public static <T> void assertMismatchDescription(String expected, Matcher<? super T> matcher, Object arg) {
-        Assert.assertFalse("Precondition: Matcher should not match item.", matcher.matches(arg));
-        Assert.assertEquals("Expected mismatch description", expected, mismatchDescription(matcher, arg));
+    public static <T> void assertMismatchDescription(String expectedText, Matcher<? super T> matcher, Object actual) {
+        assertThat("Precondition: Matcher should not match item.", not(matcher.matches(actual)));
+        assertThat("Expected mismatch description", mismatchDescription(matcher, actual), containsString(expectedText));
     }
 
     public static void assertNullSafe(Matcher<?> matcher) {
         try {
             matcher.matches(null);
         } catch (Exception e) {
-            Assert.fail("Matcher was not null safe");
+            fail("Matcher was not null safe");
         }
     }
 
@@ -51,7 +55,7 @@ public abstract class AbstractMatcherTest extends TestCase {
         try {
             matcher.matches(new UnknownType());
         } catch (Exception e) {
-            Assert.fail("Matcher was not unknown type safe, because: " + e);
+            fail("Matcher was not unknown type safe, because: " + e);
         }
     }
 
