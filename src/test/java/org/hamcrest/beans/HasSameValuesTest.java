@@ -1,6 +1,7 @@
 package org.hamcrest.beans;
 
 import com.glowa_net.data.SimplePojo;
+import org.hamcrest.AbstractMatcherTest;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -20,19 +21,29 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThrows;
 
-public class HasSameValuesTest {
+public class HasSameValuesTest extends AbstractMatcherTest {
 
-    protected static final String     DESCRIPTION_DEFAULT = " descriptionDefault ";
-    protected static final SimplePojo DEFAULT_POJO        = new SimplePojo();
-    public static final    String     FIELD_WAS_NULL      = "was null";
-    public static final    String     FIELD_NULL          = "null";
-    public static final    String     ACTUAL_ITEM_IS_NULL = "actual item is 'null'";
-    protected static final Pattern    EMPTY_FIELDS        = Pattern.compile(DESCRIPTION_DEFAULT + "\\s*?\\{\\s+\\}", Pattern.MULTILINE + Pattern.DOTALL);
+    protected static final String  DESCRIPTION_DEFAULT = " descriptionDefault ";
+    protected static final String  FIELD_WAS_NULL      = "was null";
+    protected static final String  FIELD_NULL          = "null";
+    protected static final String  ACTUAL_ITEM_IS_NULL = "actual item is 'null'";
+    protected static final Pattern EMPTY_FIELDS        = Pattern.compile(DESCRIPTION_DEFAULT + "\\s*?\\{\\s+\\}", Pattern.MULTILINE + Pattern.DOTALL);
+
+    protected static final String FIELD_SIMPLE_INT    = "simpleInt";
+    protected static final String FIELD_SIMPLE_STRING = "simpleString";
+
+    protected static final SimplePojo DEFAULT_POJO         = new SimplePojo();
+    protected static final int        DEFAULT_INT_VALUE    = 123;
+    protected static final String     DEFAULT_STRING_VALUE = "RELAX";
 
     protected HasSameValues<SimplePojo> o2T;
 
-    protected static class HasSameValuesTestClazz {
+    protected static class HasSameValuesTestDifferentClazz {
+    }
 
+    @Override
+    protected Matcher<?> createMatcher() {
+        return HasSameValues.hasSameValues(DEFAULT_POJO);
     }
 
     @Before
@@ -46,8 +57,8 @@ public class HasSameValuesTest {
 
     protected SimplePojo prepareDifferentObject() {
         final SimplePojo item = new SimplePojo();
-        item.setSimpleInt(123);
-        item.setSimpleString("RELAX");
+        item.setSimpleInt(DEFAULT_INT_VALUE);
+        item.setSimpleString(DEFAULT_STRING_VALUE);
         return item;
     }
 
@@ -81,8 +92,8 @@ public class HasSameValuesTest {
 
         final Throwable actual = assertThrows(Throwable.class, () -> assertThat(item, o2T));
         verifyThrowable(actual, allOf( //
-                containsString("simpleInt: expected: <0> but: was <123>"), //
-                containsString("simpleString: expected: null but: was \"RELAX\"") //
+                containsString(FIELD_SIMPLE_INT + ": expected: <0> but: was <" + DEFAULT_INT_VALUE + ">"), //
+                containsString(FIELD_SIMPLE_STRING + ": expected: null but: was \"" + DEFAULT_STRING_VALUE + "\"") //
         ));
     }
 
@@ -97,7 +108,7 @@ public class HasSameValuesTest {
     @Test
     public void testMatchesSafely_withDifference_return_false() {
         final SimplePojo item = new SimplePojo();
-        item.setSimpleInt(123);
+        item.setSimpleInt(DEFAULT_INT_VALUE);
 
         final boolean actual = o2T.matchesSafely(item);
         assertThat(actual, is(false));
@@ -115,9 +126,9 @@ public class HasSameValuesTest {
     public void testDescribeMismatch_WrongObjectType_description_isChanged() {
         final Description description = prepareDescription();
 
-        final HasSameValuesTestClazz actual = new HasSameValuesTestClazz();
+        final HasSameValuesTestDifferentClazz actual = new HasSameValuesTestDifferentClazz();
         o2T.describeMismatch(actual, description);
-        verifyDescription(description, containsString(HasSameValuesTestClazz.class.getName()));
+        verifyDescription(description, containsString(HasSameValuesTestDifferentClazz.class.getName()));
     }
 
     @Test

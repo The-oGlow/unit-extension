@@ -3,6 +3,7 @@ package org.hamcrest.beans;
 import org.hamcrest.Description;
 import org.hamcrest.DiagnosingMatcher;
 import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
@@ -19,20 +20,19 @@ import static org.hamcrest.beans.PropertyUtil.propertyDescriptorsFor;
 
 public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends SamePropertyValuesAs<T> {
 
-//    static final Description            DESC_MISMATCH    = new StringDescription();
-//    static final Description            DESC_DESCRIPTION = new StringDescription();
+    //    static final Description            DESC_MISMATCH    = new StringDescription();
+    static final Description DESC_DESCRIPTION = new StringDescription();
 
     private final T                     expectedBean;
     private final Set<String>           propertyNames;
     private final List<PropertyMatcher> propertyMatchers;
     private final List<String>          ignoredFields;
 
-//    public SamePropertiesValuesAs(T expectedBean, List<String> ignoredProperties) {
-//        super(expectedBean, ignoredProperties);
-//    }
+    public static <T> Matcher<T> samePropertiesValuesAs(T expectedBean, String... ignoredProperties) {
+        return new SamePropertiesValuesAs<>(expectedBean, asList(ignoredProperties));
+    }
 
-    @SuppressWarnings("WeakerAccess")
-    public SamePropertiesValuesAs(T expectedBean, List<String> ignoredProperties) {
+    private SamePropertiesValuesAs(T expectedBean, List<String> ignoredProperties) {
         verifyInput(expectedBean);
 
         PropertyDescriptor[] descriptors = propertyDescriptorsFor(expectedBean, Object.class);
@@ -44,54 +44,12 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
         initDescription();
     }
 
-    public static <B> Matcher<B> samePropertiesValuesAs(B expectedBean, String... ignoredProperties) {
-        return new SamePropertiesValuesAs<>(expectedBean, asList(ignoredProperties));
-    }
-
-    protected void verifyInput(final T expectedBean) {
+    private void verifyInput(final T expectedBean) {
         assertThat(expectedBean, notNullValue());
     }
 
-    protected void initDescription() {
-//        DESC_DESCRIPTION.appendText("The bean must have the total same content : " + System.lineSeparator()).appendValue(expectedBean);
-//        DESC_MISMATCH.appendText(" has not the total same content : " + System.lineSeparator()).appendValue(expectedBean);
-    }
-
-//    @SuppressWarnings("unchecked")
-//    protected <V> V getFieldValue(String fieldName) {
-//        Field field = FieldUtils.getField(this.getClass(), fieldName, true);
-//        try {
-//            return (V) FieldUtils.readField(field, this, true);
-//        } catch (IllegalAccessException e) {
-//            return null;
-//        }
-//    }
-//
-//    protected T getExpectedBean() {
-//        return getFieldValue("expectedBean");
-//    }
-//
-//    protected Set<String> getPropertyNames() {
-//        return getFieldValue("propertyNames");
-//    }
-//
-//    protected List<Matcher<?>> getPropertyMatchers() {
-//        return getFieldValue("propertyMatchers");
-//    }
-//
-//    protected List<String> getIgnoredFields() {
-//        return getFieldValue("ignoredFields");
-//    }
-
-    protected boolean hasAllMatchingValues(Object actual, Description mismatchDescription) {
-        boolean result = true;
-        for (Matcher<?> propertyMatcher : propertyMatchers) {
-            if (!propertyMatcher.matches(actual)) {
-                propertyMatcher.describeMismatch(actual, mismatchDescription);
-                result = false;
-            }
-        }
-        return result;
+    private void initDescription() {
+        DESC_DESCRIPTION.appendText(System.lineSeparator()).appendText("The bean must have the total same content");
     }
 
     @Override
@@ -110,6 +68,17 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
             description.appendText(" ignoring ") //
                     .appendValueList("[", ", ", "]", ignoredFields);
         }
+    }
+
+    protected boolean hasAllMatchingValues(Object actual, Description mismatchDescription) {
+        boolean result = true;
+        for (Matcher<?> propertyMatcher : propertyMatchers) {
+            if (!propertyMatcher.matches(actual)) {
+                propertyMatcher.describeMismatch(actual, mismatchDescription);
+                result = false;
+            }
+        }
+        return result;
     }
 
     private boolean isCompatibleType(Object actual, Description mismatchDescription) {
@@ -131,21 +100,11 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
         return true;
     }
 
-//    private boolean hasMatchingValues(Object actual, Description mismatchDescription) {
-//        for (PropertyMatcher propertyMatcher : propertyMatchers) {
-//            if (!propertyMatcher.matches(actual)) {
-//                propertyMatcher.describeMismatch(actual, mismatchDescription);
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-
     private static <T> List<PropertyMatcher> propertyMatchersFor(T bean, PropertyDescriptor[] descriptors, List<String> ignoredFields) {
         List<PropertyMatcher> result = new ArrayList<>(descriptors.length);
         for (PropertyDescriptor propertyDescriptor : descriptors) {
             if (isIgnored(ignoredFields, propertyDescriptor)) {
-                result.add(new PropertyMatcher(propertyDescriptor, bean));
+                result.add(PropertyMatcher.matchProperty(propertyDescriptor, bean));
             }
         }
         return result;
@@ -165,7 +124,7 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
         return !ignoredFields.contains(propertyDescriptor.getDisplayName());
     }
 
-    static Object readProperty(Method method, Object target) {
+    private Object readProperty(Method method, Object target) {
         try {
             return method.invoke(target, NO_ARGUMENTS);
         } catch (Exception e) {

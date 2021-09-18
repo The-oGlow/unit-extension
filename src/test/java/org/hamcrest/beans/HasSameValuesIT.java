@@ -3,20 +3,21 @@ package org.hamcrest.beans;
 import com.glowa_net.data.SimplePojo;
 import org.hamcrest.Description;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.containsStringIgnoringCase;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThrows;
 
 public class HasSameValuesIT extends HasSameValuesTest {
 
-    @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
     public void testDescribeTo_withNullValue_throw_NPE() {
-        o2T.describeTo(null);
+        Throwable actual = Assert.assertThrows(Throwable.class, () -> o2T.describeTo(null));
+        assertThat(actual, instanceOf(NullPointerException.class));
     }
 
     @Test

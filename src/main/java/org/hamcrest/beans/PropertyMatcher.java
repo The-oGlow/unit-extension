@@ -8,16 +8,25 @@ import org.hamcrest.Matchers;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
-import static org.hamcrest.beans.SamePropertiesValuesAs.readProperty;
+import static org.hamcrest.beans.PropertyUtil.NO_ARGUMENTS;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-@SuppressWarnings("WeakerAccess")
-class PropertyMatcher extends DiagnosingMatcher<Object> {
+class PropertyMatcher<T> extends DiagnosingMatcher<T> {
     private final Method          readMethod;
     private final Matcher<Object> matcher;
     private final String          propertyName;
 
-    public PropertyMatcher(PropertyDescriptor descriptor, Object expectedObject) {
+    /**
+     * @param descriptor     the descriptor for this property
+     * @param expectedObject the expected value for this property
+     *
+     * @return a new created matcher
+     */
+    public static PropertyMatcher<Object> matchProperty(PropertyDescriptor descriptor, Object expectedObject) {
+        return new PropertyMatcher<>(descriptor, expectedObject);
+    }
+
+    private PropertyMatcher(PropertyDescriptor descriptor, Object expectedObject) {
         this.propertyName = descriptor.getDisplayName();
         this.readMethod = descriptor.getReadMethod();
         if (this.readMethod != null) {
@@ -38,7 +47,7 @@ class PropertyMatcher extends DiagnosingMatcher<Object> {
         if (!matcher.matches(actualValue)) {
             mismatch.appendText(propertyName + " ");
             matcher.describeMismatch(actualValue, mismatch);
-            mismatch.appendText(",").appendText(System.lineSeparator());
+            //mismatch.appendText(",").appendText(System.lineSeparator());
             return false;
         }
         return true;
@@ -47,5 +56,13 @@ class PropertyMatcher extends DiagnosingMatcher<Object> {
     @Override
     public void describeTo(Description description) {
         description.appendText(propertyName + ": ").appendDescriptionOf(matcher);
+    }
+
+    protected final Object readProperty(Method method, Object target) {
+        try {
+            return method.invoke(target, NO_ARGUMENTS);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not invoke " + method + " on " + target, e);
+        }
     }
 }

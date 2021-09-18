@@ -38,22 +38,23 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
     private final Map<String, Object>                  fields         = new HashMap<>();
     private final List<Triple<String, Object, Object>> mismatchFields = new LinkedList<>();
 
+    public static <T> HasSameValues<T> hasSameValues(final T expectedBean) {
+        return new HasSameValues<>(expectedBean);
+    }
+
     private HasSameValues(final T expectedBean) {
         super(expectedBean == null ? null : expectedBean.getClass());
-        verifyInput(expectedBean);
-
-        Field[] allFields = FieldUtils.getAllFields(expectedBean.getClass());
+        this.expectedBean = expectedBean;
+        verifyInput(this.expectedBean);
+        Field[] allFields = FieldUtils.getAllFields(this.expectedBean.getClass());
         for (Field singleField : allFields) {
             try {
-                fields.put(singleField.getName(), FieldUtils.readField(singleField, expectedBean, true));
+                fields.put(singleField.getName(), FieldUtils.readField(singleField, this.expectedBean, true));
             } catch (IllegalAccessException e) {
                 throw new IllegalArgumentException(e);
             }
         }
-        this.expectedBean = expectedBean;
-
         initDescription();
-
     }
 
     private void verifyInput(final T expectedBean) {
@@ -62,10 +63,6 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
 
     private void initDescription() {
         DESC_DESCRIPTION.appendText(System.lineSeparator()).appendText("The bean must have the total same content");
-    }
-
-    public static <T> Matcher<T> hasSameValues(final T expectedBean) {
-        return new HasSameValues<>(expectedBean);
     }
 
     @Override

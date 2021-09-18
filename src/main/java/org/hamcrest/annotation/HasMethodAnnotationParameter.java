@@ -3,7 +3,6 @@ package org.hamcrest.annotation;
 import com.glowa_net.util.validator.AnnotationParameterValidator;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 
 ;
 
@@ -26,12 +25,32 @@ public class HasMethodAnnotationParameter<T> extends BaseMatcher<T> {
     private final Object                       annotationParameterValue;
 
     /**
+     * Creates a matcher that matches if the examined {@link Object} has the
+     * specified method with the specific annotation and a specfic annotation
+     * parameter. For example:
+     * <p>
+     * <pre>assertThat(objectCheese, hasMethodAnnotationParameter("getCheese", CheeseAnnotation.class, "country", java.util.Locale.FRANCE.getCountry()))</pre>
+     *
+     * @param methodName               the name of the method to check for the annotation
+     * @param annotationClazz          the class of the {@code methodName}
+     * @param annotationParameterKey   the name of the annotation-parameter
+     * @param annotationParameterValue the value of the annotation-parameter
+     * @param <T>
+     *
+     * @return a matcher
+     */
+    public static <T> HasMethodAnnotationParameter<T> hasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
+                                                                                   Object annotationParameterValue) {
+        return new HasMethodAnnotationParameter<>(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
+    }
+
+    /**
      * @param methodName               the name of the method to check for the annotation
      * @param annotationClazz          the class of the {@code methodName}
      * @param annotationParameterKey   the name of the annotation-parameter
      * @param annotationParameterValue the value of the annotation-parameter
      */
-    protected HasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey, Object annotationParameterValue) {
+    private HasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey, Object annotationParameterValue) {
         this.methodName = methodName;
         this.annotationClazz = annotationClazz;
         this.annotationParameterKey = annotationParameterKey;
@@ -65,26 +84,6 @@ public class HasMethodAnnotationParameter<T> extends BaseMatcher<T> {
                     .appendText(" doesn't have that methodName, that annotation or that annotation-parameter");
         }
 
-    }
-
-    /**
-     * Creates a matcher that matches if the examined {@link Object} has the
-     * specified method with the specific annotation and a specfic annotation
-     * parameter. For example:
-     * <p>
-     * <pre>assertThat(objectCheese, hasMethodAnnotationParameter("getCheese", CheeseAnnotation.class, "country", java.util.Locale.FRANCE.getCountry()))</pre>
-     *
-     * @param methodName               the name of the method to check for the annotation
-     * @param annotationClazz          the class of the {@code methodName}
-     * @param annotationParameterKey   the name of the annotation-parameter
-     * @param annotationParameterValue the value of the annotation-parameter
-     * @param <T>
-     *
-     * @return a matcher
-     */
-    public static <T> Matcher<T> hasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
-                                                              Object annotationParameterValue) {
-        return new HasMethodAnnotationParameter<>(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
     }
 
 }

@@ -7,34 +7,38 @@ import org.hamcrest.StringDescription;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class PropertyMatcherTest {
 
-    private static final SimplePojo DEFAULT_POJO;
-    private static final SimplePojo DIFFERENT_POJO;
+    protected static final SimplePojo DEFAULT_POJO;
+    protected static final SimplePojo DIFFERENT_POJO;
 
-    private static final String PROP_NAME                = "simpleInt";
-    private static final int    PROP_VALUE_DIFFERENT_INT = 123;
-    private static final String PROP_VALUE_DIFFERENT_STR = "RELAX";
+    protected static final String PROP_NAME                = "simpleInt";
+    protected static final int    PROP_VALUE_DIFFERENT_INT = 123;
+    protected static final String PROP_VALUE_DIFFERENT_STR = "RELAX";
 
-    private PropertyMatcher o2T;
+    private static final String PROP_NAME_SETTER = "onlySetterByte";
 
-    private BeanInfo           bean;
-    private PropertyDescriptor descriptor;
-    private Description        description;
+    protected PropertyMatcher o2T;
+
+    protected PropertyDescriptor descriptor;
+    protected Description        description;
 
     static {
         DEFAULT_POJO = new SimplePojo();
@@ -44,62 +48,92 @@ public class PropertyMatcherTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws IntrospectionException {
         description = new StringDescription();
-        bean = Introspector.getBeanInfo(DEFAULT_POJO.getClass());
-        descriptor = Arrays.stream(bean.getPropertyDescriptors()).filter(pd -> pd.getName().matches(PROP_NAME)).findFirst().get();
+        descriptor = prepareDescriptor(DEFAULT_POJO, PROP_NAME);
 
-        o2T = new PropertyMatcher(descriptor, DEFAULT_POJO);
+        o2T = PropertyMatcher.matchProperty(descriptor, DEFAULT_POJO);
+    }
+
+    protected PropertyDescriptor prepareDescriptor(Object bean, String propertyName) throws IntrospectionException {
+        BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
+        return Arrays.stream(beanInfo.getPropertyDescriptors()).filter(pd -> pd.getName().matches(propertyName)).findFirst().get();
     }
 
     @Test
-    public void testMatches_correct_property_matches() {
+    public void testCreates_matcherCreated() {
+        assertThat(o2T, notNullValue());
+        assertThat(o2T, instanceOf(PropertyMatcher.class));
+    }
+
+    @Test
+    public void testMatches_sameProperty_return_true() {
         Object otherObject = DEFAULT_POJO;
-        boolean expected1 = true;
-        Matcher<String> expected2 = not(allOf(containsString(PROP_NAME), containsString(String.valueOf(PROP_VALUE_DIFFERENT_INT))));
+        boolean expectedMatch = true;
+        Matcher<String> expectedDescription = not(allOf(containsString(PROP_NAME), containsString(String.valueOf(PROP_VALUE_DIFFERENT_INT))));
 
-        boolean actual1 = o2T.matches(otherObject, description);
+        boolean actualMatch = o2T.matches(otherObject, description);
 
-        assertThat(actual1, equalTo(expected1));
-        assertThat(description.toString(), expected2);
+        assertThat(actualMatch, equalTo(expectedMatch));
+        assertThat(description.toString(), expectedDescription);
     }
 
     @Test
-    public void testMatches_different_property_not_matches() {
+    public void testMatches_differentProperty_return_false() {
         Object otherObject = DIFFERENT_POJO;
-        boolean expected1 = false;
-        Matcher<String> expected2 = allOf(containsString(PROP_NAME), containsString(String.valueOf(PROP_VALUE_DIFFERENT_INT)));
+        boolean expectedMatch = false;
+        Matcher<String> expectedDescription = allOf(containsString(PROP_NAME), containsString(String.valueOf(PROP_VALUE_DIFFERENT_INT)));
 
-        boolean actual1 = o2T.matches(otherObject, description);
+        boolean actualMatch = o2T.matches(otherObject, description);
 
-        assertThat(actual1, equalTo(expected1));
-        assertThat(description.toString(), expected2);
+        assertThat(actualMatch, equalTo(expectedMatch));
+        assertThat(description.toString(), expectedDescription);
     }
 
     @Test
-    public void testDescribeTo_null_throw_npe() {
-        Description testDescription = null;
+    public void testmatches_noGetter_return_false() throws IntrospectionException {
+        descriptor = prepareDescriptor(DEFAULT_POJO, PROP_NAME_SETTER);
+        o2T = PropertyMatcher.matchProperty(descriptor, DEFAULT_POJO);
+        Object otherObject = DEFAULT_POJO;
 
-        Throwable actual = Assert.assertThrows(Throwable.class, () -> o2T.describeTo(testDescription));
+        boolean expectedMatch = false;
+        Matcher<String> expectedDescription = equalTo(PROP_NAME_SETTER + " was null");
+        boolean actualMatch = o2T.matches(otherObject, description);
 
-        assertThat(actual, instanceOf(NullPointerException.class));
+        assertThat(actualMatch, equalTo(expectedMatch));
+        assertThat(description.toString(), expectedDescription);
     }
 
     @Test
-    public void testDescribeTo_null_description_throw_npe() {
-        Description testDescription = new Description.NullDescription();
-
-        o2T.describeTo(testDescription);
-
-        assertThat(testDescription.toString(), emptyString());
-    }
-
-    @Test
-    public void testDescribeTo_empty_description_return_the_same() {
+    public void testDescribeTo_withEmpty_return_the_same() {
         Description testDescription = new StringDescription();
 
         o2T.describeTo(testDescription);
 
         assertThat(testDescription.toString(), containsString(String.valueOf(DEFAULT_POJO.getSimpleInt())));
     }
+
+    @Test
+    public void testReadProperty_return_propertyValue() {
+        Object target = DIFFERENT_POJO;
+        Method method = (Method) ReflectionTestUtils.getField(o2T, "readMethod");
+
+        Object actual = o2T.readProperty(method, target);
+
+        assertThat(actual, equalTo(PROP_VALUE_DIFFERENT_INT));
+    }
+
+    @Test
+    public void testReadProperty_noGetter_throw_IAE() throws IntrospectionException {
+        Object target = DEFAULT_POJO;
+        descriptor = prepareDescriptor(target, PROP_NAME_SETTER);
+        o2T = PropertyMatcher.matchProperty(descriptor, DEFAULT_POJO);
+
+        Method method = (Method) ReflectionTestUtils.getField(o2T, "readMethod");
+
+        Throwable actual = Assert.assertThrows(Throwable.class, () -> o2T.readProperty(method, target));
+
+        assertThat(actual, instanceOf(IllegalArgumentException.class));
+    }
+
 }

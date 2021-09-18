@@ -3,7 +3,6 @@ package org.hamcrest.annotation;
 import com.glowa_net.util.validator.AnnotationParameterValidator;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 
 /**
  * A matcher, which verifies if a class has a specific annotation.
@@ -21,7 +20,23 @@ public class HasMethodAnnotation<T> extends BaseMatcher<T> {
     private final Class<T>                     annotationClazz;
     private final AnnotationParameterValidator validator;
 
-    protected HasMethodAnnotation(String methodName, Class<T> annotationClazz) {
+    /*
+     * Creates a matcher that matches if the examined {@link Object} has the
+     * specified method with the specific annotation. For example:
+     * <p>
+     * <pre>assertThat(objectCheese, hasMethodAnnotation("getCheese", CheeseAnnotation.class))</pre>
+     *
+     * @param methodName      the name of the method to look for
+     * @param annotationClazz the class of the annotation
+     * @param <T>
+     *
+     * @return a matcher
+     */
+    public static <T> HasMethodAnnotation<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
+        return new HasMethodAnnotation<>(methodName, annotationClazz);
+    }
+
+    private HasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         this.methodName = methodName;
         this.annotationClazz = annotationClazz;
         this.validator = new AnnotationParameterValidator();
@@ -49,21 +64,5 @@ public class HasMethodAnnotation<T> extends BaseMatcher<T> {
             mismatchDescription.appendText("actual=").appendValue(item.getClass()).appendText(" doesn't have that methodName or that annotation.");
         }
 
-    }
-
-    /*
-     * Creates a matcher that matches if the examined {@link Object} has the
-     * specified method with the specific annotation. For example:
-     * <p>
-     * <pre>assertThat(objectCheese, hasMethodAnnotation("getCheese", CheeseAnnotation.class))</pre>
-     *
-     * @param methodName      the name of the method to look for
-     * @param annotationClazz the class of the annotation
-     * @param <T>
-     *
-     * @return a matcher
-     */
-    public static <T> Matcher<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
-        return new HasMethodAnnotation<>(methodName, annotationClazz);
     }
 }
