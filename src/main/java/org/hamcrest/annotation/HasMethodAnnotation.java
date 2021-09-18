@@ -1,10 +1,9 @@
 package org.hamcrest.annotation;
 
+import com.glowa_net.util.validator.AnnotationParameterValidator;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-
-import com.glowa_net.util.validator.AnnotationParameterValidator;
 
 /**
  * A matcher, which verifies if a class has a specific annotation.
@@ -19,10 +18,10 @@ import com.glowa_net.util.validator.AnnotationParameterValidator;
 public class HasMethodAnnotation<T> extends BaseMatcher<T> {
 
     private final String                       methodName;
-    private final Class<?>                     annotationClazz;
+    private final Class<T>                     annotationClazz;
     private final AnnotationParameterValidator validator;
 
-    public HasMethodAnnotation(String methodName, Class<?> annotationClazz) {
+    protected HasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         this.methodName = methodName;
         this.annotationClazz = annotationClazz;
         this.validator = new AnnotationParameterValidator();
@@ -52,7 +51,7 @@ public class HasMethodAnnotation<T> extends BaseMatcher<T> {
 
     }
 
-    /**
+    /*
      * Creates a matcher that matches if the examined {@link Object} has the
      * specified method with the specific annotation. For example:
      * <p>
@@ -60,11 +59,11 @@ public class HasMethodAnnotation<T> extends BaseMatcher<T> {
      *
      * @param methodName      the name of the method to look for
      * @param annotationClazz the class of the annotation
+     * @param <T>
      *
      * @return a matcher
      */
-    public static Matcher<Object> hasMethodAnnotation(String methodName, Class<?> annotationClazz) {
+    public static <T> Matcher<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         return new HasMethodAnnotation<>(methodName, annotationClazz);
     }
-
 }

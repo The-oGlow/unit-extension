@@ -1,8 +1,8 @@
 package org.hamcrest;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class AnnotationMatchersTest {
@@ -14,9 +14,9 @@ public class AnnotationMatchersTest {
 
     @Test
     public void testHasMethodAnnotationReturnsAMatcher() {
-        Matcher<? super Matcher<Object>> expected = Matchers.instanceOf(Matcher.class);
+        Matcher<? super Matcher<?>> expected = Matchers.instanceOf(Matcher.class);
 
-        Matcher<Object> actual = AnnotationMatchers.hasMethodAnnotation(methodName, annotationClazz);
+        Matcher<?> actual = AnnotationMatchers.hasMethodAnnotation(methodName, annotationClazz);
 
         // if the matcher works correct, is irrelevant for this test.
         assertThat(actual, expected);
@@ -24,9 +24,9 @@ public class AnnotationMatchersTest {
 
     @Test
     public void testHasMethodAnnotationParameterReturnsAMatcher() {
-        Matcher<? super Matcher<Object>> expected = Matchers.instanceOf(Matcher.class);
+        Matcher<? super Matcher<?>> expected = Matchers.instanceOf(Matcher.class);
 
-        Matcher<Object> actual = AnnotationMatchers.hasMethodAnnotationParameter(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
+        Matcher<?> actual = AnnotationMatchers.hasMethodAnnotationParameter(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
 
         // if the matcher works correct, is irrelevant for this test.
         assertThat(actual, expected);

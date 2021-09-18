@@ -16,7 +16,7 @@ import java.util.Objects;
  * @see org.easymock.EasyMockMatcher
  * @since 0.10.000
  */
-public class PrimaryId<T> implements ArgumentMatcher, IArgumentMatcher {
+public class PrimaryId<T> implements ArgumentMatcher<T>, IArgumentMatcher {
 
     private final T        expectedInstance;
     private final Field    expectedField;
@@ -44,15 +44,18 @@ public class PrimaryId<T> implements ArgumentMatcher, IArgumentMatcher {
     public boolean matches(final Object actual) {
         boolean result = false;
         if (expectedInstance == null && actual == null) {
-            result = true;
+            // nothing to do
         } else if ((expectedInstance != null && actual != null) //
                 && (expectClazz.isAssignableFrom(actual.getClass()))) {
-            final Object actualValue = ReflectionHelper.readField(expectedField, (T) actual);
+            final Object actualValue = ReflectionHelper.readField(expectedField, actual);
             result = Objects.equals(actualValue, expectedValue);
         }
         return result;
     }
 
+    /**
+     * @param buffer the previous text to append some new text
+     */
     public void appendTo(final StringBuffer buffer) {
         buffer.append(expectClazz == null ? "null" : expectClazz.getName());
         buffer.append(" with ").append(expectedField == null ? "null" : expectedField.getName()).append("=<");

@@ -13,42 +13,60 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class PrimaryIdTest {
 
-    private SimplePojo expectedInstance;
-    private String     expectedInstanceFieldName  = "simpleInt";
-    private int        expectedInstanceFieldValue = 100;
+    protected SimplePojo expectedInstance;
+    protected String     expectedInstanceFieldName  = "simpleInt";
+    protected int        expectedInstanceFieldValue = 100;
 
-    private PrimaryId<SimplePojo> o2T;
+    protected SimplePojo actualInstanceSame;
+    protected SimplePojo actualInstanceDifferent;
+    protected String     actualInstanceFieldName           = "simpleInt";
+    protected int        actualInstanceFieldValueSame      = expectedInstanceFieldValue;
+    protected int        actualInstanceFieldValueDifferent = actualInstanceFieldValueSame + 1;
+
+    protected PrimaryId<SimplePojo> o2T;
 
     @Before
     public void setUp() throws Exception {
         expectedInstance = new SimplePojo();
         expectedInstance.setSimpleInt(expectedInstanceFieldValue);
 
+        actualInstanceSame = new SimplePojo();
+        actualInstanceSame.setSimpleInt(actualInstanceFieldValueSame);
+        actualInstanceDifferent = new SimplePojo();
+        actualInstanceDifferent.setSimpleInt(actualInstanceFieldValueDifferent);
+
         o2T = new PrimaryId<>(expectedInstance, expectedInstanceFieldName);
     }
 
     @Test
-    public void testCreateObject_withValues_everyFieldIsFilled() {
-        assertThat(o2T, notNullValue());
-        assertThat(o2T.toString(), containsString(String.valueOf(expectedInstance)));
-        assertThat(o2T.toString(), containsString(expectedInstance.getClass().getName()));
-        assertThat(o2T.toString(), containsString(expectedInstanceFieldName));
-        assertThat(o2T.toString(), containsString(String.valueOf(expectedInstanceFieldValue)));
+    public void testMatches_correctValue_return_true() {
+        boolean expected = true;
+
+        boolean actual = o2T.matches(actualInstanceSame);
+
+        assertThat(actual, Matchers.equalTo(expected));
     }
 
     @Test
-    public void testCreateObject_withNull_everythingIsNull() {
-        Pattern pattern = Pattern.compile(".+\\w=null,.+\\w=null,.+\\w=null,.+\\w=null.+", Pattern.CASE_INSENSITIVE);
+    public void testMatches_incorrectValue_return_false() {
+        boolean expected = false;
+
+        boolean actual = o2T.matches(actualInstanceDifferent);
+
+        assertThat(actual, Matchers.equalTo(expected));
+    }
+
+    @Test
+    public void testMatches_bothNull_return_false() {
+        boolean expected = false;
 
         o2T = new PrimaryId<>(null, null);
 
-        assertThat(o2T, notNullValue());
-        assertThat(o2T.toString(), Matchers.matchesPattern(pattern));
+        boolean actual = o2T.matches(null);
+
+        assertThat(actual, Matchers.equalTo(expected));
     }
 
-    @Test
-    public void matches() {
-    }
 
     @Test
     public void testAppendTo_withValues() {
@@ -72,6 +90,18 @@ public class PrimaryIdTest {
 
         assertThat(actual, notNullValue());
         assertThat(actual.toString(), Matchers.matchesPattern(pattern));
+    }
+
+    @Test
+    public void testToString_return_values() {
+        Pattern pattern = Pattern.compile("^" + o2T.getClass().getSimpleName() + "." //
+                + "expectClazz=.+" + expectedInstance.getClass().getName() + ", " //
+                + "expectedField=.+" + expectedInstanceFieldName + ",.+" //
+                + "expectedValue=" + expectedInstanceFieldValue //
+                + ".+", Pattern.CASE_INSENSITIVE);
+
+        assertThat(o2T, notNullValue());
+        assertThat(o2T.toString(), Matchers.matchesPattern(pattern));
     }
 
 }

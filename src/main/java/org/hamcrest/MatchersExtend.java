@@ -50,10 +50,11 @@ public class MatchersExtend extends org.hamcrest.Matchers {
      *
      * @param methodName      the name of the method to look for
      * @param annotationClazz the class of the annotation
+     * @param <T>
      *
      * @return a matcher
      */
-    public static org.hamcrest.Matcher<Object> hasMethodAnnotation(String methodName, Class<?> annotationClazz) {
+    public static <T> org.hamcrest.Matcher<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         return org.hamcrest.AnnotationMatchers.hasMethodAnnotation(methodName, annotationClazz);
     }
 
@@ -67,11 +68,12 @@ public class MatchersExtend extends org.hamcrest.Matchers {
      * @param annotationClazz          the class of the annotation
      * @param annotationParameterKey   the name of key for that annotation parameter
      * @param annotationParameterValue the value of the annotation parameter
+     * @param <T>
      *
      * @return a matcher
      */
-    public static org.hamcrest.Matcher<Object> hasMethodAnnotationParameter(String methodName, Class<?> annotationClazz, String annotationParameterKey,
-                                                                            Object annotationParameterValue) {
+    public static <T> org.hamcrest.Matcher<T> hasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
+                                                                           Object annotationParameterValue) {
         return org.hamcrest.AnnotationMatchers.hasMethodAnnotationParameter(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
     }
 

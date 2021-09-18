@@ -1,15 +1,15 @@
 package org.hamcrest.annotation;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-
 import org.hamcrest.Description;
 import org.hamcrest.StringDescription;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class HasMethodAnnotationTest {
 
@@ -26,60 +26,44 @@ public class HasMethodAnnotationTest {
         }
     }
 
-    private       HasMethodAnnotation<?>       o2t;
-    private       HasMethodAnnotationTestClazz o2tClazz;
-    private final String                       methodName                  = "methodWithAnnnotation";
-    private final String                       methodNameWithoutAnnotation = "methodWithoutAnnotation";
-    private final String                       wrongMethodName             = "wrongMethodName";
-    private final Class<?>                     annotationClazz             = Ignore.class;
+    protected       HasMethodAnnotation<?>       o2t;
+    protected       HasMethodAnnotationTestClazz o2tClazz;
+    protected final String                       methodName                  = "methodWithAnnnotation";
+    protected final String                       methodNameWithoutAnnotation = "methodWithoutAnnotation";
+    protected final String                       wrongMethodName             = "wrongMethodName";
+    protected final Class<?>                     annotationClazz             = Ignore.class;
 
     @Before
     public void setUp() {
         o2tClazz = new HasMethodAnnotationTestClazz();
     }
 
+    protected Description prepareDescription() {
+        return new StringDescription();
+    }
+
+    protected <T> HasMethodAnnotation<T> prepareMatcher(String matchMethodName, Class<T> matchAnnotationClazz) {
+        return (HasMethodAnnotation<T>) HasMethodAnnotation.hasMethodAnnotation(matchMethodName, matchAnnotationClazz);
+    }
+
+    protected void verifyMatches(boolean expected, Object matchClazz, String matchMethodName, Class<?> matchAnnotationClazz) {
+        o2t = prepareMatcher(matchMethodName, matchAnnotationClazz);
+        assertThat(o2t.matches(matchClazz), equalTo(expected));
+    }
+
     @Test
-    public void testCreateHasMethodAnnotation() {
-        o2t = prepareMatcher(methodName, annotationClazz);
+    public void testCreate_matcher_created() {
+        o2t = (HasMethodAnnotation<?>) HasMethodAnnotation.hasMethodAnnotation(methodName, annotationClazz);
         assertThat(o2t, notNullValue());
     }
 
     @Test
-    public void testMatchesAnnotationFound() {
-        matches(true, o2tClazz, methodName, annotationClazz);
+    public void testMatches_annotation_found() {
+        verifyMatches(true, o2tClazz, methodName, annotationClazz);
     }
 
     @Test
-    public void testMatchesNoClazzGiven() {
-        matches(false, null, methodName, annotationClazz);
-    }
-
-    @Test
-    public void testMatchesMethodNameNotExists() {
-        matches(false, o2tClazz, wrongMethodName, annotationClazz);
-    }
-
-    @Test
-    public void testMatchesMethodNameWithoutAnnotation() {
-        matches(false, o2tClazz, methodNameWithoutAnnotation, annotationClazz);
-    }
-
-    @Test
-    public void testMatchesNoAnnotionClazzGiven() {
-        matches(false, o2tClazz, methodName, null);
-    }
-
-    @Test
-    public void testMatchesAnnotionClazzIsWrong() {
-        matches(false, o2tClazz, methodName, String.class);
-    }
-
-    private Description prepareDescription() {
-        return new StringDescription();
-    }
-
-    @Test
-    public void testDescribeToIsChanged() {
+    public void testDescribeTo_description_isChanged() {
         o2t = prepareMatcher(methodName, annotationClazz);
         Description description = prepareDescription();
         String desciptionBefore = description.toString();
@@ -89,7 +73,7 @@ public class HasMethodAnnotationTest {
     }
 
     @Test
-    public void testDescribeMismatchWithNullItemIsChanged() {
+    public void testDescribeMismatch_withNullItem_description_isChanged() {
         o2t = prepareMatcher(methodName, annotationClazz);
         Description mismatchDescription = prepareDescription();
         String desciptionBefore = mismatchDescription.toString();
@@ -99,8 +83,9 @@ public class HasMethodAnnotationTest {
         assertThat(mismatchDescription.toString(), not(equalTo(desciptionBefore)));
     }
 
+
     @Test
-    public void testDescribeMismatchWithItemIsChanged() {
+    public void testDescribeMismatch_withItem_desctiption_isChanged() {
         o2t = prepareMatcher(methodName, annotationClazz);
         Description mismatchDescription = prepareDescription();
         String desciptionBefore = mismatchDescription.toString();
@@ -109,14 +94,4 @@ public class HasMethodAnnotationTest {
 
         assertThat(mismatchDescription.toString(), not(equalTo(desciptionBefore)));
     }
-
-    private HasMethodAnnotation<?> prepareMatcher(String matchMethodName, Class<?> matchAnnotationClazz) {
-        return new HasMethodAnnotation<>(matchMethodName, matchAnnotationClazz);
-    }
-
-    private void matches(boolean expected, Object matchClazz, String matchMethodName, Class<?> matchAnnotationClazz) {
-        o2t = prepareMatcher(matchMethodName, matchAnnotationClazz);
-        assertThat(o2t.matches(matchClazz), equalTo(expected));
-    }
-
 }

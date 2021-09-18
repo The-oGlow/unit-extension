@@ -25,7 +25,7 @@ public class AnnotationMatchers {
      *
      * @return a matcher
      */
-    public static org.hamcrest.Matcher<Object> hasMethodAnnotation(String methodName, Class<?> annotationClazz) {
+    public static <T> org.hamcrest.Matcher<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         return HasMethodAnnotation.hasMethodAnnotation(methodName, annotationClazz);
     }
 
@@ -39,11 +39,12 @@ public class AnnotationMatchers {
      * @param annotationClazz          the class of the annotation
      * @param annotationParameterKey   the name of key for that annotation parameter
      * @param annotationParameterValue the value of the annotation parameter
+     * @param <T>
      *
      * @return a matcher
      */
-    public static org.hamcrest.Matcher<Object> hasMethodAnnotationParameter(String methodName, Class<?> annotationClazz, String annotationParameterKey,
-                                                                            Object annotationParameterValue) {
+    public static <T> org.hamcrest.Matcher<T> hasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
+                                                                           Object annotationParameterValue) {
         return HasMethodAnnotationParameter.hasMethodAnnotationParameter(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
     }
 }

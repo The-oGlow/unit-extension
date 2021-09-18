@@ -20,7 +20,7 @@ import org.hamcrest.Matcher;
 public class HasMethodAnnotationParameter<T> extends BaseMatcher<T> {
 
     private final String                       methodName;
-    private final Class<?>                     annotationClazz;
+    private final Class<T>                     annotationClazz;
     private final AnnotationParameterValidator validator;
     private final String                       annotationParameterKey;
     private final Object                       annotationParameterValue;
@@ -31,7 +31,7 @@ public class HasMethodAnnotationParameter<T> extends BaseMatcher<T> {
      * @param annotationParameterKey   the name of the annotation-parameter
      * @param annotationParameterValue the value of the annotation-parameter
      */
-    public HasMethodAnnotationParameter(String methodName, Class<?> annotationClazz, String annotationParameterKey, Object annotationParameterValue) {
+    protected HasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey, Object annotationParameterValue) {
         this.methodName = methodName;
         this.annotationClazz = annotationClazz;
         this.annotationParameterKey = annotationParameterKey;
@@ -78,11 +78,12 @@ public class HasMethodAnnotationParameter<T> extends BaseMatcher<T> {
      * @param annotationClazz          the class of the {@code methodName}
      * @param annotationParameterKey   the name of the annotation-parameter
      * @param annotationParameterValue the value of the annotation-parameter
+     * @param <T>
      *
      * @return a matcher
      */
-    public static Matcher<Object> hasMethodAnnotationParameter(String methodName, Class<?> annotationClazz, String annotationParameterKey,
-                                                               Object annotationParameterValue) {
+    public static <T> Matcher<T> hasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
+                                                              Object annotationParameterValue) {
         return new HasMethodAnnotationParameter<>(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
     }
 

@@ -35,16 +35,16 @@ public class HasMethodAnnotationParameterTest {
         }
     }
 
-    private       HasMethodAnnotationParameter<?>       o2t;
-    private       HasMethodAnnotationParameterTestClazz o2tClazz;
-    private final String                                methodName                    = "methodWithAnnnotationTest";
-    private final String                                methodWithoutAnnotation       = "methodWithoutAnnotation";
-    private final String                                wrongMethodName               = "wrongMethodName";
-    private final String                                wrongAnnotationParameterKey   = "wrongAnnotationParameterKey";
-    private final Class<?>                              annotationClazz               = HasMethodAnnotationParameterTestAnnotation.class;
-    private final String                                annotationParameterKey        = "expected";
-    private final int                                   annotationParameterValue      = 1;
-    private final Long                                  annotationParameterValueWrong = 2L;
+    protected       HasMethodAnnotationParameter<?>       o2t;
+    protected       HasMethodAnnotationParameterTestClazz o2tClazz;
+    protected final String                                methodName                    = "methodWithAnnnotationTest";
+    protected final String                                methodWithoutAnnotation       = "methodWithoutAnnotation";
+    protected final String                                wrongMethodName               = "wrongMethodName";
+    protected final String                                wrongAnnotationParameterKey   = "wrongAnnotationParameterKey";
+    protected final Class<?>                              annotationClazz               = HasMethodAnnotationParameterTestAnnotation.class;
+    protected final String                                annotationParameterKey        = "expected";
+    protected final int                                   annotationParameterValue      = 1;
+    protected final Long                                  annotationParameterValueWrong = 2L;
 
     @Before
     public void setUp() throws Exception {
@@ -52,68 +52,35 @@ public class HasMethodAnnotationParameterTest {
 
     }
 
+    protected void verifyMatches(boolean expected, Object matchClazz, String matchMethodName, Class<?> matchAnnotationClazz, String matchAnnotationParameterKey,
+                                 Object matchAnnotationParameterValue) {
+        o2t = prepareMatcher(matchMethodName, matchAnnotationClazz, matchAnnotationParameterKey, matchAnnotationParameterValue);
+        assertThat(o2t.matches(matchClazz), equalTo(expected));
+    }
+
+    protected <T> HasMethodAnnotationParameter<T> prepareMatcher(String matchMethodName, Class<T> matchAnnotationClazz, String matchAnnotationParameterKey,
+                                                                 Object matchAnnotationParameterValue) {
+        return (HasMethodAnnotationParameter<T>) HasMethodAnnotationParameter.hasMethodAnnotationParameter(matchMethodName, matchAnnotationClazz, matchAnnotationParameterKey, matchAnnotationParameterValue);
+
+    }
+
+    protected Description prepareDescription() {
+        return new StringDescription();
+    }
+
     @Test
-    public void testCreateHasMethodAnnotationParameter() {
+    public void testCreate_matcher_created() {
         o2t = prepareMatcher(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
         assertThat(o2t, notNullValue());
     }
 
     @Test
-    public void testMatchesAnnotationParameterFound() {
-        matches(true, o2tClazz, methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
+    public void testMatches_annotationParameter_found() {
+        verifyMatches(true, o2tClazz, methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
     }
 
     @Test
-    public void testMatchesNoClazzGiven() {
-        matches(false, null, methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
-    }
-
-    @Test
-    public void testMatchesMethodNameNotExists() {
-        matches(false, o2tClazz, wrongMethodName, annotationClazz, annotationParameterKey, annotationParameterValue);
-    }
-
-    @Test
-    public void testMatchesMethodNameWithoutAnnotation() {
-        matches(false, o2tClazz, methodWithoutAnnotation, annotationClazz, annotationParameterKey, annotationParameterValue);
-    }
-
-    @Test
-    public void testMatchesNoAnnotionClazzGiven() {
-        matches(false, o2tClazz, methodName, null, annotationParameterKey, annotationParameterValue);
-    }
-
-    @Test
-    public void testMatchesWrongAnnotionClazzGiven() {
-        matches(false, o2tClazz, methodName, String.class, annotationParameterKey, annotationParameterValue);
-    }
-
-    @Test
-    public void testMatchesWrongAnnotationParameterKeyGiven() {
-        matches(false, o2tClazz, methodName, annotationClazz, wrongAnnotationParameterKey, annotationParameterValue);
-    }
-
-    @Test
-    public void testMatchesNoAnnotationParameterKeyGiven() {
-        matches(false, o2tClazz, methodName, annotationClazz, "", annotationParameterValue);
-    }
-
-    @Test
-    public void testMatchesWrongAnnotationParameterValueGiven() {
-        matches(false, o2tClazz, methodName, annotationClazz, annotationParameterKey, annotationParameterValueWrong);
-    }
-
-    @Test
-    public void testMatchesNoAnnotationParameterValueGiven() {
-        matches(false, o2tClazz, methodName, annotationClazz, annotationParameterKey, null);
-    }
-
-    private Description prepareDescription() {
-        return new StringDescription();
-    }
-
-    @Test
-    public void testDescribeToIsChanged() {
+    public void testDescribeTo_description_isChanged() {
         o2t = prepareMatcher(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
         Description description = prepareDescription();
         String desciptionBefore = description.toString();
@@ -123,7 +90,7 @@ public class HasMethodAnnotationParameterTest {
     }
 
     @Test
-    public void testDescribeMismatchWithNullItemIsChanged() {
+    public void testDescribeMismatch_withNullItem_description_IsChanged() {
         o2t = prepareMatcher(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
         Description mismatchDescription = prepareDescription();
         String desciptionBefore = mismatchDescription.toString();
@@ -134,7 +101,7 @@ public class HasMethodAnnotationParameterTest {
     }
 
     @Test
-    public void testDescribeMismatchWithItemIsChanged() {
+    public void testDescribeMismatch_withItem_description_isChanged() {
         o2t = prepareMatcher(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
         Description mismatchDescription = prepareDescription();
         String desciptionBefore = mismatchDescription.toString();
@@ -143,17 +110,4 @@ public class HasMethodAnnotationParameterTest {
 
         assertThat(mismatchDescription.toString(), not(equalTo(desciptionBefore)));
     }
-
-    private void matches(boolean expected, Object matchClazz, String matchMethodName, Class<?> matchAnnotationClazz, String matchAnnotationParameterKey,
-                         Object matchAnnotationParameterValue) {
-        o2t = prepareMatcher(matchMethodName, matchAnnotationClazz, matchAnnotationParameterKey, matchAnnotationParameterValue);
-        assertThat(o2t.matches(matchClazz), equalTo(expected));
-    }
-
-    private HasMethodAnnotationParameter<?> prepareMatcher(String matchMethodName, Class<?> matchAnnotationClazz, String matchAnnotationParameterKey,
-                                                           Object matchAnnotationParameterValue) {
-        return new HasMethodAnnotationParameter(matchMethodName, matchAnnotationClazz, matchAnnotationParameterKey, matchAnnotationParameterValue);
-
-    }
-
 }

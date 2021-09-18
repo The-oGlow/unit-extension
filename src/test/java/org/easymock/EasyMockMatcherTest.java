@@ -1,7 +1,6 @@
 package org.easymock;
 
 import com.glowa_net.data.SimplePojo;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -9,12 +8,8 @@ import static org.hamcrest.Matchers.nullValue;
 
 public class EasyMockMatcherTest {
 
-    @Before
-    public void setUp() {
-    }
-
     @Test
-    public void testEqPrimaryIdInitializationReturnsNull() {
+    public void testEqPrimaryId_initialization_return_mull() {
         final SimplePojo expectedInstance = new SimplePojo();
         final String primIdFieldName = "simpleInt";
 
