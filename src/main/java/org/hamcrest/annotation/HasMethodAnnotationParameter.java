@@ -86,4 +86,14 @@ public class HasMethodAnnotationParameter<T> extends BaseMatcher<T> {
 
     }
 
+    @Override
+    public String toString() {
+        return "HasMethodAnnotationParameter{" +
+                "annotationClazz=" + annotationClazz +
+                ", annotationParameterKey='" + annotationParameterKey + '\'' +
+                ", annotationParameterValue=" + annotationParameterValue +
+                ", methodName='" + methodName + '\'' +
+                ", validator=" + validator +
+                "} " + super.toString();
+    }
 }

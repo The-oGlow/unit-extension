@@ -65,4 +65,13 @@ class PropertyMatcher<T> extends DiagnosingMatcher<T> {
             throw new IllegalArgumentException("Could not invoke " + method + " on " + target, e);
         }
     }
+
+    @Override
+    public String toString() {
+        return "PropertyMatcher{" +
+                "matcher=" + matcher +
+                ", propertyName='" + propertyName + '\'' +
+                ", readMethod=" + readMethod +
+                "} " + super.toString();
+    }
 }

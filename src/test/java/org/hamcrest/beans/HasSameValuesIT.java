@@ -13,28 +13,28 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThrows;
 
-public class HasSameValuesIT extends HasSameValuesTest {
+public class HasSameValuesIT<T extends SimplePojo> extends HasSameValuesTest<T> {
 
     public void testDescribeTo_withNullValue_throw_NPE() {
-        Throwable actual = Assert.assertThrows(Throwable.class, () -> o2T.describeTo(null));
+        Throwable actual = Assert.assertThrows(Throwable.class, () -> o2T().describeTo(null));
         assertThat(actual, instanceOf(NullPointerException.class));
     }
 
     @Test
     public void testDescribeMismatch_withSameObject_description_isChanged() {
-        final SimplePojo item = DEFAULT_POJO;
+        final T item = prepareMatcherArgument();
         final Description description = prepareDescription();
 
-        o2T.describeMismatch(item, description);
+        o2T().describeMismatch(item, description);
         verifyDescription(description, Matchers.matchesRegex(EMPTY_FIELDS));
     }
 
     @Test
     public void testDescribeMismatch_withDifferentObject_description_isChanged() {
-        final SimplePojo item = prepareDifferentObject();
+        final T item = prepareComparingArgument();
         final Description description = prepareDescription();
 
-        o2T.describeMismatch(item, description);
+        o2T().describeMismatch(item, description);
         verifyDescription(description, Matchers.matchesRegex(EMPTY_FIELDS));
     }
 
@@ -42,32 +42,35 @@ public class HasSameValuesIT extends HasSameValuesTest {
     public void testDescribeMismatch_withNullObject_description_isChanged_withNull() {
         final Description description = prepareDescription();
 
-        o2T.describeMismatch(null, description);
+        o2T().describeMismatch(null, description);
         verifyDescription(description, containsString(DESCRIPTION_DEFAULT + FIELD_WAS_NULL));
     }
 
     @Test
     public void testDescribeMismatch_withNullDescription_throw_NPE() {
-        assertThrows(NullPointerException.class, () -> o2T.describeMismatch(DEFAULT_POJO, null));
+        assertThrows(NullPointerException.class, () -> o2T().describeMismatch(prepareMatcherArgument(), null));
     }
 
     @Test
     public void testMatchesSafely_multipleDifference_return_false() {
-        final SimplePojo item = prepareDifferentObject();
+        final T item = prepareComparingArgument();
+        HasSameValues<T> tsO2T = tsO2T();
 
-        final boolean actual = o2T.matchesSafely(item);
+        final boolean actual = tsO2T.matchesSafely(item);
         assertThat(actual, is(false));
     }
 
     @Test
     public void testMatchesSafely_withNull_return_false() {
-        final Throwable actual = assertThrows(Throwable.class, () -> o2T.matchesSafely(null));
+        HasSameValues<T> tsO2T = tsO2T();
+        final Throwable actual = assertThrows(Throwable.class, () -> tsO2T.matchesSafely(null));
         verifyThrowable(actual, containsStringIgnoringCase(ACTUAL_ITEM_IS_NULL));
     }
 
     @Test
     public void testDescribeMismatchSafely_withNullDescription_throw_NPE() {
-        assertThrows(NullPointerException.class, () -> o2T.describeMismatchSafely(DEFAULT_POJO, null));
+        HasSameValues<T> tsO2T = tsO2T();
+        assertThrows(NullPointerException.class, () -> tsO2T.describeMismatchSafely(prepareMatcherArgument(), null));
     }
 
 }

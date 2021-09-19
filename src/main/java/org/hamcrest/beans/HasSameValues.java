@@ -123,4 +123,13 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "HasSameValues{" +
+                "expectedBean=" + expectedBean +
+                ", fields=" + fields +
+                ", mismatchFields=" + mismatchFields +
+                "} " + super.toString();
+    }
 }
