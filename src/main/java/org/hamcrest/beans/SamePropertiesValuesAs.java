@@ -131,14 +131,4 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
             throw new IllegalArgumentException("Could not invoke " + method + " on " + target, e);
         }
     }
-
-    @Override
-    public String toString() {
-        return "SamePropertiesValuesAs{" +
-                "expectedBean=" + expectedBean +
-                ", ignoredFields=" + ignoredFields +
-                ", propertyMatchers=" + propertyMatchers +
-                ", propertyNames=" + propertyNames +
-                "} " + super.toString();
-    }
 }

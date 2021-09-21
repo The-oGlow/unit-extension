@@ -62,7 +62,7 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
     }
 
     private void initDescription() {
-        DESC_DESCRIPTION.appendText(System.lineSeparator()).appendText("The bean must have the total same content");
+        DESC_DESCRIPTION.appendText("The bean must have the total same content");
     }
 
     @Override
@@ -122,14 +122,5 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
             return description.toString();
         }
         return null;
-    }
-
-    @Override
-    public String toString() {
-        return "HasSameValues{" +
-                "expectedBean=" + expectedBean +
-                ", fields=" + fields +
-                ", mismatchFields=" + mismatchFields +
-                "} " + super.toString();
     }
 }

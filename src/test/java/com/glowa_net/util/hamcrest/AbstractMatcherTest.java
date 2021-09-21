@@ -1,5 +1,9 @@
-package org.hamcrest;
+package com.glowa_net.util.hamcrest;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.hamcrest.StringDescription;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
@@ -12,15 +16,31 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assume.assumeThat;
 
 /**
+ * Base class for testing a {@link org.hamcrest.BaseMatcher}
+ * For testing extended matcher, use {@link org.hamcrest.ExtendedMatcherTest}
+ *
  * @param <T> the type, the {@code o2T} uses
+ *
+ * @see org.hamcrest.ExtendedMatcherTest
  */
 public abstract class AbstractMatcherTest<T> {
 
+    /**
+     * Class for testing a {@link Matcher} with a different clazz.
+     */
     protected static class AbstractMatcherTestDifferentClazz {
     }
+
+    /**
+     * Class for testing a {@link Matcher} with a unknown type.
+     */
+    protected static class UnknownType {
+    }
+
+    protected static final String DIFFERENT_CLAZZ_NAME = AbstractMatcherTestDifferentClazz.class.getName();
+    protected static final String UNKNOWN_TYPE_NAME    = UnknownType.class.getName();
 
     protected static final String DESCRIPTION_DEFAULT = " descriptionDefault ";
     protected static final String FIELD_WAS_NULL      = "was null";
@@ -29,12 +49,6 @@ public abstract class AbstractMatcherTest<T> {
 
     private final Matcher<T> o2T;
     private final Class<?>   o2TClazz;
-
-    /**
-     * Class for testing a {@link Matcher} with a unknown type.
-     */
-    protected static class UnknownType {
-    }
 
     /**
      * Default constructor.
@@ -51,8 +65,6 @@ public abstract class AbstractMatcherTest<T> {
      *
      * @see #o2T
      * @see #o2T()
-     * @see #tsO2T()
-     * @see #dmO2T()
      */
     protected abstract Matcher<T> createMatcher();
 
@@ -61,7 +73,7 @@ public abstract class AbstractMatcherTest<T> {
      *
      * @see #o2T
      */
-    protected Description prepareDescription() {
+    protected Description prepareDefaultDescription() {
         return new StringDescription().appendText(DESCRIPTION_DEFAULT);
     }
 
@@ -69,17 +81,17 @@ public abstract class AbstractMatcherTest<T> {
      * @return a new object used as comparison inside of {@link #o2T}
      *
      * @see #o2T
-     * @see #prepareComparingArgument()
+     * @see #prepareArgumentToCompareWith()
      */
-    protected abstract T prepareMatcherArgument();
+    protected abstract T prepareArgumentInMatcher();
 
     /**
      * @return a new object with different content as the object inside of {@link #o2T}
      *
      * @see #o2T
-     * @see #prepareMatcherArgument()
+     * @see #prepareArgumentInMatcher()
      */
-    protected abstract T prepareComparingArgument();
+    protected abstract T prepareArgumentToCompareWith();
 
     /**
      * Fails with the given {@code message}.
@@ -89,7 +101,7 @@ public abstract class AbstractMatcherTest<T> {
      * @see #fail()
      */
     protected static void fail(String message) {
-        org.junit.Assert.fail(message);
+        Assert.fail(message);
     }
 
     /**
@@ -98,7 +110,7 @@ public abstract class AbstractMatcherTest<T> {
      * @see #fail(String)
      */
     protected static void fail() {
-        org.junit.Assert.fail();
+        Assert.fail();
     }
 
     /**
@@ -126,7 +138,7 @@ public abstract class AbstractMatcherTest<T> {
      */
     protected static <T> void assertMatches(String message, Matcher<T> matcher, Object arg) {
         if (!matcher.matches(arg)) {
-            fail(String.format("%s, because: '%s'", message, mismatchDescription(matcher, arg)));
+            fail(String.format("%s, because: '%s'", message, mismatchDescriptionText(matcher, arg)));
         }
     }
 
@@ -185,7 +197,7 @@ public abstract class AbstractMatcherTest<T> {
      */
     protected static <T> void assertMismatchDescription(String expectedText, Matcher<? super T> matcher, Object mismatchArg) {
         assertThat("Precondition: Matcher should not match argument.", not(matcher.matches(mismatchArg)));
-        assertThat("Expected mismatch description", mismatchDescription(matcher, mismatchArg), containsString(expectedText));
+        assertThat("Expected mismatch description", mismatchDescriptionText(matcher, mismatchArg), containsString(expectedText));
     }
 
     /**
@@ -224,7 +236,7 @@ public abstract class AbstractMatcherTest<T> {
      *
      * @see #DESCRIPTION_DEFAULT
      */
-    protected void verifyDescription(final Description actualDescription, final Matcher<String> expected) {
+    protected void verifyDescription(Description actualDescription, Matcher<String> expected) {
         assertThat(actualDescription, not(equalTo(DESCRIPTION_DEFAULT)));
         assertThat(actualDescription.toString(), expected);
     }
@@ -235,7 +247,7 @@ public abstract class AbstractMatcherTest<T> {
      * @param actualException the current [@link {@link Throwable}
      * @param expected        a String-{@link Matcher} to verify the {@code actualException}
      */
-    protected void verifyThrowable(final Throwable actualException, final Matcher<String> expected) {
+    protected void verifyThrowable(Throwable actualException, Matcher<String> expected) {
         assertThat(actualException, notNullValue());
         assertThat(actualException, instanceOf(AssertionError.class));
         assertThat(actualException.getMessage(), expected);
@@ -251,7 +263,7 @@ public abstract class AbstractMatcherTest<T> {
      *
      * @return a text for the missmatch {@link Description}
      */
-    private static <T> String mismatchDescription(Matcher<? super T> matcher, Object mismatchArg) {
+    private static <T> String mismatchDescriptionText(Matcher<? super T> matcher, Object mismatchArg) {
         Description description = new StringDescription();
         matcher.describeMismatch(mismatchArg, description);
         return description.toString().trim();
@@ -266,42 +278,11 @@ public abstract class AbstractMatcherTest<T> {
         }
     }
 
-    protected void assumeIsDiagnosingMatcher() {
-        assumeThat("No DiagnosingMatcher available!", isMatcherType(this::dmO2T), is(true));
-    }
-
-    protected void assumeIsTypeSafeMatcher() {
-        assumeThat("No TypeSafeMatcher available!", isMatcherType(this::tsO2T), is(true));
-    }
-
     /**
      * @return the {@link #o2T} to test against
-     *
-     * @see #tsO2T()
-     * @see #dmO2T()
      */
     protected Matcher<T> o2T() {
         return this.o2T;
-    }
-
-    /**
-     * @return the {@code o2T} as {@link TypeSafeMatcher} to test against
-     *
-     * @see #o2T()
-     * @see #dmO2T()
-     */
-    protected <M extends TypeSafeMatcher<T>> M tsO2T() {
-        return (M) this.o2T;
-    }
-
-    /**
-     * @return the {@code o2T} as {@link DiagnosingMatcher} to test against
-     *
-     * @see #o2T()
-     * @see #tsO2T()
-     */
-    protected <M extends DiagnosingMatcher<T>> M dmO2T() {
-        return (M) this.o2T;
     }
 
     /**
@@ -310,6 +291,8 @@ public abstract class AbstractMatcherTest<T> {
     protected Class<?> getO2TClazz() {
         return o2TClazz;
     }
+
+    /* Section for {@link org.hamcrest.BaseMatcher} unit tests */
 
     /**
      * Generic unit test, to assume the {@code o2T} is created.
@@ -342,21 +325,21 @@ public abstract class AbstractMatcherTest<T> {
      */
     @Test
     public void testGeneric_testMatches_objectsAreTheSame_matches() {
-        T actual = prepareMatcherArgument();
+        T actual = prepareArgumentInMatcher();
         assertThat(actual, o2T);
     }
 
-    protected abstract Matcher<String> prepareObjectsAreDifferentCheck();
+    protected abstract Matcher<String> prepareMatcher_objectsAreDifferent_check();
 
     /**
      * Generic unit test, to assume the {@code o2T} identifies a different object with an {@link AssertionError}.
      */
     @Test
     public void testGeneric_testMatches_objectsAreDifferent_throw_assertError() {
-        T argument = prepareComparingArgument();
+        T argument = prepareArgumentToCompareWith();
 
         Throwable actualThrowable = assertThrows(Throwable.class, () -> assertThat(argument, o2T));
-        verifyThrowable(actualThrowable, prepareObjectsAreDifferentCheck());
+        verifyThrowable(actualThrowable, prepareMatcher_objectsAreDifferent_check());
     }
 
     /**
@@ -364,17 +347,17 @@ public abstract class AbstractMatcherTest<T> {
      *
      * @see #testGeneric_testDescribeTo_descriptionDefault_isAdded()
      */
-    protected abstract Matcher<String> prepareDescriptionTextDefaultCheck();
+    protected abstract Matcher<String> prepareMatcherDescriptionText_defaultDescription_check();
 
     /**
      * Generic unit test, to assume the {@code o2T} adds a default text to the {@link Description}.
      */
     @Test
     public void testGeneric_testDescribeTo_descriptionDefault_isAdded() {
-        final Description description = prepareDescription();
+        Description description = prepareDefaultDescription();
 
         o2T.describeTo(description);
-        verifyDescription(description, prepareDescriptionTextDefaultCheck());
+        verifyDescription(description, prepareMatcherDescriptionText_defaultDescription_check());
     }
 
     /**
@@ -382,18 +365,18 @@ public abstract class AbstractMatcherTest<T> {
      *
      * @see #testGeneric_testDescribeMismatch_differentObjectContent_description_isAdded()
      */
-    protected abstract Matcher<String> prepareDescriptionTextMissmatchContentCheck();
+    protected abstract Matcher<String> prepareDescriptionText_missmatchContent_check();
 
     /**
      * Generic unit test, to assume the {@code o2T} adds a missmatch text {@link Description}, when object has a different content.
      */
     @Test
     public void testGeneric_testDescribeMismatch_differentObjectContent_description_isAdded() {
-        final Description description = prepareDescription();
-        final T item = prepareComparingArgument();
+        Description description = prepareDefaultDescription();
+        T item = prepareArgumentToCompareWith();
 
         o2T.describeMismatch(item, description);
-        verifyDescription(description, prepareDescriptionTextMissmatchContentCheck());
+        verifyDescription(description, prepareDescriptionText_missmatchContent_check());
     }
 
     /**
@@ -401,101 +384,17 @@ public abstract class AbstractMatcherTest<T> {
      *
      * @see #testGeneric_testDescribeMismatch_differentObjectType_description_isAdded()
      */
-    protected abstract Matcher<String> prepareDescriptionTextMissmatchTypeCheck();
+    protected abstract Matcher<String> prepareDescriptionText_missmatchType_check();
 
     /**
      * Generic unit test, to assume the {@code o2T} adds a missmatch text {@link Description}, when object has a different type.
      */
     @Test
     public void testGeneric_testDescribeMismatch_differentObjectType_description_isAdded() {
-        final Description description = prepareDescription();
-        final AbstractMatcherTestDifferentClazz item = new AbstractMatcherTestDifferentClazz();
+        Description description = prepareDefaultDescription();
+        AbstractMatcherTestDifferentClazz item = new AbstractMatcherTestDifferentClazz();
 
         o2T.describeMismatch(item, description);
-        verifyDescription(description, prepareDescriptionTextMissmatchTypeCheck());
+        verifyDescription(description, prepareDescriptionText_missmatchType_check());
     }
-
-    /* Section for {@link TypeSafeMatcher} unit tests */
-
-    @Test
-    public void testGeneric_testMatchesSafely_objectsAreTheSame_matches() {
-        assumeIsTypeSafeMatcher();
-        TypeSafeMatcher<T> tsO2T = tsO2T();
-
-        T item = prepareMatcherArgument();
-
-        final boolean actual = tsO2T.matchesSafely(item);
-        assertThat(actual, is(true));
-    }
-
-    @Test
-    public void testGeneric_testMatchesSafely_objectsAreDifferent_missmatches() {
-        assumeIsTypeSafeMatcher();
-        TypeSafeMatcher<T> tsO2T = tsO2T();
-
-        T item = prepareComparingArgument();
-
-        final boolean actual = tsO2T.matchesSafely(item);
-        assertThat(actual, is(false));
-    }
-
-    /**
-     * @return a {@link Matcher}, for use in an unit test
-     *
-     * @see #testGeneric_testDescribeMismatchSafely_sameObject_description_notChanged()
-     */
-    protected abstract Matcher<String> prepareDescriptionTextMissmatchSafelySameObjectCheck();
-
-    @Test
-    public void testGeneric_testDescribeMismatchSafely_sameObject_description_notChanged() {
-        assumeIsTypeSafeMatcher();
-        TypeSafeMatcher<T> tsO2T = tsO2T();
-
-        final Description description = prepareDescription();
-        final T item = prepareMatcherArgument();
-
-        tsO2T.describeMismatchSafely(item, description);
-        verifyDescription(description, prepareDescriptionTextMissmatchSafelySameObjectCheck());
-    }
-
-    /**
-     * @return a {@link Matcher}, for use in an unit test
-     *
-     * @see #testGeneric_testDescribeMismatchSafely_differenObject_description_isAdded()
-     */
-    protected abstract Matcher<String> prepareDescriptionTextMissmatchSafelyDifferentObjectCheck();
-
-    @Test
-    public void testGeneric_testDescribeMismatchSafely_differenObject_description_isAdded() {
-        assumeIsTypeSafeMatcher();
-        TypeSafeMatcher<T> tsO2T = tsO2T();
-
-        final Description description = prepareDescription();
-        final T item = prepareComparingArgument();
-
-        tsO2T.describeMismatchSafely(item, description);
-        verifyDescription(description, prepareDescriptionTextMissmatchSafelyDifferentObjectCheck());
-    }
-
-    /**
-     * @return a {@link Matcher}, for use in an unit test
-     *
-     * @see #testGeneric_testDescribeMismatchSafely_nullObject_description_isAddedWithNull()
-     */
-    protected abstract Matcher<String> prepareDescriptionTextMissmatchSafelyNullObjectCheck();
-
-    @Test
-    public void testGeneric_testDescribeMismatchSafely_nullObject_description_isAddedWithNull() {
-        assumeIsTypeSafeMatcher();
-        TypeSafeMatcher<T> tsO2T = tsO2T();
-
-        final Description description = prepareDescription();
-        final T item = null;
-
-        tsO2T.describeMismatchSafely(item, description);
-        verifyDescription(description, prepareDescriptionTextMissmatchSafelyNullObjectCheck());
-    }
-
-    /* Section for {@link DiagnosingMatcher} unit tests */
-
 }

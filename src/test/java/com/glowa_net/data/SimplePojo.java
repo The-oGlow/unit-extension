@@ -6,9 +6,13 @@ import java.util.List;
 
 public class SimplePojo {
 
-    public static final int FIELD_COUNT  = 4;
+    public static final int FIELD_COUNT  = 6;
     public static final int GETTER_COUNT = 5;
     public static final int SETTER_COUNT = 5;
+
+    public static final int STATIC_COUNT = 8;
+    public static final int FINAL_COUNT  = 8;
+    public static final int CONST_COUNT  = 7;
 
     public static final Float CONST_FLOAT = 111f;
     public static       int   STATIC_INT  = 11;

@@ -1,7 +1,7 @@
 package org.hamcrest.beans;
 
 import com.glowa_net.data.SimplePojo;
-import org.hamcrest.AbstractMatcherTest;
+import org.hamcrest.ExtendedMatcherTest;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 
-public class HasSameValuesTest<T extends SimplePojo> extends AbstractMatcherTest<T> {
+public class HasSameValuesTest<T extends SimplePojo> extends ExtendedMatcherTest<T> {
 
     protected static final Pattern EMPTY_FIELDS = Pattern.compile(DESCRIPTION_DEFAULT + "\\s*?\\{\\s+\\}", Pattern.MULTILINE + Pattern.DOTALL);
 
@@ -25,11 +25,11 @@ public class HasSameValuesTest<T extends SimplePojo> extends AbstractMatcherTest
 
     @Override
     protected Matcher<T> createMatcher() {
-        return HasSameValues.hasSameValues(prepareMatcherArgument());
+        return HasSameValues.hasSameValues(prepareArgumentInMatcher());
     }
 
     @Override
-    protected T prepareMatcherArgument() {
+    protected T prepareArgumentInMatcher() {
         T item = (T) new SimplePojo();
         item.setSimpleInt(DEFAULT_INT);
         item.setSimpleString(DEFAULT_STRING);
@@ -37,48 +37,52 @@ public class HasSameValuesTest<T extends SimplePojo> extends AbstractMatcherTest
     }
 
     @Override
-    protected T prepareComparingArgument() {
+    protected T prepareArgumentToCompareWith() {
         T item = (T) new SimplePojo();
         item.setSimpleInt(DIFFERENT_INT);
         item.setSimpleString(DIFFERENT_STRING);
         return item;
     }
 
+    /* Section for {@link org.hamcrest.BaseMatcher} unit tests */
+
     @Override
-    protected Matcher<String> prepareObjectsAreDifferentCheck() {
+    protected Matcher<String> prepareMatcher_objectsAreDifferent_check() {
         return allOf( //
-                containsString(FIELD_SIMPLE_INT + ": expected: <0> but: was <" + DIFFERENT_INT + ">"), //
-                containsString(FIELD_SIMPLE_STRING + ": expected: null but: was \"" + DIFFERENT_STRING + "\"") //
+                containsString(String.format("%s: expected: <%s> but: was <%s>", FIELD_SIMPLE_INT, DEFAULT_INT, DIFFERENT_INT)), //
+                containsString(String.format("%s: expected: \"%s\" but: was \"%s\"", FIELD_SIMPLE_STRING, DEFAULT_STRING, DIFFERENT_STRING))//
         );
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextDefaultCheck() {
+    protected Matcher<String> prepareMatcherDescriptionText_defaultDescription_check() {
         return containsString(HasSameValues.DESC_DESCRIPTION.toString());
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextMissmatchContentCheck() {
+    protected Matcher<String> prepareDescriptionText_missmatchContent_check() {
         return containsString(DESCRIPTION_DEFAULT);
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextMissmatchTypeCheck() {
-        return containsString(AbstractMatcherTestDifferentClazz.class.getName());
+    protected Matcher<String> prepareDescriptionText_missmatchType_check() {
+        return containsString(DIFFERENT_CLAZZ_NAME);
     }
 
+    /* Section for {@link org.hamcrest.TypeSafeMatcher} unit tests */
+
     @Override
-    protected Matcher<String> prepareDescriptionTextMissmatchSafelySameObjectCheck() {
+    protected Matcher<String> prepareMatcherDescriptionText_missmatchSafely_sameObject_check() {
         return Matchers.matchesRegex(EMPTY_FIELDS);
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextMissmatchSafelyDifferentObjectCheck() {
+    protected Matcher<String> prepareMatcherDescriptionText_missmatchSafely_differentObject_check() {
         return Matchers.matchesRegex(EMPTY_FIELDS);
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextMissmatchSafelyNullObjectCheck() {
+    protected Matcher<String> prepareMatcherDescriptionText_missmatchSafely_nullObject_check() {
         return containsString(DESCRIPTION_DEFAULT + FIELD_NULL);
     }
 
@@ -86,96 +90,4 @@ public class HasSameValuesTest<T extends SimplePojo> extends AbstractMatcherTest
     public void testMatchesSafely_noGetter_throw_IAE() {
 
     }
-
-//    @Test
-//    public void testCreates_matcherCreated() {
-//        assertThat(tsO2T(), notNullValue());
-//        assertThat(tsO2T(), instanceOf(HasSameValues.class));
-//    }
-
-//    @Test
-//    public void testMatches_objectsAreTheSame() {
-//        T actual = prepareMatcherObject();
-//        assertThat(actual, tsO2T());
-//    }
-
-//    @Test
-//    public void testMatches_objectsAreDifferent_return_assertError() {
-//        T item = prepareComparingArgument();
-//
-//        Matcher<String> expected = allOf( //
-//                containsString(FIELD_SIMPLE_INT + ": expected: <0> but: was <" + DEFAULT_INT_VALUE + ">"), //
-//                containsString(FIELD_SIMPLE_STRING + ": expected: null but: was \"" + DEFAULT_STRING_VALUE + "\"") //
-//        );
-//
-//        final Throwable actual = assertThrows(Throwable.class, () -> assertThat(item, tsO2T()));
-//        verifyThrowable(actual, expected);
-//    }
-
-//    @Test
-//    public void testMatchesSafely_theSame_return_true() {
-//        T item = prepareMatcherArgument();
-//        HasSameValues<T> tsO2T = tsO2T();
-//
-//        final boolean actual = tsO2T.matchesSafely(item);
-//        assertThat(actual, is(true));
-//    }
-
-//    @Test
-//    public void testMatchesSafely_withDifference_return_false() {
-//        T item = prepareMatcherArgument();
-//        item.setSimpleInt(DEFAULT_INT_VALUE);
-//        HasSameValues<T> tsO2T = tsO2T();
-//
-//        final boolean actual = tsO2T.matchesSafely(item);
-//        assertThat(actual, is(false));
-//    }
-
-
-//    @Test
-//    public void testDescribeTo_description_isChanged() {
-//        final Description description = prepareDescription();
-//
-//        o2T().describeTo(description);
-//        verifyDescription(description, containsString(HasSameValues.DESC_DESCRIPTION.toString()));
-//    }
-
-//    @Test
-//    public void testDescribeMismatch_WrongObjectType_description_isChanged() {
-//        final Description description = prepareDescription();
-//
-//        final HasSameValuesTestDifferentClazz actual = new HasSameValuesTestDifferentClazz();
-//        o2T().describeMismatch(actual, description);
-//        verifyDescription(description, containsString(HasSameValuesTestDifferentClazz.class.getName()));
-//    }
-
-//    @Test
-//    public void testDescribeMismatchSafely_nullObject_description_isChanged_withNull() {
-//        final Description description = prepareDescription();
-//        HasSameValues<T> tsO2T = tsO2T();
-//
-//        tsO2T.describeMismatchSafely(null, description);
-//        verifyDescription(description, containsString(DESCRIPTION_DEFAULT + FIELD_NULL));
-//    }
-
-    //    @Test
-//    public void testDescribeMismatchSafely_sameObject_description_isChanged() {
-//        final T item = prepareMatcherArgument();
-//        final Description description = prepareDescription();
-//        HasSameValues<T> tsO2T = tsO2T();
-//
-//        tsO2T.describeMismatchSafely(item, description);
-//        verifyDescription(description, Matchers.matchesRegex(EMPTY_FIELDS));
-//    }
-
-//    @Test
-//    public void testDescribeMismatchSafely_differenObject_description_isChanged() {
-//        final T item = prepareComparingArgument();
-//        final Description description = prepareDescription();
-//        HasSameValues<T> tsO2T = tsO2T();
-//
-//        tsO2T.describeMismatchSafely(item, description);
-//        verifyDescription(description, Matchers.matchesRegex(EMPTY_FIELDS));
-//    }
-
 }

@@ -65,13 +65,4 @@ public class HasMethodAnnotation<T> extends BaseMatcher<T> {
         }
 
     }
-
-    @Override
-    public String toString() {
-        return "HasMethodAnnotation{" +
-                "annotationClazz=" + annotationClazz +
-                ", methodName='" + methodName + '\'' +
-                ", validator=" + validator +
-                "} " + super.toString();
-    }
 }

@@ -1,9 +1,9 @@
 package org.hamcrest.beans;
 
-import org.hamcrest.AbstractMatcherTest;
+import org.hamcrest.ExtendedMatcherTest;
 import org.hamcrest.Matcher;
 
-public class SamePropertiesValuesAsTest<T extends ExampleBean> extends AbstractMatcherTest<T> {
+public class SamePropertiesValuesAsTest<T extends ExampleBean> extends ExtendedMatcherTest<T> {
 
     private static final ExampleBean.Value aValue       = new ExampleBean.Value("expected");
     private static final ExampleBean       expectedBean = new ExampleBean("same", 1, aValue);
@@ -11,51 +11,51 @@ public class SamePropertiesValuesAsTest<T extends ExampleBean> extends AbstractM
 
     @Override
     protected Matcher<T> createMatcher() {
-        return SamePropertiesValuesAs.samePropertiesValuesAs(prepareMatcherArgument());
+        return SamePropertiesValuesAs.samePropertiesValuesAs(prepareArgumentInMatcher());
     }
 
     @Override
-    protected T prepareMatcherArgument() {
+    protected T prepareArgumentInMatcher() {
         return (T) expectedBean;
     }
 
     @Override
-    protected T prepareComparingArgument() {
+    protected T prepareArgumentToCompareWith() {
         return (T) actualBean;
     }
 
     @Override
-    protected Matcher<String> prepareObjectsAreDifferentCheck() {
+    protected Matcher<String> prepareMatcher_objectsAreDifferent_check() {
         return null;
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextDefaultCheck() {
+    protected Matcher<String> prepareMatcherDescriptionText_defaultDescription_check() {
         return null;
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextMissmatchContentCheck() {
+    protected Matcher<String> prepareDescriptionText_missmatchContent_check() {
         return null;
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextMissmatchTypeCheck() {
+    protected Matcher<String> prepareDescriptionText_missmatchType_check() {
         return null;
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextMissmatchSafelySameObjectCheck() {
+    protected Matcher<String> prepareMatcherDescriptionText_missmatchSafely_sameObject_check() {
         return null;
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextMissmatchSafelyDifferentObjectCheck() {
+    protected Matcher<String> prepareMatcherDescriptionText_missmatchSafely_differentObject_check() {
         return null;
     }
 
     @Override
-    protected Matcher<String> prepareDescriptionTextMissmatchSafelyNullObjectCheck() {
+    protected Matcher<String> prepareMatcherDescriptionText_missmatchSafely_nullObject_check() {
         return null;
     }
 
