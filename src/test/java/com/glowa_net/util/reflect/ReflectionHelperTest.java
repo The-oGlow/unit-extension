@@ -3,18 +3,11 @@ package com.glowa_net.util.reflect;
 import com.glowa_net.data.SimplePojo;
 import com.glowa_net.data.SimpleSerializable;
 import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -22,7 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThrows;
 
 public class ReflectionHelperTest {
@@ -39,19 +37,28 @@ public class ReflectionHelperTest {
 
     public static final String   CONST_FLOAT_NAME  = "CONST_FLOAT";
     public static final Class<?> CONST_FLOAT_CLAZZ = Float.class;
-    public static final Float    CONST_FLOAT_VALUE = SimplePojo.CONST_FLOAT;
+    public static final Float    CONST_FLOAT_VALUE = 111f;
 
     public static final String NOT_FOUND = "notFound";
 
     private SimplePojo pojo;
+    private String     differentPojo;
 
     @Before
     public void setUp() {
         pojo = new SimplePojo();
         pojo.setSimpleString(SIMPLE_STRING_VALUE);
         pojo.setSimpleInt(SIMPLE_INT_VALUE);
+
+        differentPojo = "different";
     }
 
+    @After
+    public void tearDown() {
+        if (SimplePojo.CONST_FLOAT.floatValue() != CONST_FLOAT_VALUE.floatValue()) {
+            ReflectionHelper.setFinalStaticValue(CONST_FLOAT_NAME, CONST_FLOAT_VALUE, pojo.getClass());
+        }
+    }
 
     private <V> void assertNullValid(final V actual) {
         assertThat(actual, nullValue());
@@ -80,7 +87,7 @@ public class ReflectionHelperTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void test_findGetter_with_null_fails() {
+    public void test_findGetter_with_null_throws_failure() {
         ReflectionHelper.findGetter(null);
     }
 
@@ -122,7 +129,7 @@ public class ReflectionHelperTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void test_findField_with_fieldNameNullAndInstance_fails() {
+    public void test_findField_with_fieldNameNullAndInstance_throws_failure() {
         ReflectionHelper.findField(null, pojo);
     }
 
@@ -140,19 +147,18 @@ public class ReflectionHelperTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void test_findField_with_fieldNameNullAndClazz_fails() {
+    public void test_findField_with_fieldNameNullAndClazz_throws_failure() {
         ReflectionHelper.findField(null, pojo.getClass());
     }
 
     @Test(expected = AssertionError.class)
-    public void test_findField_with_fieldNameAndInstanceNull_fails() {
+    public void test_findField_with_fieldNameAndInstanceNull_throws_failure() {
         ReflectionHelper.findField(SIMPLE_STRING_NAME, (Object) null);
     }
 
-    @SuppressWarnings("RedundantCast")
     @Test(expected = AssertionError.class)
-    public void test_findField_with_fieldNameAndClazzNull_fails() {
-        ReflectionHelper.findField(SIMPLE_STRING_NAME, (Class<?>) null);
+    public void test_findField_with_fieldNameAndClazzNull_throws_failure() {
+        ReflectionHelper.findField(SIMPLE_STRING_NAME, null);
     }
 
     @Test
@@ -168,7 +174,7 @@ public class ReflectionHelperTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void test_readField_with_fieldNameVariableAndClazz_fails() {
+    public void test_readField_with_fieldNameVariableAndClazz_throws_failure() {
         ReflectionHelper.readField(SIMPLE_INT_NAME, pojo.getClass());
     }
 
@@ -193,13 +199,25 @@ public class ReflectionHelperTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void test_readField_with_fieldNameNullAndInstance_fails() {
+    public void test_readField_with_fieldNameNullAndInstance_throws_failure() {
         ReflectionHelper.readField((String) null, pojo);
     }
 
     @Test(expected = AssertionError.class)
-    public void test_readField_with_fieldNullAndInstance_fails() {
+    public void test_readField_with_fieldNullAndInstance_throws_failure() {
         ReflectionHelper.readField((Field) null, pojo);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void test_readField_with_fieldNotFoundInClazz_throws_failure() {
+        final Field field = ReflectionHelper.findField(SIMPLE_STRING_NAME, pojo);
+        ReflectionHelper.readField(field, differentPojo.getClass());
+    }
+
+    @Test(expected = AssertionError.class)
+    public void test_readField_with_fieldNotFoundInInstance_throws_failure() {
+        final Field field = ReflectionHelper.findField(SIMPLE_STRING_NAME, pojo);
+        ReflectionHelper.readField(field, differentPojo);
     }
 
     @Test
@@ -209,12 +227,12 @@ public class ReflectionHelperTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void test_makeFieldAccessible_withFieldNameNotFoundAndInstance_fails() {
+    public void test_makeFieldAccessible_withFieldNameNotFoundAndInstance_throws_failure() {
         ReflectionHelper.makeFieldAccessible(NOT_FOUND, pojo);
     }
 
     @Test(expected = AssertionError.class)
-    public void test_makeFieldAccessible_with_fieldNameNullAndInstance_fails() {
+    public void test_makeFieldAccessible_with_fieldNameNullAndInstance_throws_failure() {
         ReflectionHelper.makeFieldAccessible((String) null, pojo);
     }
 
@@ -227,32 +245,32 @@ public class ReflectionHelperTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void test_makeFieldAccessible_with_fieldNullAndInstance_fails() {
+    public void test_makeFieldAccessible_with_fieldNullAndInstance_throws_failure() {
         ReflectionHelper.makeFieldAccessible((Field) null, pojo);
     }
 
     @Test
-    @Ignore("Fails")
-    public void test_setFinalStaticValue_with_FieldNameAndValueAndClazz_replaceValue() throws IllegalAccessException {
-        final int valueBefore = 10;
-        final int valueAfter = valueBefore + 20;
-        assertValid(CONST_FLOAT_VALUE, valueBefore);
+    public void test_setFinalStaticValue_with_fieldNameAndValueAndClazz_replaceValue() throws IllegalAccessException {
+        final float valueBefore = CONST_FLOAT_VALUE;
+        final float valueAfter = valueBefore + 20f;
+        assertValid(SimplePojo.CONST_FLOAT, valueBefore);
 
         final Field field = ReflectionHelper.setFinalStaticValue(CONST_FLOAT_NAME, valueAfter, pojo.getClass());
         assertValid(field.get(CONST_FLOAT_VALUE), valueAfter);
+        assertValid(SimplePojo.CONST_FLOAT, valueAfter);
     }
 
-    @Test
-    @Ignore("fails")
-    public void test_setFinalStaticValue_with_fieldAndValueAndClazz_replaceValue() throws IllegalAccessException {
-        final Float valueBefore = CONST_FLOAT_VALUE;
-        final Float valueAfter = valueBefore + 20;
-        final Field field = ReflectionHelper.findField(CONST_FLOAT_NAME, pojo.getClass());
-        assertValid(field.get(CONST_FLOAT_VALUE), valueBefore);
+    @Test(expected = AssertionError.class)
+    public void test_setFinalStaticValue_with_fieldNameAndValueAndWrongClazz_throws_failure() throws IllegalAccessException {
+        final float valueBefore = CONST_FLOAT_VALUE;
+        final float valueAfter = valueBefore + 20f;
+        assertValid(SimplePojo.CONST_FLOAT, valueBefore);
 
-        ReflectionHelper.setFinalStaticValue(field, valueAfter, pojo.getClass());
+        final Field field = ReflectionHelper.setFinalStaticValue(CONST_FLOAT_NAME, valueAfter, differentPojo.getClass());
         assertValid(field.get(CONST_FLOAT_VALUE), valueAfter);
+        assertValid(SimplePojo.CONST_FLOAT, valueAfter);
     }
+
 
     @Test
     public void test_readStaticValue_with_FieldNameConstAndClazz_return_value() {
@@ -262,7 +280,7 @@ public class ReflectionHelperTest {
 
 
     @Test(expected = AssertionError.class)
-    public void test_readStaticValue_with_FieldNameNotFoundAndClazz_fails() {
+    public void test_readStaticValue_with_FieldNameNotFoundAndClazz_throws_failure() {
         ReflectionHelper.readStaticValue(NOT_FOUND, pojo.getClass());
     }
 
@@ -273,25 +291,32 @@ public class ReflectionHelperTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void test_readGetterValue_with_fieldNameNotFoundAndInstance_fails() {
+    public void test_readGetterValue_with_fieldNameNotFoundAndInstance_throws_failure() {
         final Object actual = ReflectionHelper.readGetterValue(NOT_FOUND, pojo);
         assertValid(actual, SIMPLE_STRING_VALUE, SIMPLE_STRING_CLAZZ);
     }
 
     @Test(expected = AssertionError.class)
-    public void test_readGetterValue_with_fieldNameNullAndInstance_fails() {
+    public void test_readGetterValue_with_fieldNameNullAndInstance_throws_failure() {
         final Object actual = ReflectionHelper.readGetterValue((String) null, pojo);
         assertValid(actual, SIMPLE_STRING_VALUE, SIMPLE_STRING_CLAZZ);
     }
 
     @Test
-    public void test_handleGetBeanInfo_throws_IntrospectionException() throws IntrospectionException {
+    public void test_handleGetBeanInfo_throws_IntrospectionException() {
+        final Class<?> instanceClazz = ArrayList.class;
+        final Class<?> stopClazz = BigDecimal.class;
 
-        Class<?> instanceClazz = ArrayList.class;
-        Class<?> stopClazz = BigDecimal.class;
+        final Throwable actual = assertThrows(Throwable.class, () -> ReflectionHelper.handleGetBeanInfo(instanceClazz, stopClazz));
+        assertValid(actual, containsString(java.beans.IntrospectionException.class.getName()), AssertionError.class);
+    }
 
-        Throwable actual = assertThrows(Throwable.class, () -> com.glowa_net.util.reflect.ReflectionHelper.handleGetBeanInfo(instanceClazz, stopClazz));
-        assertValid(actual, containsString("java.beans.IntrospectionException"), AssertionError.class);
+    @Test
+    public void test_handleInvokeMethod() throws IntrospectionException {
+        PropertyDescriptor getter = new PropertyDescriptor(SIMPLE_STRING_NAME, pojo.getClass());
+        final Throwable actual = assertThrows(Throwable.class, () -> ReflectionHelper.handleInvokeMethod(getter, SIMPLE_STRING_CLAZZ));
+
+        assertValid(actual, containsString(NoSuchMethodException.class.getName()), AssertionError.class);
     }
 
 }
