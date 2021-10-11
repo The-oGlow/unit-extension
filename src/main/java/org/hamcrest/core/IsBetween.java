@@ -1,5 +1,7 @@
 package org.hamcrest.core;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
@@ -19,49 +21,69 @@ import static org.hamcrest.Matchers.notNullValue;
  */
 public class IsBetween<T extends Comparable<T>> extends TypeSafeMatcher<T> {
 
-    static final Description DESC_MISMATCH    = new StringDescription();
-    static final Description DESC_DESCRIPTION = new StringDescription();
+    public static class Range<T> extends MutablePair<T, T> {
+        /**
+         * Create a new range instance.
+         *
+         * @param from start value of the range
+         * @param to   end value of the range
+         */
+        public Range(T from, T to) {
+            super(from, to);
+        }
+    }
 
-    protected final T from;
-    protected final T to;
+    protected static final String DESC_MISMATCH_TEXT_1 = "The value must be between %s and %s. ";
+    protected static final String DESC_MISMATCH_TEXT_2 = " is not between %s and $%s. ";
+    protected static final String RANGE_INFO_NOT_INCL  = "Range start and end not included. ";
 
-    protected IsBetween(final T from, final T to) {
+    protected static final Description DESC_MISMATCH    = new StringDescription();
+    protected static final Description DESC_DESCRIPTION = new StringDescription();
+
+    protected Pair<T, T> fromTo;
+
+    protected IsBetween(Range<T> fromTo) {
         super();
-        verifyInput(from, to);
-
-        this.from = from;
-        this.to = to;
-
+        verifyInput(fromTo);
+        this.fromTo = fromTo;
         initDescription();
     }
 
-    protected void verifyInput(final T from, final T to) {
-        assertThat(from, notNullValue());
-        assertThat(to, notNullValue());
-        assertThat(to, greaterThan(from));
+    protected void verifyInput(Range<T> fromTo) {
+        assertThat(fromTo, notNullValue());
+        assertThat(fromTo.getLeft(), notNullValue());
+        assertThat(fromTo.getRight(), notNullValue());
+        assertThat(fromTo.getRight(), greaterThan(fromTo.getLeft()));
+    }
+
+    protected String getRangeInfo() {
+        return RANGE_INFO_NOT_INCL;
     }
 
     protected void initDescription() {
-        DESC_DESCRIPTION.appendText("The value must be between ").appendValue(from).appendText(" and ").appendValue(to)
-                .appendText(". Range start and end not included. ");
-        DESC_MISMATCH.appendText(" is not between ").appendValue(from).appendText(" and ").appendValue(to).appendText(". Range start and end not included.");
+        DESC_DESCRIPTION.appendText(String.format(DESC_MISMATCH_TEXT_1, fromTo.getLeft(), fromTo.getRight())).appendText(getRangeInfo());
+        DESC_MISMATCH.appendText(String.format(DESC_MISMATCH_TEXT_2, fromTo.getLeft(), fromTo.getRight())).appendText(getRangeInfo());
     }
 
-    public static <T extends Comparable<T>> Matcher<T> between(final T from, final T to) {
-        return new IsBetween<>(from, to);
+    public static <T extends Comparable<T>> Matcher<T> between(T from, T to) {
+        return between(new Range<>(from, to));
+    }
+
+    public static <T extends Comparable<T>> Matcher<T> between(Range<T> fromTo) {
+        return new IsBetween<>(fromTo);
     }
 
     @Override
-    protected boolean matchesSafely(final T item) {
+    protected boolean matchesSafely(T item) {
         if (item == null) {
             return false;
         } else {
-            return (item.compareTo(from) > 0) && (item.compareTo(to) < 0);
+            return (item.compareTo(fromTo.getLeft()) > 0) && (item.compareTo(fromTo.getRight()) < 0);
         }
     }
 
     @Override
-    protected void describeMismatchSafely(final T item, final Description mismatchDescription) {
+    protected void describeMismatchSafely(T item, Description mismatchDescription) {
         mismatchDescription.appendValue(item).appendText(DESC_MISMATCH.toString());
     }
 

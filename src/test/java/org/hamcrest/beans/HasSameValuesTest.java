@@ -1,7 +1,7 @@
 package org.hamcrest.beans;
 
 import com.glowa_net.data.SimplePojo;
-import org.hamcrest.ExtendedMatcherTest;
+import org.hamcrest.AbstractExtendedMatcherTest;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 
-public class HasSameValuesTest<T extends SimplePojo> extends ExtendedMatcherTest<T> {
+public class HasSameValuesTest<T extends SimplePojo> extends AbstractExtendedMatcherTest<T> {
 
     protected static final Pattern EMPTY_FIELDS = Pattern.compile(DESCRIPTION_DEFAULT + "\\s*?\\{\\s+\\}", Pattern.MULTILINE + Pattern.DOTALL);
 
@@ -49,14 +49,14 @@ public class HasSameValuesTest<T extends SimplePojo> extends ExtendedMatcherTest
     @Override
     protected Matcher<String> prepareMatcher_objectsAreDifferent_check() {
         return allOf( //
-                containsString(String.format("%s: expected: <%s> but: was <%s>", FIELD_SIMPLE_INT, DEFAULT_INT, DIFFERENT_INT)), //
-                containsString(String.format("%s: expected: \"%s\" but: was \"%s\"", FIELD_SIMPLE_STRING, DEFAULT_STRING, DIFFERENT_STRING))//
+                containsString(String.format("%s= expected: <%s> but: was <%s>", FIELD_SIMPLE_INT, DEFAULT_INT, DIFFERENT_INT)), //
+                containsString(String.format("%s= expected: \"%s\" but: was \"%s\"", FIELD_SIMPLE_STRING, DEFAULT_STRING, DIFFERENT_STRING))//
         );
     }
 
     @Override
     protected Matcher<String> prepareMatcherDescriptionText_defaultDescription_check() {
-        return containsString(HasSameValues.DESC_DESCRIPTION.toString());
+        return containsString(HasSameValues.SAME_CONTENT);
     }
 
     @Override

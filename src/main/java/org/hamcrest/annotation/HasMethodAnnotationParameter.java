@@ -27,17 +27,18 @@ public class HasMethodAnnotationParameter<T> extends BaseMatcher<T> {
     /**
      * Creates a matcher that matches if the examined {@link Object} has the
      * specified method with the specific annotation and a specfic annotation
-     * parameter. For example:
+     * parameter.
      * <p>
+     * For example:
      * <pre>assertThat(objectCheese, hasMethodAnnotationParameter("getCheese", CheeseAnnotation.class, "country", java.util.Locale.FRANCE.getCountry()))</pre>
      *
      * @param methodName               the name of the method to check for the annotation
      * @param annotationClazz          the class of the {@code methodName}
      * @param annotationParameterKey   the name of the annotation-parameter
      * @param annotationParameterValue the value of the annotation-parameter
-     * @param <T>
+     * @param <T>                      type of the values
      *
-     * @return a matcher
+     * @return newly created matcher
      */
     public static <T> HasMethodAnnotationParameter<T> hasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
                                                                                    Object annotationParameterValue) {

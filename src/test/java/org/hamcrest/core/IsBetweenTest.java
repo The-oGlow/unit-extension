@@ -13,6 +13,9 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThrows;
 
+/**
+ * @see IsBetween
+ */
 public class IsBetweenTest {
 
     protected static final String DESCRIPTION_DEFAULT = " descriptionDefault ";

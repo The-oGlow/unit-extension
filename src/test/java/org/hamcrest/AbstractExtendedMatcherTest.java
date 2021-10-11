@@ -20,7 +20,7 @@ import static org.junit.Assume.assumeThat;
  * @see org.hamcrest.DiagnosingMatcher
  * @see org.hamcrest.TypeSafeMatcher
  */
-public abstract class ExtendedMatcherTest<T> extends AbstractMatcherTest<T> {
+public abstract class AbstractExtendedMatcherTest<T> extends AbstractMatcherTest<T> {
 
     /**
      * @return the {@code o2T} as {@link TypeSafeMatcher} to test against
@@ -28,7 +28,6 @@ public abstract class ExtendedMatcherTest<T> extends AbstractMatcherTest<T> {
      * @see #o2T()
      * @see #dmO2T()
      */
-    @SuppressWarnings("unchecked")
     protected <M extends TypeSafeMatcher<T>> M tsO2T() {
         return (M) o2T();
     }
@@ -39,7 +38,6 @@ public abstract class ExtendedMatcherTest<T> extends AbstractMatcherTest<T> {
      * @see #o2T()
      * @see #tsO2T()
      */
-    @SuppressWarnings("unchecked")
     protected <M extends DiagnosingMatcher<T>> M dmO2T() {
         return (M) o2T();
     }
@@ -141,4 +139,16 @@ public abstract class ExtendedMatcherTest<T> extends AbstractMatcherTest<T> {
 
     /* Section for {@link org.hamcrest.DiagnosingMatcher} unit tests */
 
+/*
+    @Test
+    public void testGeneric_testDescribeTo_nullObject_description_isAddedWithNull() {
+        assumeIsDiagnosingMatcher();
+        DiagnosingMatcher<T> dmO2T = dmO2T();
+
+        Description description = prepareDefaultDescription();
+
+        dmO2T.describeTo(description);
+        verifyDescription(description, null);
+    }
+*/
 }

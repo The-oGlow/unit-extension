@@ -1,34 +1,27 @@
 package org.hamcrest;
 
+import com.glowa_net.util.hamcrest.AbstractPublicTest;
+import org.hamcrest.annotation.HasMethodAnnotation;
+import org.hamcrest.annotation.HasMethodAnnotationParameter;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-
-@SuppressWarnings("FieldCanBeLocal")
-public class AnnotationMatchersTest {
-
-    private final String   methodName               = "";
-    private final Class<?> annotationClazz          = null;
-    private final String   annotationParameterKey   = "";
-    private final String   annotationParameterValue = "";
+/**
+ * @see AnnotationMatchers
+ */
+public class AnnotationMatchersTest extends AbstractPublicTest {
 
     @Test
-    public void testHasMethodAnnotationReturnsAMatcher() {
-        Matcher<? super Matcher<?>> expected = Matchers.instanceOf(Matcher.class);
-
-        Matcher<?> actual = AnnotationMatchers.hasMethodAnnotation(methodName, annotationClazz);
-
-        // if the matcher works correct, is irrelevant for this test.
-        assertThat(actual, expected);
+    public void testHasMethodAnnotation_return_aMatcher() {
+        actual = AnnotationMatchers.hasMethodAnnotation(methodName, annotationClazz);
+        verifyMatcher(HasMethodAnnotation.class);
     }
 
     @Test
-    public void testHasMethodAnnotationParameterReturnsAMatcher() {
-        Matcher<? super Matcher<?>> expected = Matchers.instanceOf(Matcher.class);
+    public void testHasMethodAnnotationParameter_return_aMatcher() {
+        String annotationParameterKey = "";
+        String annotationParameterValue = "";
 
-        Matcher<?> actual = AnnotationMatchers.hasMethodAnnotationParameter(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
-
-        // if the matcher works correct, is irrelevant for this test.
-        assertThat(actual, expected);
+        actual = AnnotationMatchers.hasMethodAnnotationParameter(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
+        verifyMatcher(HasMethodAnnotationParameter.class);
     }
 }

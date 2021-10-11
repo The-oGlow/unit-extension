@@ -1,6 +1,5 @@
 package org.hamcrest;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.hamcrest.core.IsBetween;
 import org.hamcrest.core.IsBetweenWithBound;
 
@@ -12,6 +11,9 @@ import org.hamcrest.core.IsBetweenWithBound;
  */
 public class BetweenMatcher {
 
+    /**
+     * Singleton with only static methods has no public constructor.
+     */
     private BetweenMatcher() {
     }
 
@@ -26,7 +28,7 @@ public class BetweenMatcher {
      *
      * @return newly created matcher
      */
-    public static <T extends Comparable<T>> Matcher<T> between(final T from, final T to) {
+    public static <T extends Comparable<T>> Matcher<T> between(T from, T to) {
         return IsBetween.between(from, to);
     }
 
@@ -40,8 +42,8 @@ public class BetweenMatcher {
      *
      * @return newly created matcher
      */
-    public static <T extends Comparable<T>> Matcher<T> between(final Pair<T, T> fromTo) {
-        return IsBetween.between(fromTo.getLeft(), fromTo.getRight());
+    public static <T extends Comparable<T>> Matcher<T> between(IsBetween.Range<T> fromTo) {
+        return IsBetween.between(fromTo);
     }
 
     /**
@@ -55,7 +57,7 @@ public class BetweenMatcher {
      *
      * @return newly created matcher
      */
-    public static <T extends Comparable<T>> Matcher<T> betweenWithBound(final T from, final T to) {
+    public static <T extends Comparable<T>> Matcher<T> betweenWithBound(T from, T to) {
         return IsBetweenWithBound.between(from, to);
     }
 
@@ -69,8 +71,8 @@ public class BetweenMatcher {
      *
      * @return newly created matcher
      */
-    public static <T extends Comparable<T>> Matcher<T> betweenWithBound(final Pair<T, T> fromTo) {
-        return IsBetweenWithBound.between(fromTo.getLeft(), fromTo.getRight());
+    public static <T extends Comparable<T>> Matcher<T> betweenWithBound(IsBetween.Range<T> fromTo) {
+        return IsBetweenWithBound.between(fromTo);
     }
 
 }

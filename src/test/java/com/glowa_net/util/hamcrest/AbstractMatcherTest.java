@@ -1,5 +1,6 @@
 package com.glowa_net.util.hamcrest;
 
+import org.hamcrest.AbstractExtendedMatcherTest;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -19,11 +20,11 @@ import static org.junit.Assert.assertThrows;
 
 /**
  * Base class for testing a {@link org.hamcrest.BaseMatcher}
- * For testing extended matcher, use {@link org.hamcrest.ExtendedMatcherTest}
+ * For testing extended matcher, use {@link AbstractExtendedMatcherTest}
  *
  * @param <T> the type, the {@code o2T} uses
  *
- * @see org.hamcrest.ExtendedMatcherTest
+ * @see AbstractExtendedMatcherTest
  */
 public abstract class AbstractMatcherTest<T> {
 
@@ -39,8 +40,9 @@ public abstract class AbstractMatcherTest<T> {
     protected static class UnknownType {
     }
 
-    protected static final String DIFFERENT_CLAZZ_NAME = AbstractMatcherTestDifferentClazz.class.getName();
-    protected static final String UNKNOWN_TYPE_NAME    = UnknownType.class.getName();
+    protected static final String DIFFERENT_CLAZZ_NAME        = AbstractMatcherTestDifferentClazz.class.getName();
+    protected static final String DIFFERENT_CLAZZ_SIMPLE_NAME = AbstractMatcherTestDifferentClazz.class.getSimpleName();
+    protected static final String UNKNOWN_TYPE_NAME           = UnknownType.class.getName();
 
     protected static final String DESCRIPTION_DEFAULT = " descriptionDefault ";
     protected static final String FIELD_WAS_NULL      = "was null";
@@ -237,6 +239,7 @@ public abstract class AbstractMatcherTest<T> {
      * @see #DESCRIPTION_DEFAULT
      */
     protected void verifyDescription(Description actualDescription, Matcher<String> expected) {
+        assertThat("expectedMatcher is no valid matcher", expected, instanceOf(Matcher.class));
         assertThat(actualDescription, not(equalTo(DESCRIPTION_DEFAULT)));
         assertThat(actualDescription.toString(), expected);
     }
@@ -248,11 +251,11 @@ public abstract class AbstractMatcherTest<T> {
      * @param expected        a String-{@link Matcher} to verify the {@code actualException}
      */
     protected void verifyThrowable(Throwable actualException, Matcher<String> expected) {
+        assertThat("expectedMatcher is no valid matcher", expected, instanceOf(Matcher.class));
         assertThat(actualException, notNullValue());
         assertThat(actualException, instanceOf(AssertionError.class));
         assertThat(actualException.getMessage(), expected);
     }
-
 
     /**
      * Generates the discription in case the {@code mismatchArg} does not match with the {@code matcher}.

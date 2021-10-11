@@ -22,15 +22,16 @@ public class HasMethodAnnotation<T> extends BaseMatcher<T> {
 
     /*
      * Creates a matcher that matches if the examined {@link Object} has the
-     * specified method with the specific annotation. For example:
+     * specified method with the specific annotation.
      * <p>
+     * For example:
      * <pre>assertThat(objectCheese, hasMethodAnnotation("getCheese", CheeseAnnotation.class))</pre>
      *
      * @param methodName      the name of the method to look for
      * @param annotationClazz the class of the annotation
-     * @param <T>
+     * @param <T> type of the values
      *
-     * @return a matcher
+     * @return newly created matcher
      */
     public static <T> HasMethodAnnotation<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         return new HasMethodAnnotation<>(methodName, annotationClazz);

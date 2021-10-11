@@ -20,19 +20,23 @@ import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * A matcher, which verifies, if two instances are totally equal.
- * In contrast to {@link SamePropertyValuesAs} this matcher reports every difference and not only the first one.
+ * In contrast to {@link org.hamcrest.beans.SamePropertyValuesAs} this matcher reports every difference and not only the first one.
  *
  * @param <T> the type of the class which will be checked
  *
  * @author Oliver Glowa
- * @see org.hamcrest.beans.SamePropertyValuesAs
  * @see org.hamcrest.MatchersExtend
  * @since 0.10.000
  */
 public class HasSameValues<T> extends TypeSafeMatcher<T> {
 
-    static final         Description DESC_DESCRIPTION = new StringDescription();
-    private static final String      INDENT           = "     ";
+    private static final   String INDENT                       = "     ";
+    protected static final String SAME_CONTENT                 = "The bean must have the total same content";
+    protected static final String ACTUAL_ITEM_CANT_BE_COMPARED = "Actual item is 'null' and can't be compared!";
+    protected static final String DELIMITER                    = ", ";
+    protected static final String LIST_START                   = "{";
+    protected static final String LIST_END                     = "}";
+    protected static final String LIST_EQU                     = "=";
 
     private final T                                    expectedBean;
     private final Map<String, Object>                  fields         = new HashMap<>();
@@ -54,20 +58,15 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
                 throw new IllegalArgumentException(e);
             }
         }
-        initDescription();
     }
 
     private void verifyInput(final T expectedBean) {
         assertThat(expectedBean, notNullValue());
     }
 
-    private void initDescription() {
-        DESC_DESCRIPTION.appendText("The bean must have the total same content");
-    }
-
     @Override
     protected boolean matchesSafely(T item) {
-        assertThat("Actual item is 'null' and can't be compared!", item, notNullValue());
+        assertThat(ACTUAL_ITEM_CANT_BE_COMPARED, item, notNullValue());
 
         for (Map.Entry<String, Object> expectedField : fields.entrySet()) {
             try {
@@ -87,7 +86,7 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText(DESC_DESCRIPTION.toString());
+        description.appendText(SAME_CONTENT);
     }
 
     @Override
@@ -96,19 +95,19 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
             mismatchDescription.appendText("null");
         } else {
             StringBuilder mismatchText = new StringBuilder();
-            mismatchText.append("{").append(System.lineSeparator()).append(INDENT);
+            mismatchText.append(LIST_START).append(System.lineSeparator()).append(INDENT);
             int i = 0;
             for (Triple<String, Object, Object> mismatchField : mismatchFields) {
                 if (mismatchField.getRight() != null) {
                     if (i > 0) {
-                        mismatchText.append(", ").append(System.lineSeparator()).append(INDENT);
+                        mismatchText.append(DELIMITER).append(System.lineSeparator()).append(INDENT);
                     }
-                    mismatchText.append(mismatchField.getLeft()).append(":");
+                    mismatchText.append(mismatchField.getLeft()).append(LIST_EQU);
                     mismatchText.append(mismatchField.getRight());
                 }
                 i++;
             }
-            mismatchText.append(System.lineSeparator()).append(INDENT).append("}");
+            mismatchText.append(System.lineSeparator()).append(INDENT).append(LIST_END);
 
             mismatchDescription.appendText(mismatchText.toString());
         }

@@ -18,15 +18,22 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.beans.PropertyUtil.NO_ARGUMENTS;
 import static org.hamcrest.beans.PropertyUtil.propertyDescriptorsFor;
 
-public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends SamePropertyValuesAs<T> {
+public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
 
-    //    static final Description            DESC_MISMATCH    = new StringDescription();
-    static final Description DESC_DESCRIPTION = new StringDescription();
+    private static final String      DELIMITER        = ", ";
+    static final         Description DESC_DESCRIPTION = new StringDescription();
 
-    private final T                     expectedBean;
-    private final Set<String>           propertyNames;
-    private final List<PropertyMatcher> propertyMatchers;
-    private final List<String>          ignoredFields;
+    protected static final String HAS_EXTRA_PROPERTIES_CALLED = "has extra properties called %s "; // trailing space is needed
+    protected static final String IS_INCOMPATIBLE_TYPE        = "is incompatible type: %s";
+    protected static final String COULD_NOT_INVOKE            = "Could not invoke %s on %s";
+    protected static final String SAME_PROPERTY_VALUES_AS     = "same property values as %s";
+    protected static final String LIST_START                  = "{";
+    protected static final String LIST_END                    = "}";
+
+    private final T                        expectedBean;
+    private final Set<String>              propertyNames;
+    private final List<PropertyMatcher<?>> propertyMatchers;
+    private final List<String>             ignoredFields;
 
     public static <T> Matcher<T> samePropertiesValuesAs(T expectedBean, String... ignoredProperties) {
         return new SamePropertiesValuesAs<>(expectedBean, asList(ignoredProperties));
@@ -40,16 +47,10 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
         this.ignoredFields = ignoredProperties;
         this.propertyNames = propertyNamesFrom(descriptors, ignoredProperties);
         this.propertyMatchers = propertyMatchersFor(expectedBean, descriptors, ignoredProperties);
-
-        initDescription();
     }
 
     private void verifyInput(final T expectedBean) {
         assertThat(expectedBean, notNullValue());
-    }
-
-    private void initDescription() {
-        DESC_DESCRIPTION.appendText(System.lineSeparator()).appendText("The bean must have the total same content");
     }
 
     @Override
@@ -60,21 +61,25 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("same property values as " //
-                + expectedBean.getClass().getSimpleName()) //
-                .appendList(" [", ", ", "]", propertyMatchers);
+        description.appendText(String.format(SAME_PROPERTY_VALUES_AS, expectedBean.getClass().getSimpleName())) //
+                .appendList(LIST_START, DELIMITER, LIST_END, propertyMatchers);
 
         if (!ignoredFields.isEmpty()) {
             description.appendText(" ignoring ") //
-                    .appendValueList("[", ", ", "]", ignoredFields);
+                    .appendValueList(LIST_START, DELIMITER, LIST_END, ignoredFields);
         }
     }
 
     protected boolean hasAllMatchingValues(Object actual, Description mismatchDescription) {
         boolean result = true;
+        int idxLoop = 0;
         for (Matcher<?> propertyMatcher : propertyMatchers) {
             if (!propertyMatcher.matches(actual)) {
+                if (idxLoop > 0) {
+                    mismatchDescription.appendText(DELIMITER);
+                }
                 propertyMatcher.describeMismatch(actual, mismatchDescription);
+                idxLoop++;
                 result = false;
             }
         }
@@ -86,7 +91,7 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
             return true;
         }
 
-        mismatchDescription.appendText("is incompatible type: " + actual.getClass().getSimpleName());
+        mismatchDescription.appendText(String.format(IS_INCOMPATIBLE_TYPE, actual.getClass().getSimpleName()));
         return false;
     }
 
@@ -94,14 +99,14 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
         Set<String> actualPropertyNames = propertyNamesFrom(propertyDescriptorsFor(actual, Object.class), ignoredFields);
         actualPropertyNames.removeAll(propertyNames);
         if (!actualPropertyNames.isEmpty()) {
-            mismatchDescription.appendText("has extra properties called " + actualPropertyNames);
+            mismatchDescription.appendText(String.format(HAS_EXTRA_PROPERTIES_CALLED, actualPropertyNames));
             return false;
         }
         return true;
     }
 
-    private static <T> List<PropertyMatcher> propertyMatchersFor(T bean, PropertyDescriptor[] descriptors, List<String> ignoredFields) {
-        List<PropertyMatcher> result = new ArrayList<>(descriptors.length);
+    private static <T> List<PropertyMatcher<?>> propertyMatchersFor(T bean, PropertyDescriptor[] descriptors, List<String> ignoredFields) {
+        List<PropertyMatcher<?>> result = new ArrayList<>(descriptors.length);
         for (PropertyDescriptor propertyDescriptor : descriptors) {
             if (isIgnored(ignoredFields, propertyDescriptor)) {
                 result.add(PropertyMatcher.matchProperty(propertyDescriptor, bean));
@@ -128,7 +133,7 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> { // extends
         try {
             return method.invoke(target, NO_ARGUMENTS);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Could not invoke " + method + " on " + target, e);
+            throw new IllegalArgumentException(String.format(COULD_NOT_INVOKE, method, target), e);
         }
     }
 }

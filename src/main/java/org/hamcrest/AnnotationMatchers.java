@@ -11,19 +11,22 @@ import org.hamcrest.annotation.HasMethodAnnotationParameter;
  */
 public class AnnotationMatchers {
 
+    /**
+     * Singleton with only static methods has no public constructor.
+     */
     private AnnotationMatchers() {
     }
 
     /**
      * Creates a matcher that matches if the examined {@link Object} has the specified method with the specific annotation.
-     * For example:
      * <p>
+     * For example:
      * <pre>assertThat(objectCheese, hasMethodAnnotation("getCheese", CheeseAnnotation.class))</pre>
      *
      * @param methodName      the name of the method to look for
      * @param annotationClazz the class of the annotation
      *
-     * @return a matcher
+     * @return newly created matcher
      */
     public static <T> org.hamcrest.Matcher<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         return HasMethodAnnotation.hasMethodAnnotation(methodName, annotationClazz);
@@ -31,20 +34,21 @@ public class AnnotationMatchers {
 
     /**
      * Creates a matcher that matches if the examined {@link Object} has the specified method with the specific annotation and a specfic annotation parameter.
-     * For example:
      * <p>
+     * For example:
      * <pre>assertThat(objectCheese, hasMethodAnnotationParameter("getCheese", CheeseAnnotation.class, "country", java.util.Locale.FRANCE.getClass()))</pre>
      *
      * @param methodName               the name of the method to look for
      * @param annotationClazz          the class of the annotation
      * @param annotationParameterKey   the name of key for that annotation parameter
      * @param annotationParameterValue the value of the annotation parameter
-     * @param <T>
+     * @param <T>                      type of the values
      *
-     * @return a matcher
+     * @return newly created matcher
      */
-    public static <T> org.hamcrest.Matcher<T> hasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
-                                                                           Object annotationParameterValue) {
+    public static <T> org.hamcrest.Matcher<T> hasMethodAnnotationParameter(
+            String methodName, Class<T> annotationClazz, String annotationParameterKey,
+            Object annotationParameterValue) {
         return HasMethodAnnotationParameter.hasMethodAnnotationParameter(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
     }
 }

@@ -12,6 +12,9 @@ import static org.hamcrest.beans.PropertyUtil.NO_ARGUMENTS;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 class PropertyMatcher<T> extends DiagnosingMatcher<T> {
+    protected static final String COULD_NOT_INVOKE = "Could not invoke %s on %s";
+    protected static final String LIST_EQU         = "=";
+
     private final Method          readMethod;
     private final Matcher<Object> matcher;
     private final String          propertyName;
@@ -47,7 +50,6 @@ class PropertyMatcher<T> extends DiagnosingMatcher<T> {
         if (!matcher.matches(actualValue)) {
             mismatch.appendText(propertyName + " ");
             matcher.describeMismatch(actualValue, mismatch);
-            //mismatch.appendText(",").appendText(System.lineSeparator());
             return false;
         }
         return true;
@@ -55,14 +57,14 @@ class PropertyMatcher<T> extends DiagnosingMatcher<T> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText(propertyName + ": ").appendDescriptionOf(matcher);
+        description.appendText(propertyName + LIST_EQU).appendDescriptionOf(matcher);
     }
 
     protected final Object readProperty(Method method, Object target) {
         try {
             return method.invoke(target, NO_ARGUMENTS);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Could not invoke " + method + " on " + target, e);
+            throw new IllegalArgumentException(String.format(COULD_NOT_INVOKE, method, target), e);
         }
     }
 }
