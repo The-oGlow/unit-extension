@@ -25,6 +25,7 @@ public class AnnotationMatchers {
      *
      * @param methodName      the name of the method to look for
      * @param annotationClazz the class of the annotation
+     * @param <T>             the type of {@code annotationClazz}
      *
      * @return newly created matcher
      */

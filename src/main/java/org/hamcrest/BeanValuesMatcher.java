@@ -10,7 +10,13 @@ public class BeanValuesMatcher {
     private BeanValuesMatcher() {
     }
 
-    public static <T> Matcher<T> hasSameValues(T expectedBean) {
+    /**
+     * @param expectedBean the bean against which examined beans are compared
+     * @param <B>          the type of {@code expectedBean}
+     *
+     * @return newly created matcher
+     */
+    public static <B> Matcher<B> hasSameValues(B expectedBean) {
         return HasSameValues.hasSameValues(expectedBean);
     }
 
@@ -28,6 +34,9 @@ public class BeanValuesMatcher {
      *
      * @param expectedBean      the bean against which examined beans are compared
      * @param ignoredProperties do not check any of these named properties.
+     * @param <B>               the type of {@code expectedBean}
+     *
+     * @return newly created matcher
      */
     public static <B> Matcher<B> samePropertiesValuesAs(B expectedBean, String... ignoredProperties) {
         return org.hamcrest.beans.SamePropertiesValuesAs.samePropertiesValuesAs(expectedBean, ignoredProperties);

@@ -110,13 +110,26 @@ public final class ReflectionHelper {
         return idField;
     }
 
+    /**
+     * @param fieldName     a name of a field of {@code instanceClazz}
+     * @param instanceClazz a type
+     * @param <V>           type of field value
+     *
+     * @return the value of {@code field}
+     */
     public static <V> V readField(final String fieldName, final Class<?> instanceClazz) {
         isInstanceSet(instanceClazz, fieldName);
         final Field field = findField(fieldName, instanceClazz);
         return readField(field, instanceClazz);
-
     }
 
+    /**
+     * @param field         a field of {@code instanceClazz}
+     * @param instanceClazz a type
+     * @param <V>           type of field value
+     *
+     * @return the value of {@code field}
+     */
     @SuppressWarnings("unchecked")
     public static <V> V readField(final Field field, final Class<?> instanceClazz) {
         isInstanceSet(instanceClazz, field);
@@ -134,6 +147,7 @@ public final class ReflectionHelper {
     /**
      * @param fieldName the name of the field
      * @param instance  the instance to look in
+     * @param <V>       type of field value
      *
      * @return the current value
      */
@@ -146,6 +160,7 @@ public final class ReflectionHelper {
     /**
      * @param field    the field
      * @param instance the instance to look in
+     * @param <V>      type of field value
      *
      * @return the current value
      */
@@ -166,6 +181,8 @@ public final class ReflectionHelper {
     /**
      * @param fieldName the name of the field
      * @param instance  the instance to investigate
+     *
+     * @return a field object
      */
     @SuppressWarnings("java:S2259")
     public static Field makeFieldAccessible(final String fieldName, final Object instance) {
@@ -176,6 +193,8 @@ public final class ReflectionHelper {
     /**
      * @param field    the field-object
      * @param instance the instance to investigate
+     *
+     * @return a field object
      */
     @SuppressWarnings({"java:S1166", "java:S1696",})
     public static Field makeFieldAccessible(final Field field, final Object instance) {
@@ -198,6 +217,8 @@ public final class ReflectionHelper {
      * @param fieldName     the name of the field to search for
      * @param newValue      the value to set
      * @param instanceClazz the class to check
+     *
+     * @return a field object
      */
     public static Field setFinalStaticValue(final String fieldName, final Object newValue, final Class<?> instanceClazz) {
         isInstanceSet(instanceClazz, fieldName);
@@ -209,6 +230,8 @@ public final class ReflectionHelper {
      * @param field         the field to search for
      * @param newValue      the value to set
      * @param instanceClazz the class to check
+     *
+     * @return a field object
      */
     @SuppressWarnings({"java:S1696"})
     public static Field setFinalStaticValue(final Field field, final Object newValue, final Class<?> instanceClazz) {
@@ -229,6 +252,7 @@ public final class ReflectionHelper {
     /**
      * @param constantName  the name of the constant
      * @param instanceClazz the class to check
+     * @param <V>           type of field value
      *
      * @return the current value of the constant
      */
@@ -244,6 +268,12 @@ public final class ReflectionHelper {
         return staticValue;
     }
 
+    /**
+     * @param getterName a name of a getter of {@code instance}
+     * @param instance   an instance of a type
+     *
+     * @return the value of {@code getterName}
+     */
     public static Object readGetterValue(final String getterName, final Object instance) {
         isInstanceSet(instance, getterName);
         final List<PropertyDescriptor> getterList = findGetter(instance);
@@ -251,19 +281,33 @@ public final class ReflectionHelper {
         return readGetterValue(getter, instance);
     }
 
+    /**
+     * @param getter   a getter  of {@code instance}
+     * @param instance an instance of a type
+     * @param <V>      the type of the value of {@code getter}
+     *
+     * @return the value of {@code getterName}
+     */
     public static <V> V readGetterValue(final PropertyDescriptor getter, final Object instance) {
         isInstanceSet(instance, getter);
         isParamSet(instance, getter);
         return handleInvokeMethod(getter, instance);
     }
 
+    /**
+     * @param propertyDescriptor a propertyDescriptor  of {@code instance}
+     * @param instance           an instance of a type
+     * @param <V>                the type of the value of {@code propertyDescriptor}
+     *
+     * @return the return value of the {@code propertyDescriptor}
+     */
     @SuppressWarnings({"unchecked", "java:S1696", "java:S2583"})
-    static <V> V handleInvokeMethod(final PropertyDescriptor getter, final Object instance) {
+    static <V> V handleInvokeMethod(final PropertyDescriptor propertyDescriptor, final Object instance) {
         V value = null;
         try {
-            value = (V) MethodUtils.invokeMethod(instance, getter.getReadMethod().getName());
+            value = (V) MethodUtils.invokeMethod(instance, propertyDescriptor.getReadMethod().getName());
         } catch (final NullPointerException | IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            failure((instance == null ? null : instance.getClass()), (getter == null ? null : getter.getName()), e);
+            failure((instance == null ? null : instance.getClass()), (propertyDescriptor == null ? null : propertyDescriptor.getName()), e);
         }
         return value;
     }
