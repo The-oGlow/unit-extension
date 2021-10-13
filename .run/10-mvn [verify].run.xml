@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="mvn [deploy]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
+    <configuration default="false" name="10-mvn [verify]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
         <MavenSettings>
             <option name="myGeneralSettings"/>
             <option name="myRunnerSettings">
@@ -11,12 +11,18 @@
                     <option name="jreName" value="#USE_PROJECT_JDK"/>
                     <option name="mavenProperties">
                         <map>
-                            <entry key="skipITs" value="true"/>
+                            <entry key="sign.exec" value="${IJ_SIGN_EXEC}"/>
+                            <entry key="sign.homedir" value="${IJ_SIGN_HOMEDIR}"/>
+                            <entry key="sign.keyname" value="${IJ_SIGN_KEYNAME}"/>
+                            <entry key="sign.passphrase" value="${IJ_SIGN_PASSPHRASE}"/>
+                            <entry key="sign.publicKeyring" value="${IJ_SIGN_PUBRING}"/>
+                            <entry key="sign.secretKeyring" value="${IJ_SIGN_SECRING}"/>
+                            <entry key="skipITs" value="false"/>
                         </map>
                     </option>
                     <option name="passParentEnv" value="true"/>
                     <option name="runMavenInBackground" value="true"/>
-                    <option name="skipTests" value="true"/>
+                    <option name="skipTests" value="false"/>
                     <option name="vmOptions" value=""/>
                 </MavenRunnerSettings>
             </option>
@@ -27,13 +33,14 @@
                     </option>
                     <option name="goals">
                         <list>
-                            <option value="deploy"/>
+                            <option value="clean"/>
+                            <option value="verify"/>
                         </list>
                     </option>
                     <option name="pomFileName"/>
                     <option name="profilesMap">
                         <map>
-                            <entry key="artifact-release" value="true"/>
+                            <entry key="build-signature" value="true"/>
                         </map>
                     </option>
                     <option name="resolveToWorkspace" value="true"/>

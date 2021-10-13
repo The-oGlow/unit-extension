@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="unit-tests" type="JUnit" factoryName="JUnit">
+    <configuration default="false" name="30-unit-tests" type="JUnit" factoryName="JUnit" folderName="unit-extension">
         <module name="unit-extension"/>
         <option name="PACKAGE_NAME" value=""/>
         <option name="MAIN_CLASS_NAME" value=""/>

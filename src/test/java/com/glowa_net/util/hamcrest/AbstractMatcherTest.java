@@ -3,11 +3,9 @@ package com.glowa_net.util.hamcrest;
 import org.hamcrest.AbstractExtendedMatcherTest;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.hamcrest.StringDescription;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -272,13 +270,14 @@ public abstract class AbstractMatcherTest<T> {
         return description.toString().trim();
     }
 
-    protected static boolean isMatcherType(ThrowingRunnable matcherInstance) {
-        try {
-            Throwable t = Assert.assertThrows(Throwable.class, matcherInstance);
-            return Matchers.nullValue().matches(t);
-        } catch (AssertionError e) {
-            return true;
-        }
+    /**
+     * @param expectedClazz   the type of matcher
+     * @param matcherInstance an matcherInstance to check for
+     *
+     * @return the {@code expectedClazz} is matching the runtime type of {@code matcherInstance}
+     */
+    protected static boolean isMatcherType(Class<?> expectedClazz, Matcher<?> matcherInstance) {
+        return matcherInstance != null && expectedClazz != null && expectedClazz.isAssignableFrom(matcherInstance.getClass());
     }
 
     /**

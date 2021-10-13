@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="mvn [install]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
+    <configuration default="false" name="85-mvn [deploy]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
         <MavenSettings>
             <option name="myGeneralSettings"/>
             <option name="myRunnerSettings">
@@ -11,6 +11,12 @@
                     <option name="jreName" value="#USE_PROJECT_JDK"/>
                     <option name="mavenProperties">
                         <map>
+                            <entry key="sign.exec" value="${IJ_SIGN_EXEC}"/>
+                            <entry key="sign.homedir" value="${IJ_SIGN_HOMEDIR}"/>
+                            <entry key="sign.keyname" value="${IJ_SIGN_KEYNAME}"/>
+                            <entry key="sign.passphrase" value="${IJ_SIGN_PASSPHRASE}"/>
+                            <entry key="sign.publicKeyring" value="${IJ_SIGN_PUBRING}"/>
+                            <entry key="sign.secretKeyring" value="${IJ_SIGN_SECRING}"/>
                             <entry key="skipITs" value="true"/>
                         </map>
                     </option>
@@ -27,13 +33,15 @@
                     </option>
                     <option name="goals">
                         <list>
-                            <option value="clean"/>
-                            <option value="install"/>
+                            <option value="deploy"/>
                         </list>
                     </option>
                     <option name="pomFileName"/>
                     <option name="profilesMap">
-                        <map/>
+                        <map>
+                            <entry key="artifact-release" value="true"/>
+                            <entry key="build-signature" value="true"/>
+                        </map>
                     </option>
                     <option name="resolveToWorkspace" value="true"/>
                     <option name="workingDirPath" value="$PROJECT_DIR$"/>

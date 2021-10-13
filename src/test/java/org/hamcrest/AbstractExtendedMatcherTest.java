@@ -43,17 +43,17 @@ public abstract class AbstractExtendedMatcherTest<T> extends AbstractMatcherTest
     }
 
     /**
-     * Call to assume that {@link this::tsO2T} satisfies the condition that is a {@link TypeSafeMatcher}.
+     * Call to assume that {@link #o2T()} satisfies the condition that is a {@link TypeSafeMatcher}.
      */
     protected void assumeIsTypeSafeMatcher() {
-        assumeThat("No TypeSafeMatcher available!", isMatcherType(this::tsO2T), is(true));
+        assumeThat("No TypeSafeMatcher available!", isMatcherType(TypeSafeMatcher.class, o2T()), is(true));
     }
 
     /**
-     * Call to assume that {@link this::dmO2T} satisfies the condition that is a {@link DiagnosingMatcher}.
+     * Call to assume that {@link #o2T()} satisfies the condition that is a {@link DiagnosingMatcher}.
      */
     protected void assumeIsDiagnosingMatcher() {
-        assumeThat("No DiagnosingMatcher available!", isMatcherType(this::dmO2T), is(true));
+        assumeThat("No DiagnosingMatcher available!", isMatcherType(DiagnosingMatcher.class, o2T()), is(true));
     }
 
     /* Section for {@link org.hamcrest.TypeSafeMatcher} unit tests */
