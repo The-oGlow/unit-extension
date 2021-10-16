@@ -12,12 +12,6 @@
                     <option name="jreName" value="#USE_PROJECT_JDK"/>
                     <option name="mavenProperties">
                         <map>
-                            <entry key="sign.exec" value="${IJ_SIGN_EXEC}"/>
-                            <entry key="sign.homedir" value="${IJ_SIGN_HOMEDIR}"/>
-                            <entry key="sign.keyname" value="${IJ_SIGN_KEYNAME}"/>
-                            <entry key="sign.passphrase" value="${IJ_SIGN_PASSPHRASE}"/>
-                            <entry key="sign.publicKeyring" value="${IJ_SIGN_PUBRING}"/>
-                            <entry key="sign.secretKeyring" value="${IJ_SIGN_SECRING}"/>
                             <entry key="skipITs" value="true"/>
                         </map>
                     </option>
@@ -41,7 +35,8 @@
                     <option name="pomFileName"/>
                     <option name="profilesMap">
                         <map>
-                            <entry key="build-signature" value="true"/>
+                            <entry key="build-signer" value="false"/>
+                            <entry key="build-$IJ_SIGN_ALIAS$" value="false"/>
                         </map>
                     </option>
                     <option name="resolveToWorkspace" value="true"/>
