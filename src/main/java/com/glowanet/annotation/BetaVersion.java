@@ -1,4 +1,4 @@
-package com.glowa_net.annotation;
+package com.glowanet.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -8,20 +8,22 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 
 /**
- * Annotation to indicate, that an element <strong>must not</strong> be used in production code.
+ * Annotation to specify, that this class is implemented, but not completed.
+ * <p>
+ * <strong>You can use it, but it may change without notification.</strong>
  *
  * @author Oliver Glowa
  * @since 0.10.000
  */
 @Documented
 @Retention(RetentionPolicy.SOURCE)
-@Target(value = {CONSTRUCTOR, METHOD, PACKAGE, MODULE, TYPE})
-public @interface Not4ProductionUse {
+@Target(value = {PACKAGE, MODULE, TYPE})
+public @interface BetaVersion {
 
     /**
-     * @return the reason, why this element must not be used in production code
+     * @return some additional information
      */
-    String reason();
+    String notice() default "";
 
     /**
      * @return the author of this element

@@ -1,6 +1,6 @@
 package org.easymock.internal.matchers;
 
-import com.glowa_net.data.SimplePojo;
+import com.glowanet.data.SimplePojo;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 package org.hamcrest.annotation;
 
-import com.glowa_net.util.validator.AnnotationParameterValidator;
+import com.glowanet.util.validator.AnnotationParameterValidator;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 

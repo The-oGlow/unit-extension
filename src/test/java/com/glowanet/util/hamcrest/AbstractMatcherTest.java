@@ -1,4 +1,4 @@
-package com.glowa_net.util.hamcrest;
+package com.glowanet.util.hamcrest;
 
 import org.hamcrest.AbstractExtendedMatcherTest;
 import org.hamcrest.Description;

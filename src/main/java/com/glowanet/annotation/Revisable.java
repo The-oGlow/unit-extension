@@ -1,4 +1,4 @@
-package com.glowa_net.annotation;
+package com.glowanet.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

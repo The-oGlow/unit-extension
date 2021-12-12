@@ -1,4 +1,4 @@
-package com.glowa_net.data;
+package com.glowanet.data;
 
 import java.io.Serializable;
 import java.util.Objects;

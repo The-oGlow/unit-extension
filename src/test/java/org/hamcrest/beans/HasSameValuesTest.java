@@ -1,6 +1,6 @@
 package org.hamcrest.beans;
 
-import com.glowa_net.data.SimplePojo;
+import com.glowanet.data.SimplePojo;
 import org.hamcrest.AbstractExtendedMatcherTest;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;

@@ -1,6 +1,6 @@
 package org.hamcrest;
 
-import com.glowa_net.util.hamcrest.AbstractMatcherTest;
+import com.glowanet.util.hamcrest.AbstractMatcherTest;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,7 +13,7 @@ import static org.junit.Assume.assumeThat;
  *     <li>{@link org.hamcrest.DiagnosingMatcher}</li>
  *     <li>{@link org.hamcrest.TypeSafeMatcher}</li>
  * </ul>.
- * For testing a standard matcher, use {@link com.glowa_net.util.hamcrest.AbstractMatcherTest}.
+ * For testing a standard matcher, use {@link com.glowanet.util.hamcrest.AbstractMatcherTest}.
  *
  * @param <T> the type, the {@code o2T} uses
  *

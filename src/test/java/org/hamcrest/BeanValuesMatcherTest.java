@@ -1,6 +1,6 @@
 package org.hamcrest;
 
-import com.glowa_net.util.hamcrest.AbstractPublicTest;
+import com.glowanet.util.hamcrest.AbstractPublicTest;
 import org.hamcrest.beans.HasSameValues;
 import org.hamcrest.beans.SamePropertiesValuesAs;
 import org.junit.Test;

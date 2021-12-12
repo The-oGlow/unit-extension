@@ -1,4 +1,4 @@
-package com.glowa_net.util.reflect;
+package com.glowanet.util.reflect;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;

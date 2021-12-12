@@ -1,6 +1,6 @@
 package org.easymock.internal.matchers;
 
-import com.glowa_net.util.reflect.ReflectionHelper;
+import com.glowanet.util.reflect.ReflectionHelper;
 import org.easymock.IArgumentMatcher;
 import org.mockito.ArgumentMatcher;
 

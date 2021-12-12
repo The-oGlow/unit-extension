@@ -1,6 +1,6 @@
 package org.easymock;
 
-import com.glowa_net.data.SimplePojo;
+import com.glowanet.data.SimplePojo;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

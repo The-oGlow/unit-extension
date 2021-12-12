@@ -1,4 +1,4 @@
-package com.glowa_net.data;
+package com.glowanet.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;

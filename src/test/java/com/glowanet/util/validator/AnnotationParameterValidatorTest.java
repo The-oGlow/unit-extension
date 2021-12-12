@@ -1,4 +1,4 @@
-package com.glowa_net.util.validator;
+package com.glowanet.util.validator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;

@@ -1,6 +1,6 @@
-package com.glowa_net.util.hamcrest;
+package com.glowanet.util.hamcrest;
 
-import com.glowa_net.data.SimplePojo;
+import com.glowanet.data.SimplePojo;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.IsBetween;
 import org.junit.Before;

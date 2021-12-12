@@ -1,4 +1,4 @@
-package com.glowa_net.util.validator;
+package com.glowanet.util.validator;
 
 class AnnotationParameterValidatorTestSample {
 

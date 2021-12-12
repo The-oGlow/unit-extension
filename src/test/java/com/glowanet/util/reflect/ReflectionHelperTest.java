@@ -1,7 +1,7 @@
-package com.glowa_net.util.reflect;
+package com.glowanet.util.reflect;
 
-import com.glowa_net.data.SimplePojo;
-import com.glowa_net.data.SimpleSerializable;
+import com.glowanet.data.SimplePojo;
+import com.glowanet.data.SimpleSerializable;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;

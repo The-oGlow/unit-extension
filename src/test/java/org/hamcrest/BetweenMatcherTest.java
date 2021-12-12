@@ -1,6 +1,6 @@
 package org.hamcrest;
 
-import com.glowa_net.util.hamcrest.AbstractPublicTest;
+import com.glowanet.util.hamcrest.AbstractPublicTest;
 import org.hamcrest.core.IsBetween;
 import org.hamcrest.core.IsBetweenWithBound;
 import org.junit.Test;
