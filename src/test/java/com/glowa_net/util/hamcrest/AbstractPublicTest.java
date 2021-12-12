@@ -21,7 +21,7 @@ abstract public class AbstractPublicTest {
     protected static final Object                   expectedBean             = new SimplePojo();
     protected static final Integer                  from                     = 10;
     protected static final Integer                  to                       = 100;
-    protected static final IsBetween.Range<Integer> range                    = new IsBetween.Range<>(from, to);
+    protected static final IsBetween.Range<Integer> rangeFromTo              = new IsBetween.Range<>(from, to);
 
     protected SimplePojo pojo;
     protected Matcher<?> actual;

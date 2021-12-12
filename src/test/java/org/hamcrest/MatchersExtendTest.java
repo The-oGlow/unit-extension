@@ -20,8 +20,20 @@ public class MatchersExtendTest extends AbstractPublicTest {
     }
 
     @Test
+    public void testBetweenRange_return_aMatcher() {
+        actual = MatchersExtend.between(rangeFromTo);
+        verifyMatcher(IsBetween.class);
+    }
+
+    @Test
     public void testBetweenWithBound_return_aMatcher() {
         actual = MatchersExtend.betweenWithBound(from, to);
+        verifyMatcher(IsBetweenWithBound.class);
+    }
+
+    @Test
+    public void testBetweenWithBoundRange_return_aMatcher() {
+        actual = MatchersExtend.betweenWithBound(rangeFromTo);
         verifyMatcher(IsBetweenWithBound.class);
     }
 

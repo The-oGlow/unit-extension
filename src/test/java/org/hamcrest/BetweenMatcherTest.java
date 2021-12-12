@@ -24,13 +24,13 @@ public class BetweenMatcherTest extends AbstractPublicTest {
 
     @Test
     public void testBetweenWithRange_return_aMatcher() {
-        actual = BetweenMatcher.between(range);
+        actual = BetweenMatcher.between(rangeFromTo);
         verifyMatcher(IsBetween.class);
     }
 
     @Test
     public void testBetweenWithBoundAndRange_return_aMatcher() {
-        actual = BetweenMatcher.betweenWithBound(range);
+        actual = BetweenMatcher.betweenWithBound(rangeFromTo);
         verifyMatcher(IsBetween.class);
     }
 }
