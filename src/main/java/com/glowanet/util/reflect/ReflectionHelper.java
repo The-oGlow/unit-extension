@@ -178,6 +178,23 @@ public final class ReflectionHelper {
         return fieldValue;
     }
 
+    public static <V> void writeField(final String fieldName, final Object instance, final V fieldValue) {
+        isInstanceSet(instance, fieldName);
+        final Field field = findField(fieldName, instance);
+        writeField(field, instance, fieldValue);
+    }
+
+    public static <V> void writeField(final Field field, final Object instance, final V fieldValue) {
+        isInstanceSet(instance, field);
+        isParamSet(instance, field);
+        try {
+            makeFieldAccessible(field, instance);
+            field.set(instance, fieldValue);
+        } catch (final IllegalArgumentException | IllegalAccessException e) {
+            failure(instance == null ? null : instance.getClass(), field, e);
+        }
+    }
+
     /**
      * @param fieldName the name of the field
      * @param instance  the instance to investigate
