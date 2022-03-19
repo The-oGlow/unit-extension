@@ -1,39 +1,28 @@
-:hide-uri-scheme:
-// project settings
-:gh_user: ollily
-:gh_org: ollily
-:gh_module: unit-extension
-:gh_group: com.glowa-net.maven.tools
+// import settings
+:site_resource: src/site/resources
+include::{site_resource}/proj-common.adoc[opts=optional]
 
-// common settings
-:gh_id: {gh_user}/{gh_module}
-:gh_id_org: {gh_org}/{gh_module}
-:gh_gav: {gh_group}/{gh_module}
-:gh_key: {gh_user}_{gh_module}
-:author: https://gitlab.com/ollily[Oliver Glowa]
-:cright: (c) 2020 by {author}
-:img_style: &style=plastic
-:link_back: link:README.adoc[image:https://img.shields.io/badge/%3C%3D%3D%20GO-Back-lightgrey[Go Back]]
-:sonar_url: logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io
+= {proj_module}
 
-= {gh_module}
-
-{link_back}
+{cmmn_backlink}
 
 == Quality Information
-https://sonarcloud.io/dashboard?id={gh_key}[image:https://sonarcloud.io/api/project_badges/quality_gate?project={gh_key}[Quality Gate]]
+
+{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_api_url}/project_badges/quality_gate?project={proj_sonarid}[Quality Gate]]
 
 == Build Information
-https://gitlab.com/{gh_id}/-/pipelines[image:https://gitlab.com/{gh_id}/badges/master/pipeline.svg[GitLab-CI]]
-link:https://gitlab.com/{gh_id}/-/tags[image:https://img.shields.io/badge/release-latest-blue?logo=gitlab{img_style}[Latest Tag]]
+
+{proj_vcsid_url}/-/pipelines[image:{proj_vcsid_url}/badges/master/pipeline.svg[title="GitLab-CI"]]
+{proj_vcsid_url}/-/releases[image:{proj_vcsid_url}/-/badges/release.svg[title="Latest Release"]]
 
 == Test Information
-https://sonarcloud.io/dashboard?id={gh_key}[image:https://img.shields.io/sonar/test_success_density/{gh_key}?{sonar_url}{img_style}[Test Status]]
-https://sonarcloud.io/dashboard?id={gh_key}[image:https://img.shields.io/sonar/tests/{gh_key}?{sonar_url}{img_style}[Test Count]]
-https://sonarcloud.io/dashboard?id={gh_key}[image:https://img.shields.io/sonar/coverage/{gh_key}?{sonar_url}{img_style}[Coverage Status]]
-https://sonarcloud.io/dashboard?id={gh_key}[image:https://sonarcloud.io/api/project_badges/measure?project={gh_key}&metric=coverage[Coverage]]
+
+{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/test_success_density/{proj_sonarid}?{cmmn_sonar_ref}{cmmn_img_style}[Test Status]]
+{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/tests/{proj_sonarid}?{cmmn_sonar_ref}{cmmn_img_style}[Test Count]]
+{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/coverage/{proj_sonarid}?{cmmn_sonar_ref}{cmmn_img_style}[Coverage Status]]
+{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_api_url}/project_badges/measure?project={proj_sonarid}&metric=coverage[Coverage]]
 
 ''''
-{link_back}
+{cmmn_backlink}
 
-~{cright}~
+~{proj_cright}~

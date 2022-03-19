@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="52-mvn [effective-pom]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
+  <configuration default="false" name="81-mvn [signed-install]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -27,12 +27,18 @@
           </option>
           <option name="goals">
             <list>
-              <option value="help:effective-pom" />
+              <option value="clean" />
+              <option value="install" />
             </list>
           </option>
           <option name="pomFileName" />
           <option name="profilesMap">
-            <map />
+            <map>
+              <entry key="activate-sign-settings" value="true" />
+              <entry key="build-signer" value="true" />
+              <entry key="build-$IJ_SIGN_ALIAS$" value="true" />
+              <entry key="artifact-release" value="true" />
+            </map>
           </option>
           <option name="resolveToWorkspace" value="true" />
           <option name="workingDirPath" value="$PROJECT_DIR$" />

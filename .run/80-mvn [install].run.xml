@@ -33,10 +33,7 @@
           </option>
           <option name="pomFileName" />
           <option name="profilesMap">
-            <map>
-              <entry key="build-signer" value="false" />
-              <entry key="build-$IJ_SIGN_ALIAS$" value="false" />
-            </map>
+            <map />
           </option>
           <option name="resolveToWorkspace" value="true" />
           <option name="workingDirPath" value="$PROJECT_DIR$" />

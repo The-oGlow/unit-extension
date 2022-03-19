@@ -1,62 +1,48 @@
-:hide-uri-scheme:
-// project settings
-:gh_user: ollily
-:gh_org: ollily
-:gh_module: unit-extension
-:gh_group: com.glowa-net.maven.tools
+// import settings
+:site_resource: src/site/resources
+include::{site_resource}/proj-common.adoc[opts=optional]
 
-// common settings
-:gh_id: {gh_user}/{gh_module}
-:gh_id_org: {gh_org}/{gh_module}
-:gh_gav: {gh_group}/{gh_module}
-:gh_key: {gh_user}_{gh_module}
-:author: https://gitlab.com/ollily[Oliver Glowa]
-:cright: (c) 2020 by {author}
-:img_style: &style=plastic
-:link_back: link:README.adoc[image:https://img.shields.io/badge/%3C%3D%3D%20GO-Back-lightgrey[Go Back]]
-:sonar_url: logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io
+= {proj_module}
 
-= {gh_module}
+link:{proj_vcsid_url}/-/releases[image:{proj_vcsid_url}/-/badges/release.svg[title="Latest Release"]]
+link:LICENSE[image:{cmmn_badge_url}/license-license-brightgreen?logo=gitlab{cmmn_img_style}[title="Software License"]]
+link:{proj_mvnid_url}[image:{cmmn_badge_maven_url}/v/{proj_gav}?logo=apache-maven{cmmn_img_style}[title="Maven Repository"]]
 
-link:https://gitlab.com/{gh_id}/-/releases[image:https://img.shields.io/badge/release-latest-blue?logo=gitlab{img_style}[Latest Version]]
-link:LICENSE[image:https://img.shields.io/badge/license-license-brightgreen?logo=gitlab{img_style}[Software License]]
-link:https://mvnrepository.com/artifact/{gh_gav}[image:https://img.shields.io/maven-central/v/{gh_gav}?logo=apache-maven{img_style}[Maven]]
-
-Dynamically unit-testing for pojos. See link:https://gitlab.com/{gh_id_org}[Homepage].
+{proj_description}
+See link:{proj_user_url}[Homepage].
 
 == Project Status
+
 See link:readme-status.adoc[Project Status].
 
-link:https://sonarcloud.io/dashboard?id={gh_key}[image:https://sonarcloud.io/images/project_badges/sonarcloud-black.svg[SonarCloud]]
+link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_badge_url}/sonarcloud-black.svg[title="SonarCloud"]]
 
 == Installation
+
 Install link:https://maven.apache.org/install.html[Maven].
 
 == Usage
+
 To use, set in your `pom.xml`:
 
 .pom.xml
-[source,xml]
+[source,html,subs="attributes"]
 ----
-..
-  <dependencies>
-  ..
-    <dependency>
-      <groupId>com.glowa-net.maven.tools</groupId>
-      <artifactId>unit-pojotester</artifactId>
-      <version>0.2.0</version>
-    </dependency>
-    ..
-  </dependencies>
-..
+&lt;parent&gt;
+  &lt;groupId&gt;{proj_group}&lt;/groupId&gt;
+  &lt;artifactId&gt;{proj_module}&lt;/artifactId&gt;
+  &lt;version&gt;{proj_version}&lt;/version&gt;
+&lt;/parent&gt;
 ----
 
 == Author
-- {author}
+
+- {proj_author_url}
 
 == License
-This project is released under version 2.0 of the link:https://gitlab.com/{gh_id}/-/blob/master/LICENSE[Apache License].
-Please see the link:https://gitlab.com/{gh_id}/-/blob/master/LICENSE[license file] for more information.
+
+This project is released under version 2.0 of the link:{proj_vcsid_url}/-/blob/master/LICENSE[Apache License].
+Please see the link:{proj_vcsid_url}/-/blob/master/LICENSE[license file] for more information.
 
 ''''
-~{cright}~
+~{proj_cright}~
