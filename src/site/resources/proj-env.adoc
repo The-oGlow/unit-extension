@@ -1,0 +1,20 @@
+// project settings (from pom-file)
+// user data
+:proj_user: ollily
+:proj_user_org: ollily
+:proj_author: Oliver Glowa
+:proj_user_email: coding at glowa-net dot com
+:proj_vcs_url: https://gitlab.com
+:proj_author_url: {proj_vcs_url}/{proj_user}[{proj_author}]
+:proj_year: 2020
+
+// organization
+:org_name: oGlow
+:org_url: http://www.glowa-net.com
+:org_email:
+
+// module data
+:proj_group: com.glowa-net.maven.tools
+:proj_module: unit-extension
+:proj_version: [latest release]
+:proj_description: Some useful extensions for unit testings.
