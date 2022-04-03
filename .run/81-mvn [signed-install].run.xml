@@ -1,50 +1,17 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="81-mvn [signed-install]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
-    <MavenSettings>
-      <option name="myGeneralSettings" />
-      <option name="myRunnerSettings">
-        <MavenRunnerSettings>
-          <option name="delegateBuildToMaven" value="false" />
-          <option name="environmentProperties">
-            <map />
-          </option>
-          <option name="jreName" value="#USE_PROJECT_JDK" />
-          <option name="mavenProperties">
-            <map>
-              <entry key="skipITs" value="true" />
-            </map>
-          </option>
-          <option name="passParentEnv" value="true" />
-          <option name="runMavenInBackground" value="true" />
-          <option name="skipTests" value="true" />
-          <option name="vmOptions" value="" />
-        </MavenRunnerSettings>
-      </option>
-      <option name="myRunnerParameters">
-        <MavenRunnerParameters>
-          <option name="profiles">
-            <set />
-          </option>
-          <option name="goals">
-            <list>
-              <option value="clean" />
-              <option value="install" />
-            </list>
-          </option>
-          <option name="pomFileName" />
-          <option name="profilesMap">
-            <map>
-              <entry key="activate-sign-settings" value="true" />
-              <entry key="build-signer" value="true" />
-              <entry key="build-$IJ_SIGN_ALIAS$" value="true" />
-              <entry key="artifact-release" value="true" />
-            </map>
-          </option>
-          <option name="resolveToWorkspace" value="true" />
-          <option name="workingDirPath" value="$PROJECT_DIR$" />
-        </MavenRunnerParameters>
-      </option>
-    </MavenSettings>
-    <method v="2" />
+  <configuration default="false" name="81-mvn [signed-install]" type="ShConfigurationType" folderName="random-extension-shell">
+    <option name="SCRIPT_TEXT" value="%USERPROFILE%\.sign-env.bat &amp; mvn -DskipTests -DskipITs sign-jar,generate-gpgkey,artifact-release clean install"/>
+    <option name="INDEPENDENT_SCRIPT_PATH" value="true"/>
+    <option name="SCRIPT_PATH" value=""/>
+    <option name="SCRIPT_OPTIONS" value=""/>
+    <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true"/>
+    <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$"/>
+    <option name="INDEPENDENT_INTERPRETER_PATH" value="true"/>
+    <option name="INTERPRETER_PATH" value=""/>
+    <option name="INTERPRETER_OPTIONS" value=""/>
+    <option name="EXECUTE_IN_TERMINAL" value="true"/>
+    <option name="EXECUTE_SCRIPT_FILE" value="false"/>
+    <envs/>
+    <method v="2"/>
   </configuration>
 </component>

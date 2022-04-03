@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.glowa-net.maven.parent</groupId>
         <artifactId>global-appl-pom</artifactId>
-        <version>2</version>
+        <version>3-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
@@ -14,28 +14,19 @@
     <artifactId>unit-extension</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
+    <!-- Section Common -->
     <name>Unit Extension</name>
     <description>Simplified automatic testing</description>
     <url>http://www.glowa-net.com</url>
     <inceptionYear>2020</inceptionYear>
 
     <scm>
+        <!-- scm-connections are defined as constant -->
         <connection>scm:git:git://gitlab.com/ollily/unit-extension.git</connection>
         <developerConnection>scm:git:git@gitlab.com/ollily/unit-extension.git</developerConnection>
-        <url>https://gitlab.com/ollily/unit-extension</url>
-        <tag>HEAD</tag>
     </scm>
 
-    <issueManagement>
-        <system>GitLab Issues</system>
-        <url>https://gitlab.com/ollily/unit-extension/-/issues</url>
-    </issueManagement>
-
-    <ciManagement>
-        <system>gitlab</system>
-        <url>https://gitlab.com/ollily/unit-extension/-/pipelines</url>
-    </ciManagement>
-
+    <!-- Section Properties -->
     <properties>
         <!-- Gitlab Properties -->
         <project.env.CI_PROJECT_ID>22436268</project.env.CI_PROJECT_ID>
@@ -44,6 +35,7 @@
         <sonar.projectKey>ollily_unit-extension</sonar.projectKey>
     </properties>
 
+    <!-- Section Dependencies -->
     <dependencyManagement>
     </dependencyManagement>
 
@@ -99,71 +91,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>coding.central</id>
-            <name>Central is the 1st in row.</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-        </repository>
-        <repository>
-            <id>coding.read</id>
-            <name>CoDinG</name>
-            <url>https://gitlab.com/api/v4/groups/10107405/-/packages/maven</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <checksumPolicy>ignore</checksumPolicy>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>apache.snapshots</id>
-            <name>Apache Schnappi</name>
-            <url>https://repository.apache.org/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>coding.central</id>
-            <name>Central is the 1st in row.</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
-            <id>coding.read</id>
-            <name>CoDinG</name>
-            <url>https://gitlab.com/api/v4/groups/10107405/-/packages/maven</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 
 </project>

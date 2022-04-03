@@ -1,8 +1,11 @@
 // import settings
 :site_resource: src/site/resources
 include::{site_resource}/proj-common.adoc[opts=optional]
+:source-highlighter: highlight.js
 
 = {proj_module}
+:toc: preamble
+:toclevels: 1
 
 link:{proj_vcsid_url}/-/releases[image:{proj_vcsid_url}/-/badges/release.svg[title="Latest Release"]]
 link:LICENSE[image:{cmmn_badge_url}/license-license-brightgreen?logo=gitlab{cmmn_img_style}[title="Software License"]]
@@ -11,17 +14,13 @@ link:{proj_mvnid_url}[image:{cmmn_badge_maven_url}/v/{proj_gav}?logo=apache-mave
 {proj_description}
 See link:{proj_user_url}[Homepage].
 
-== Project Status
-
-See link:readme-status.adoc[Project Status].
-
-link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_badge_url}/sonarcloud-black.svg[title="SonarCloud"]]
-
 == Installation
+
+=== Pre-Requirements
 
 Install link:https://maven.apache.org/install.html[Maven].
 
-== Usage
+=== Usage
 
 To use, set in your `pom.xml`:
 
@@ -35,9 +34,17 @@ To use, set in your `pom.xml`:
 &lt;/parent&gt;
 ----
 
+include::readme-project.adoc[opts=optional]
+
+== Project Status
+
+See link:readme-status.adoc[Project Status].
+
+link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_badge_url}/sonarcloud-black.svg[title="SonarCloud"]]
+
 == Author
 
-- {proj_author_url}
+{proj_author_url}
 
 == License
 

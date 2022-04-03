@@ -34,7 +34,7 @@
           <option name="pomFileName" />
           <option name="profilesMap">
             <map>
-              <entry key="build-signer" value="false" />
+              <entry key="sign-jar" value="false" />
             </map>
           </option>
           <option name="resolveToWorkspace" value="true" />
