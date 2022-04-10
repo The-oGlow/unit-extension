@@ -33,8 +33,18 @@ public class TestResultHelper {
         // static helper
     }
 
+    public static <T> void verifyCollectorNoError(Object collectorOrInstance, int errorSize, T expected, T actual) {
+        assertThat(actual, equalTo(expected));
+        verifyCollectorNoError(collectorOrInstance);
+    }
+
     public static void verifyCollectorNoError(Object collectorOrInstance) {
         verifyCollector(collectorOrInstance, NO_ERROR);
+    }
+
+    public static <T> void verifyCollector(Object collectorOrInstance, int errorSize, T expected, T actual) {
+        assertThat(actual, equalTo(expected));
+        verifyCollector(collectorOrInstance, errorSize);
     }
 
     public static void verifyCollector(Object collectorOrInstance, int errorSize) {
@@ -48,6 +58,11 @@ public class TestResultHelper {
             assertThat(actualThrows, instanceOf(Collection.class));
             assertThat(((Collection<?>) actualThrows), hasSize(errorSize));
         }
+    }
+
+    public static <T> void verifyCollectorWithReset(Object collectorOrInstance, int errorSize, T expected, T actual) {
+        assertThat(actual, equalTo(expected));
+        verifyCollectorWithReset(collectorOrInstance, errorSize);
     }
 
     public static void verifyCollectorWithReset(Object collectorOrInstance, int errorSize) {
