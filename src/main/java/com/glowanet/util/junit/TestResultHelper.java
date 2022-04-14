@@ -33,7 +33,7 @@ public class TestResultHelper {
         // static helper
     }
 
-    public static <T> void verifyCollectorNoError(Object collectorOrInstance, int errorSize, T expected, T actual) {
+    public static <T> void verifyCollectorNoError(Object collectorOrInstance, T expected, T actual) {
         assertThat(actual, equalTo(expected));
         verifyCollectorNoError(collectorOrInstance);
     }
@@ -47,22 +47,40 @@ public class TestResultHelper {
         verifyCollector(collectorOrInstance, errorSize);
     }
 
-    public static void verifyCollector(Object collectorOrInstance, int errorSize) {
+    public static void verifyCollector(Object collectorOrInstance, Matcher<?> matcher) {
         ErrorCollector collector = prepareCollector(collectorOrInstance);
         if (isExtend(collector)) {
-            assertThat(((ErrorCollectorExt) collector).getErrorSize(), equalTo(errorSize));
+            assertThat(((ErrorCollectorExt) collector).getErrorSize(), (Matcher<Number>) matcher);
         } else {
             // legacy mode
             Object actualThrows = ReflectionHelper.readField(ERRORS_NAME, collector);
             assertThat(actualThrows, notNullValue());
             assertThat(actualThrows, instanceOf(Collection.class));
-            assertThat(((Collection<?>) actualThrows), hasSize(errorSize));
+            assertThat(((Collection<?>) actualThrows), (Matcher<Collection<?>>) matcher);
+        }
+    }
+
+    public static void verifyCollector(Object collectorOrInstance, int errorSize) {
+        ErrorCollector collector = prepareCollector(collectorOrInstance);
+        if (isExtend(collector)) {
+            verifyCollector(collector, equalTo(errorSize));
+        } else {
+            // legacy mode
+            verifyCollector(collector, hasSize(errorSize));
         }
     }
 
     public static <T> void verifyCollectorWithReset(Object collectorOrInstance, int errorSize, T expected, T actual) {
         assertThat(actual, equalTo(expected));
         verifyCollectorWithReset(collectorOrInstance, errorSize);
+    }
+
+    public static void verifyCollectorWithReset(Object collectorOrInstance, Matcher<?> matcher) {
+        ErrorCollector collector = prepareCollector(collectorOrInstance);
+        verifyCollector(collector, matcher);
+        if (isExtend(collector)) {
+            ((ErrorCollectorExt) collector).reset();
+        }
     }
 
     public static void verifyCollectorWithReset(Object collectorOrInstance, int errorSize) {
