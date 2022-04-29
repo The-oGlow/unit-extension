@@ -5,6 +5,7 @@ import org.junit.rules.ErrorCollector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This is an {@code ErrorCollector} with some "EXTRA" features.
@@ -27,6 +28,19 @@ public class ErrorCollectorExt extends ErrorCollector {
 
     public int getErrorSize() {
         return readErrors().size();
+    }
+
+    public List<String> getErrorTexts() {
+        List<Throwable> errors = readErrors();
+        List<String> errorTexts = new ArrayList<>();
+        if (errors != null) {
+            errorTexts = errors.stream().map(Throwable::getMessage).collect(Collectors.toList());
+        }
+        return errorTexts;
+    }
+
+    public String getErrorTextsToString() {
+        return getErrorTexts().stream().map(String::toString).collect(Collectors.joining("\n"));
     }
 
     public void reset() {

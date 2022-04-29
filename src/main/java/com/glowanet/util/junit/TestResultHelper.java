@@ -2,6 +2,8 @@ package com.glowanet.util.junit;
 
 import com.glowanet.util.junit.rules.ErrorCollectorExt;
 import com.glowanet.util.reflect.ReflectionHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.function.ThrowingRunnable;
@@ -29,6 +31,8 @@ public class TestResultHelper {
     public static final int                    WITH_ERROR     = 1;
     public static final int                    TWO_ERROR      = 2;
 
+    private static final Logger LOGGER = LogManager.getLogger();
+
     private TestResultHelper() {
         // static helper
     }
@@ -43,6 +47,9 @@ public class TestResultHelper {
     }
 
     public static <T> void verifyCollector(Object collectorOrInstance, int errorSize, T expected, T actual) {
+        if (!equalTo(expected).matches(actual)) {
+            logTheErrors(collectorOrInstance);
+        }
         assertThat(actual, equalTo(expected));
         verifyCollector(collectorOrInstance, errorSize);
     }
@@ -50,7 +57,11 @@ public class TestResultHelper {
     public static void verifyCollector(Object collectorOrInstance, Matcher<?> matcher) {
         ErrorCollector collector = prepareCollector(collectorOrInstance);
         if (isExtend(collector)) {
-            assertThat(((ErrorCollectorExt) collector).getErrorSize(), (Matcher<Number>) matcher);
+            ErrorCollectorExt collectorExt = (ErrorCollectorExt) collector;
+            if (!matcher.matches(collectorExt.getErrorSize())) {
+                logTheErrors(collectorExt);
+            }
+            assertThat(collectorExt.getErrorSize(), (Matcher<Number>) matcher);
         } else {
             // legacy mode
             Object actualThrows = ReflectionHelper.readField(ERRORS_NAME, collector);
@@ -148,5 +159,12 @@ public class TestResultHelper {
 
     protected static boolean isExtend(ErrorCollector collector) {
         return (instanceOf(ErrorCollectorExt.class).matches(collector));
+    }
+
+    protected static void logTheErrors(Object collectorOrInstance) {
+        ErrorCollector collector = prepareCollector(collectorOrInstance);
+        if (isExtend(collector)) {
+            LOGGER.error(String.format("These are the collected errors :\n%s", ((ErrorCollectorExt) collector).getErrorTextsToString()));
+        }
     }
 }
