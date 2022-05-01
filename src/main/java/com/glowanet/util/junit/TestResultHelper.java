@@ -164,7 +164,12 @@ public class TestResultHelper {
     protected static void logTheErrors(Object collectorOrInstance) {
         ErrorCollector collector = prepareCollector(collectorOrInstance);
         if (isExtend(collector)) {
-            LOGGER.error(String.format("These are the collected errors :\n%s", ((ErrorCollectorExt) collector).getErrorTextsToString()));
+            ErrorCollectorExt collectorExt = (ErrorCollectorExt) collector;
+            if (collectorExt.getErrorSize() > 0) {
+                LOGGER.error(String.format("These are the collected errors :\n%s", collectorExt.getErrorTextsToString()));
+            } else {
+                LOGGER.error("No errors collected!");
+            }
         }
     }
 }
