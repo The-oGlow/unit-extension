@@ -1,10 +1,12 @@
 package com.glowanet.util.junit.rules;
 
 import com.glowanet.util.reflect.ReflectionHelper;
+import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +48,16 @@ public class ErrorCollectorExt extends ErrorCollector {
         return size;
     }
 
+    @Test
+    public void t() {
+        Object a = null;
+
+        int b = 2;
+
+        System.out.println(Optional.ofNullable(a).orElse(b));
+
+    }
+
     /**
      * @return List of collected error messages
      *
@@ -55,7 +67,9 @@ public class ErrorCollectorExt extends ErrorCollector {
         List<Throwable> errors = readErrors();
         List<String> errorTexts = new ArrayList<>();
         if (errors != null) {
-            errorTexts = errors.stream().map(Throwable::getMessage).collect(Collectors.toList());
+            errorTexts = errors.stream()
+                    .map(m -> Optional.ofNullable(m.getMessage()).orElse(m.getClass().getName()))
+                    .collect(Collectors.toList());
         }
         return errorTexts;
     }
@@ -66,7 +80,9 @@ public class ErrorCollectorExt extends ErrorCollector {
      * @see #getErrorTexts()
      */
     public String getErrorTextsToString() {
-        return getErrorTexts().stream().map(String::toString).collect(Collectors.joining("\n"));
+        return getErrorTexts().stream()
+                .map(String::toString)
+                .collect(Collectors.joining("\n"));
     }
 
     /**
