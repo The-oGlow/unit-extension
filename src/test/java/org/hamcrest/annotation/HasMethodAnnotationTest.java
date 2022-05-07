@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.lang.annotation.Annotation;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -31,7 +33,7 @@ public class HasMethodAnnotationTest {
     protected final String                       methodName                  = "methodWithAnnnotation";
     protected final String                       methodNameWithoutAnnotation = "methodWithoutAnnotation";
     protected final String                       wrongMethodName             = "wrongMethodName";
-    protected final Class<?>                     annotationClazz             = Ignore.class;
+    protected final Class<? extends Annotation>  annotationClazz             = Ignore.class;
 
     @Before
     public void setUp() {
@@ -42,11 +44,11 @@ public class HasMethodAnnotationTest {
         return new StringDescription();
     }
 
-    protected <T> HasMethodAnnotation<T> prepareMatcher(String matchMethodName, Class<T> matchAnnotationClazz) {
+    protected <T extends Annotation> HasMethodAnnotation<T> prepareMatcher(String matchMethodName, Class<T> matchAnnotationClazz) {
         return (HasMethodAnnotation<T>) HasMethodAnnotation.hasMethodAnnotation(matchMethodName, matchAnnotationClazz);
     }
 
-    protected void verifyMatches(boolean expected, Object matchClazz, String matchMethodName, Class<?> matchAnnotationClazz) {
+    protected void verifyMatches(boolean expected, Object matchClazz, String matchMethodName, Class<? extends Annotation> matchAnnotationClazz) {
         o2t = prepareMatcher(matchMethodName, matchAnnotationClazz);
         assertThat(o2t.matches(matchClazz), equalTo(expected));
     }
@@ -82,7 +84,6 @@ public class HasMethodAnnotationTest {
 
         assertThat(mismatchDescription.toString(), not(equalTo(desciptionBefore)));
     }
-
 
     @Test
     public void testDescribeMismatch_withItem_desctiption_isChanged() {

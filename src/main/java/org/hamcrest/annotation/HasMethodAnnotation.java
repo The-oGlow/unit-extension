@@ -4,6 +4,8 @@ import com.glowanet.util.validator.AnnotationParameterValidator;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
+import java.lang.annotation.Annotation;
+
 /**
  * A matcher, which verifies if a class has a specific annotation.
  *
@@ -14,7 +16,7 @@ import org.hamcrest.Description;
  * @see HasMethodAnnotationParameter
  * @since 0.02.000
  */
-public class HasMethodAnnotation<T> extends BaseMatcher<T> {
+public class HasMethodAnnotation<T extends Annotation> extends BaseMatcher<T> {
 
     private final String                       methodName;
     private final Class<T>                     annotationClazz;
@@ -33,7 +35,7 @@ public class HasMethodAnnotation<T> extends BaseMatcher<T> {
      *
      * @return newly created matcher
      */
-    public static <T> HasMethodAnnotation<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
+    public static <T extends Annotation> HasMethodAnnotation<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         return new HasMethodAnnotation<>(methodName, annotationClazz);
     }
 

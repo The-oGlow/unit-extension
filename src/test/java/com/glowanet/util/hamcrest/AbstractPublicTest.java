@@ -1,9 +1,12 @@
 package com.glowanet.util.hamcrest;
 
+import com.glowanet.data.SimpleAnnotation;
 import com.glowanet.data.SimplePojo;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.IsBetween;
 import org.junit.Before;
+
+import java.lang.annotation.Annotation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -14,14 +17,14 @@ import static org.hamcrest.Matchers.notNullValue;
  */
 abstract public class AbstractPublicTest {
 
-    protected static final String                   methodName               = "fooMethod";
-    protected static final Class<?>                 annotationClazz          = AbstractPublicTest.class;
-    protected static final String                   annotationParameterKey   = "fooParameter";
-    protected static final Object                   annotationParameterValue = "fooValue";
-    protected static final Object                   expectedBean             = new SimplePojo();
-    protected static final Integer                  from                     = 10;
-    protected static final Integer                  to                       = 100;
-    protected static final IsBetween.Range<Integer> rangeFromTo              = new IsBetween.Range<>(from, to);
+    protected static final String                      methodName               = "fooMethod";
+    protected static final Class<? extends Annotation> annotationClazz          = SimpleAnnotation.class;
+    protected static final String                      annotationParameterKey   = "fooParameter";
+    protected static final Object                      annotationParameterValue = "fooValue";
+    protected static final Object                      expectedBean             = new SimplePojo();
+    protected static final Integer                     from                     = 10;
+    protected static final Integer                     to                       = 100;
+    protected static final IsBetween.Range<Integer>    rangeFromTo              = new IsBetween.Range<>(from, to);
 
     protected SimplePojo pojo;
     protected Matcher<?> actual;

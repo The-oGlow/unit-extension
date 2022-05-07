@@ -24,11 +24,6 @@ public class HasMethodAnnotationParameterIT extends HasMethodAnnotationParameter
     }
 
     @Test
-    public void testMatches_wrongAnnotionClazzGiven_return_false() {
-        verifyMatches(false, o2tClazz, methodName, String.class, annotationParameterKey, annotationParameterValue);
-    }
-
-    @Test
     public void testMatches_wrongAnnotationParameterKeyGiven_return_false() {
         verifyMatches(false, o2tClazz, methodName, annotationClazz, wrongAnnotationParameterKey, annotationParameterValue);
     }

@@ -25,7 +25,6 @@ import static org.junit.Assert.assertThrows;
 
 public class ReflectionHelperTest {
 
-
     public static final String   SIMPLE_STRING_NAME  = "simpleString";
     public static final Class<?> SIMPLE_STRING_CLAZZ = String.class;
     public static final String   SIMPLE_STRING_VALUE = "simpleText";
@@ -271,13 +270,11 @@ public class ReflectionHelperTest {
         assertValid(SimplePojo.CONST_FLOAT, valueAfter);
     }
 
-
     @Test
     public void test_readStaticValue_with_FieldNameConstAndClazz_return_value() {
         final Object actual = ReflectionHelper.readStaticValue(CONST_FLOAT_NAME, pojo.getClass());
         assertValid(actual, CONST_FLOAT_VALUE);
     }
-
 
     @Test(expected = AssertionError.class)
     public void test_readStaticValue_with_FieldNameNotFoundAndClazz_throws_failure() {

@@ -18,18 +18,39 @@ import java.util.stream.Collectors;
  */
 public class ErrorCollectorExt extends ErrorCollector {
 
+    /**
+     * @return List or collected throwables.
+     */
     protected List<Throwable> readErrors() {
         return ReflectionHelper.readField("errors", this);
     }
 
+    /**
+     * Write a list of throwables into the collector.
+     *
+     * @param errors List of throwables
+     */
     protected void writeErrors(List<Throwable> errors) {
         ReflectionHelper.writeField("errors", this, errors);
     }
 
+    /**
+     * @return How many errors are collected.
+     */
     public int getErrorSize() {
-        return readErrors().size();
+        int size = 0;
+        List<Throwable> errors = readErrors();
+        if (errors != null) {
+            size = readErrors().size();
+        }
+        return size;
     }
 
+    /**
+     * @return List of collected error messages
+     *
+     * @see #getErrorTextsToString()
+     */
     public List<String> getErrorTexts() {
         List<Throwable> errors = readErrors();
         List<String> errorTexts = new ArrayList<>();
@@ -39,10 +60,18 @@ public class ErrorCollectorExt extends ErrorCollector {
         return errorTexts;
     }
 
+    /**
+     * @return All collected error messages, delimited with '\n'
+     *
+     * @see #getErrorTexts()
+     */
     public String getErrorTextsToString() {
         return getErrorTexts().stream().map(String::toString).collect(Collectors.joining("\n"));
     }
 
+    /**
+     * Clear the collector.
+     */
     public void reset() {
         writeErrors(new ArrayList<Throwable>());
     }

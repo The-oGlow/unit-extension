@@ -2,6 +2,8 @@ package org.hamcrest;
 
 import org.hamcrest.core.IsBetween;
 
+import java.lang.annotation.Annotation;
+
 /**
  * Contains matchers, which are missing in the original class of {@link org.hamcrest.Matchers}.
  *
@@ -87,7 +89,7 @@ public class MatchersExtend extends org.hamcrest.Matchers {
      *
      * @return newly created matcher
      */
-    public static <T> org.hamcrest.Matcher<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
+    public static <T extends Annotation> org.hamcrest.Matcher<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         return org.hamcrest.AnnotationMatchers.hasMethodAnnotation(methodName, annotationClazz);
     }
 
@@ -106,7 +108,7 @@ public class MatchersExtend extends org.hamcrest.Matchers {
      *
      * @return newly created matcher
      */
-    public static <T> org.hamcrest.Matcher<T> hasMethodAnnotationParameter(
+    public static <T extends Annotation> org.hamcrest.Matcher<T> hasMethodAnnotationParameter(
             String methodName, Class<T> annotationClazz, String annotationParameterKey,
             Object annotationParameterValue) {
         return org.hamcrest.AnnotationMatchers.hasMethodAnnotationParameter(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
