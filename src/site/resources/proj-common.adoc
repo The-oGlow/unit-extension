@@ -2,21 +2,24 @@
 
 // common settings
 :cmmn_img_style: &style=plastic
+:cmmn_img_gitlab_style: &logo=gitlab{cmmn_img_style}
 :cmmn_badge_url: https://img.shields.io/badge
 :cmmn_badge_maven_url: https://img.shields.io/maven-central
 :cmmn_badge_sonar_url: https://img.shields.io/sonar
+:cmmn_badge_gitlab_status_url: https://img.shields.io/gitlab/pipeline-status
 :cmmn_sonar_dash_url: https://sonarcloud.io/dashboard
 :cmmn_sonar_api_url: https://sonarcloud.io/api
 :cmmn_sonar_badge_url: https://sonarcloud.io/images/project_badges
 :cmmn_sonar_ref: logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io
 :cmmn_maven_url: https://mvnrepository.com/artifact
 :cmmn_backlink: link:README.adoc[image:{cmmn_badge_url}/%3C%3D%3D%20GO-Back-lightgrey[Go Back]]
+:cmmn_pipelink: -/pipelines?ref=
 
 // project settings
 include::proj-env.adoc[opts=optional]
 
 // project settings (generated)
-:proj_vcsid: {proj_user}/{proj_module}
+:proj_vcsid: {proj_gitgroup}/{proj_module}
 :proj_id_org: {proj_user_org}/{proj_module}
 :proj_gav: {proj_group}/{proj_module}
 :proj_sonarid: {proj_user}_{proj_module}
@@ -24,3 +27,4 @@ include::proj-env.adoc[opts=optional]
 :proj_user_url: {proj_vcs_url}/{proj_user_org}
 :proj_vcsid_url: {proj_vcs_url}/{proj_vcsid}
 :proj_mvnid_url: {cmmn_maven_url}/{proj_gav}
+:proj_pipe_url: {proj_vcsid_url}/{cmmn_pipelink}

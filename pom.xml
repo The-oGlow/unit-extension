@@ -92,4 +92,71 @@
         </dependency>
     </dependencies>
 
+    <!-- Section Repositories -->
+    <repositories>
+        <repository>
+            <id>coding.central</id>
+            <name>Central is the 1st in row.</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+        </repository>
+        <repository>
+            <id>coding.read</id>
+            <name>Central Awsome Index</name>
+            <url>https://gitlab.com/api/v4/groups/10107405/-/packages/maven</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>coding.central</id>
+            <name>Central is the 1st in row.</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>coding.read</id>
+            <name>Central Awsome Index</name>
+            <url>https://gitlab.com/api/v4/groups/10107405/-/packages/maven</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
 </project>

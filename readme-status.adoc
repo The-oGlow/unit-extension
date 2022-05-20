@@ -11,8 +11,14 @@ include::{site_resource}/proj-common.adoc[opts=optional]
 {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_api_url}/project_badges/quality_gate?project={proj_sonarid}[Quality Gate]]
 
 == Build Information
-
-{proj_vcsid_url}/-/pipelines[image:{proj_vcsid_url}/badges/master/pipeline.svg[title="GitLab-CI"]]
+:brnch_1: develop
+:brnch_2: master
+{proj_pipe_url}{brnch_1}[
+image:{cmmn_badge_gitlab_status_url}/{proj_vcsid}?branch={brnch_1}&label={brnch_1}{cmmn_img_gitlab_style}[title="Pipeline status on {brnch_1} branch"]
+]
+{proj_pipe_url}{brnch_2}[
+image:{cmmn_badge_gitlab_status_url}/{proj_vcsid}?branch={brnch_2}&label={brnch_2}{cmmn_img_gitlab_style}[title="Pipeline status on {brnch_2} branch"]
+]
 {proj_vcsid_url}/-/releases[image:{proj_vcsid_url}/-/badges/release.svg[title="Latest Release"]]
 
 == Test Information
