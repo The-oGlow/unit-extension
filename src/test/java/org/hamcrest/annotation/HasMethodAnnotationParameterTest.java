@@ -5,6 +5,7 @@ import org.hamcrest.StringDescription;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -41,7 +42,7 @@ public class HasMethodAnnotationParameterTest {
     protected final String                                methodWithoutAnnotation       = "methodWithoutAnnotation";
     protected final String                                wrongMethodName               = "wrongMethodName";
     protected final String                                wrongAnnotationParameterKey   = "wrongAnnotationParameterKey";
-    protected final Class<?>                              annotationClazz               = HasMethodAnnotationParameterTestAnnotation.class;
+    protected final Class<? extends Annotation>           annotationClazz               = HasMethodAnnotationParameterTestAnnotation.class;
     protected final String                                annotationParameterKey        = "expected";
     protected final int                                   annotationParameterValue      = 1;
     protected final Long                                  annotationParameterValueWrong = 2L;
@@ -52,14 +53,14 @@ public class HasMethodAnnotationParameterTest {
 
     }
 
-    protected void verifyMatches(boolean expected, Object matchClazz, String matchMethodName, Class<?> matchAnnotationClazz, String matchAnnotationParameterKey,
+    protected void verifyMatches(boolean expected, Object matchClazz, String matchMethodName, Class<? extends Annotation> matchAnnotationClazz, String matchAnnotationParameterKey,
                                  Object matchAnnotationParameterValue) {
         o2t = prepareMatcher(matchMethodName, matchAnnotationClazz, matchAnnotationParameterKey, matchAnnotationParameterValue);
         assertThat(o2t.matches(matchClazz), equalTo(expected));
     }
 
-    protected <T> HasMethodAnnotationParameter<T> prepareMatcher(String matchMethodName, Class<T> matchAnnotationClazz, String matchAnnotationParameterKey,
-                                                                 Object matchAnnotationParameterValue) {
+    protected <T extends Annotation> HasMethodAnnotationParameter<T> prepareMatcher(String matchMethodName, Class<T> matchAnnotationClazz, String matchAnnotationParameterKey,
+                                                                                    Object matchAnnotationParameterValue) {
         return (HasMethodAnnotationParameter<T>) HasMethodAnnotationParameter.hasMethodAnnotationParameter(matchMethodName, matchAnnotationClazz, matchAnnotationParameterKey, matchAnnotationParameterValue);
 
     }

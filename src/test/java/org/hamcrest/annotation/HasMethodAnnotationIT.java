@@ -24,8 +24,4 @@ public class HasMethodAnnotationIT extends HasMethodAnnotationTest {
         verifyMatches(false, o2tClazz, methodName, null);
     }
 
-    @Test
-    public void testMatches_annotionClazzIsWrong_return_false() {
-        verifyMatches(false, o2tClazz, methodName, String.class);
-    }
 }

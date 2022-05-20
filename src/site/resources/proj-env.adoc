@@ -14,6 +14,7 @@
 :org_email:
 
 // module data
+:proj_gitgroup: the-oglow
 :proj_group: com.glowa-net.maven.tools
 :proj_module: unit-extension
 :proj_version: [latest release]

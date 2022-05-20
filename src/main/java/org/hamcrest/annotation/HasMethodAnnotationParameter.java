@@ -4,6 +4,8 @@ import com.glowanet.util.validator.AnnotationParameterValidator;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
+import java.lang.annotation.Annotation;
+
 ;
 
 /**
@@ -16,7 +18,7 @@ import org.hamcrest.Description;
  * @see HasMethodAnnotation
  * @since 0.02.000
  */
-public class HasMethodAnnotationParameter<T> extends BaseMatcher<T> {
+public class HasMethodAnnotationParameter<T extends Annotation> extends BaseMatcher<T> {
 
     private final String                       methodName;
     private final Class<T>                     annotationClazz;
@@ -40,8 +42,8 @@ public class HasMethodAnnotationParameter<T> extends BaseMatcher<T> {
      *
      * @return newly created matcher
      */
-    public static <T> HasMethodAnnotationParameter<T> hasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
-                                                                                   Object annotationParameterValue) {
+    public static <T extends Annotation> HasMethodAnnotationParameter<T> hasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
+                                                                                                      Object annotationParameterValue) {
         return new HasMethodAnnotationParameter<>(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
     }
 

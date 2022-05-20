@@ -26,16 +26,17 @@ import static org.junit.Assert.fail;
  */
 public final class ReflectionHelper {
 
-
     private ReflectionHelper() {
     }
 
     /**
-     * @param instance the instance to investigate
+     * @param instance an instantiated object
      *
      * @return list of fields, which have a getter, or an empty list
+     *
+     * @throws AssertionError when {@code instance} is null
      */
-    public static List<PropertyDescriptor> findGetter(final Object instance) {
+    public static List<PropertyDescriptor> findGetter(final Object instance) throws AssertionError {
         final List<PropertyDescriptor> getterList = new ArrayList<>();
         if (instance == null) {
             failure(null, null, null);
@@ -54,7 +55,7 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param instance the instance to investigate
+     * @param instance an instantiated object
      *
      * @return list of fields, which have a setter, or an empty list
      */
@@ -64,13 +65,13 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param clazz the class to check
+     * @param instanceClazz the type of the instance
      *
-     * @return TRUE = the clazz implements {@link Serializable}, else FALSE
+     * @return TRUE = the {@code instanceClazz} implements {@link Serializable}, else FALSE
      */
-    public static boolean hasSerializableIF(final Class<?> clazz) {
+    public static boolean hasSerializableIF(final Class<?> instanceClazz) {
         boolean hasIt = false;
-        final List<Class<?>> listIF = ClassUtils.getAllInterfaces(clazz);
+        final List<Class<?>> listIF = ClassUtils.getAllInterfaces(instanceClazz);
         for (final Class<?> clazzIF : listIF) {
             if (Serializable.class.equals(clazzIF)) {
                 hasIt = true;
@@ -81,12 +82,12 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param fieldName the name of the field to search for
-     * @param instance  the instance to investigate
+     * @param fieldName the name of a field
+     * @param instance  an instantiated object
      *
      * @return the found field-object
      *
-     * @throws AssertionError in case the fieldName can not be found
+     * @throws AssertionError in case the {@code fieldName} can not be found
      */
     public static Field findField(final String fieldName, final Object instance) {
         isInstanceSet(instance, fieldName);
@@ -94,12 +95,10 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param fieldName     the name of the field to search for
-     * @param instanceClazz the class of the instance to investigate
+     * @param fieldName     the name of a field
+     * @param instanceClazz the type of the instance
      *
      * @return the found field-object
-     *
-     * @throws AssertionError in case the fieldName can not be found
      */
     public static Field findField(final String fieldName, final Class<?> instanceClazz) {
         isInstanceSet(instanceClazz, fieldName);
@@ -111,9 +110,9 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param fieldName     a name of a field of {@code instanceClazz}
-     * @param instanceClazz a type
-     * @param <V>           type of field value
+     * @param fieldName     the name of a field
+     * @param instanceClazz the type of the instance
+     * @param <V>           type of value in {@code fieldName}
      *
      * @return the value of {@code field}
      */
@@ -124,14 +123,16 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param field         a field of {@code instanceClazz}
-     * @param instanceClazz a type
-     * @param <V>           type of field value
+     * @param field         an instantiated object of type field
+     * @param instanceClazz the type of the instance
+     * @param <V>           type of value in {@code field}
      *
      * @return the value of {@code field}
+     *
+     * @throws AssertionError in case the {@code field} can not be accessed
      */
     @SuppressWarnings("unchecked")
-    public static <V> V readField(final Field field, final Class<?> instanceClazz) {
+    public static <V> V readField(final Field field, final Class<?> instanceClazz) throws AssertionError {
         isInstanceSet(instanceClazz, field);
         isParamSet(instanceClazz, field);
         V fieldValue = null;
@@ -145,9 +146,9 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param fieldName the name of the field
+     * @param fieldName the name of a field
      * @param instance  the instance to look in
-     * @param <V>       type of field value
+     * @param <V>       type of value in {@code fieldName}
      *
      * @return the current value
      */
@@ -158,11 +159,13 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param field    the field
+     * @param field    an instantiated object of type field
      * @param instance the instance to look in
-     * @param <V>      type of field value
+     * @param <V>      type of value in {@code field}
      *
      * @return the current value
+     *
+     * @throws AssertionError when {@code field} does not exist / is not accessible
      */
     @SuppressWarnings("unchecked")
     public static <V> V readField(final Field field, final Object instance) {
@@ -178,26 +181,40 @@ public final class ReflectionHelper {
         return fieldValue;
     }
 
-    public static <V> void writeField(final String fieldName, final Object instance, final V fieldValue) {
+    /**
+     * @param fieldName the name of a field
+     * @param instance  the instance to look in
+     * @param newValue  the new value to set
+     * @param <V>       type of value in {@code fieldName}
+     */
+    public static <V> void writeField(final String fieldName, final Object instance, final V newValue) {
         isInstanceSet(instance, fieldName);
         final Field field = findField(fieldName, instance);
-        writeField(field, instance, fieldValue);
+        writeField(field, instance, newValue);
     }
 
-    public static <V> void writeField(final Field field, final Object instance, final V fieldValue) {
+    /**
+     * @param field    an instantiated object of type field
+     * @param instance the instance to look in
+     * @param newValue the new value to set
+     * @param <V>      type of value in {@code field}
+     *
+     * @throws AssertionError when {@code field} does not exist / is not accessible / cannot be modified
+     */
+    public static <V> void writeField(final Field field, final Object instance, final V newValue) throws AssertionError {
         isInstanceSet(instance, field);
         isParamSet(instance, field);
         try {
             makeFieldAccessible(field, instance);
-            field.set(instance, fieldValue);
+            field.set(instance, newValue);
         } catch (final IllegalArgumentException | IllegalAccessException e) {
             failure(instance == null ? null : instance.getClass(), field, e);
         }
     }
 
     /**
-     * @param fieldName the name of the field
-     * @param instance  the instance to investigate
+     * @param fieldName the name of a field
+     * @param instance  an instantiated object
      *
      * @return a field object
      */
@@ -208,8 +225,8 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param field    the field-object
-     * @param instance the instance to investigate
+     * @param field    an instantiated object of type field
+     * @param instance an instantiated object
      *
      * @return a field object
      */
@@ -231,9 +248,9 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param fieldName     the name of the field to search for
-     * @param newValue      the value to set
-     * @param instanceClazz the class to check
+     * @param fieldName     the name of a field
+     * @param newValue      the new value to set
+     * @param instanceClazz the type of the instance
      *
      * @return a field object
      */
@@ -244,14 +261,16 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param field         the field to search for
-     * @param newValue      the value to set
-     * @param instanceClazz the class to check
+     * @param field         an instantiated object of type field
+     * @param newValue      the new value to set
+     * @param instanceClazz the type of the instance
      *
      * @return a field object
+     *
+     * @throws AssertionError when {@code field} does not exist / is not accessible / cannot be modified
      */
-    @SuppressWarnings({"java:S1696"})
-    public static Field setFinalStaticValue(final Field field, final Object newValue, final Class<?> instanceClazz) {
+    @SuppressWarnings("java:S1696")
+    public static Field setFinalStaticValue(final Field field, final Object newValue, final Class<?> instanceClazz) throws AssertionError {
         isInstanceSet(instanceClazz, field);
         isParamSet(instanceClazz, field);
         try {
@@ -268,13 +287,15 @@ public final class ReflectionHelper {
 
     /**
      * @param constantName  the name of the constant
-     * @param instanceClazz the class to check
+     * @param instanceClazz the type of the instance
      * @param <V>           type of field value
      *
      * @return the current value of the constant
+     *
+     * @throws AssertionError when {@code constantName} does not exist / is not accessible
      */
     @SuppressWarnings({"unchecked", "java:S1696"})
-    public static <V> V readStaticValue(final String constantName, final Class<?> instanceClazz) {
+    public static <V> V readStaticValue(final String constantName, final Class<?> instanceClazz) throws AssertionError {
         isInstanceSet(instanceClazz, constantName);
         V staticValue = null;
         try {
@@ -299,7 +320,7 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param getter   a getter  of {@code instance}
+     * @param getter   a getter of {@code instance}
      * @param instance an instance of a type
      * @param <V>      the type of the value of {@code getter}
      *
@@ -312,14 +333,16 @@ public final class ReflectionHelper {
     }
 
     /**
-     * @param propertyDescriptor a propertyDescriptor  of {@code instance}
+     * @param propertyDescriptor a propertyDescriptor of {@code instance}
      * @param instance           an instance of a type
      * @param <V>                the type of the value of {@code propertyDescriptor}
      *
      * @return the return value of the {@code propertyDescriptor}
+     *
+     * @throws AssertionError when {@code propertyDescriptor} does not exist / is not accessible
      */
     @SuppressWarnings({"unchecked", "java:S1696", "java:S2583"})
-    static <V> V handleInvokeMethod(final PropertyDescriptor propertyDescriptor, final Object instance) {
+    static <V> V handleInvokeMethod(final PropertyDescriptor propertyDescriptor, final Object instance) throws AssertionError {
         V value = null;
         try {
             value = (V) MethodUtils.invokeMethod(instance, propertyDescriptor.getReadMethod().getName());
@@ -329,8 +352,16 @@ public final class ReflectionHelper {
         return value;
     }
 
+    /**
+     * @param fieldName     the name of a field
+     * @param instanceClazz the type of the instance
+     *
+     * @return field or null
+     *
+     * @throws AssertionError when {@code fieldName} does not exist / is not accessible
+     */
     @SuppressWarnings({"java:S1696"})
-    static Field handleGetField(final String fieldName, final Class<?> instanceClazz) {
+    static Field handleGetField(final String fieldName, final Class<?> instanceClazz) throws AssertionError {
         Field idField = null;
         try {
             idField = FieldUtils.getField(instanceClazz, fieldName, true);
@@ -340,7 +371,15 @@ public final class ReflectionHelper {
         return idField;
     }
 
-    static BeanInfo handleGetBeanInfo(final Class<?> instanceClazz, final Class<?> stopClazz) {
+    /**
+     * @param instanceClazz the type of the instance
+     * @param stopClazz     the type when to stop the search
+     *
+     * @return beanInfo or null
+     *
+     * @throws AssertionError when {@code instanceClazz} does not exist / is accessible
+     */
+    static BeanInfo handleGetBeanInfo(final Class<?> instanceClazz, final Class<?> stopClazz) throws AssertionError {
         BeanInfo beanInfo = null;
         try {
             beanInfo = Introspector.getBeanInfo(instanceClazz, stopClazz);
@@ -350,28 +389,54 @@ public final class ReflectionHelper {
         return beanInfo;
     }
 
-    private static void isInstanceSet(final Object instance, final Object suffix) {
+    /**
+     * @param instance an instance of a type
+     * @param suffix   an additional text for the {@link AssertionError}
+     *
+     * @throws AssertionError when {@code instance} is null
+     */
+    private static void isInstanceSet(final Object instance, final Object suffix) throws AssertionError {
         if (instance == null) {
             failure(instance, suffix, null);
         }
     }
 
-    private static void isParamSet(final Object prefix, final Object param) {
+    /**
+     * @param prefix an additional text for the {@link AssertionError}
+     * @param param  an instance of a parameter
+     *
+     * @throws AssertionError when {@code param} is null
+     */
+    private static void isParamSet(final Object prefix, final Object param) throws AssertionError {
         if (param == null) {
             failure(prefix, param, null);
         }
     }
 
-    private static void failure(final Class<?> paramClazz, final Object suffix, final Throwable errMsg) {
-        failure(paramClazz == null ? null : paramClazz.getName(), suffix, errMsg);
+    /**
+     * @param paramClazz the type of the parameter
+     * @param suffix     an additional text for the {@link AssertionError}
+     * @param throwable  the catched throwable
+     *
+     * @throws AssertionError raises always this error
+     */
+    private static void failure(final Class<?> paramClazz, final Object suffix, final Throwable throwable) throws AssertionError {
+        failure(paramClazz == null ? null : paramClazz.getName(), suffix, throwable);
     }
 
+    /**
+     * @param param     an instance of a parameter
+     * @param suffix    an additional text for the {@link AssertionError}
+     * @param throwable the catched throwable
+     *
+     * @throws AssertionError raises always this error
+     */
     @SuppressWarnings("java:S5960")
-    private static void failure(final Object param, final Object suffix, final Throwable errMsg) {
+    private static void failure(final Object param, final Object suffix, final Throwable throwable) throws AssertionError {
         final String msg = String.format("Can't find or access '%s%s' %s", //
                 (param == null ? "NULL" : param), //
                 (suffix == null || suffix.toString().isEmpty() ? "#NULL" : ("#" + suffix)), //
-                (errMsg == null ? "!" : (":" + System.lineSeparator() + ExceptionUtils.getStackTrace(errMsg))) //
+                (throwable == null ? "!" : (":" + System.lineSeparator() + ExceptionUtils.getStackTrace(throwable))) //
         );
         fail(msg);
     }

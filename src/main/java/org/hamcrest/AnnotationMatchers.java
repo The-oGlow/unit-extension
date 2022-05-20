@@ -3,6 +3,8 @@ package org.hamcrest;
 import org.hamcrest.annotation.HasMethodAnnotation;
 import org.hamcrest.annotation.HasMethodAnnotationParameter;
 
+import java.lang.annotation.Annotation;
+
 /**
  * Contains matchers, which checks if a class has an annotation and annotation-parameters.
  *
@@ -29,7 +31,7 @@ public class AnnotationMatchers {
      *
      * @return newly created matcher
      */
-    public static <T> org.hamcrest.Matcher<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
+    public static <T extends Annotation> org.hamcrest.Matcher<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         return HasMethodAnnotation.hasMethodAnnotation(methodName, annotationClazz);
     }
 
@@ -47,7 +49,7 @@ public class AnnotationMatchers {
      *
      * @return newly created matcher
      */
-    public static <T> org.hamcrest.Matcher<T> hasMethodAnnotationParameter(
+    public static <T extends Annotation> org.hamcrest.Matcher<T> hasMethodAnnotationParameter(
             String methodName, Class<T> annotationClazz, String annotationParameterKey,
             Object annotationParameterValue) {
         return HasMethodAnnotationParameter.hasMethodAnnotationParameter(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
