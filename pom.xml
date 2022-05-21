@@ -22,8 +22,10 @@
 
     <scm>
         <!-- scm-connections are defined as constant -->
-        <connection>scm:git:git://gitlab.com/ollily/unit-extension.git</connection>
-        <developerConnection>scm:git:git@gitlab.com/ollily/unit-extension.git</developerConnection>
+        <connection>scm:git:https://gitlab.com/the-oglow/unit-extension.git</connection>
+        <developerConnection>scm:git:https://gitlab.com/the-oglow/unit-extension.git</developerConnection>
+        <url>${project.env.CI_PROJECT_URL}</url>
+        <tag>HEAD</tag>
     </scm>
 
     <!-- Section Properties -->
@@ -111,7 +113,7 @@
         </repository>
         <repository>
             <id>coding.read</id>
-            <name>Central Awsome Index</name>
+            <name>CASSI-Central Awesome Snap Shot Index</name>
             <url>https://gitlab.com/api/v4/groups/10107405/-/packages/maven</url>
             <snapshots>
                 <enabled>true</enabled>
@@ -144,7 +146,7 @@
         </pluginRepository>
         <pluginRepository>
             <id>coding.read</id>
-            <name>Central Awsome Index</name>
+            <name>CASSI-Central Awesome Snap Shot Index</name>
             <url>https://gitlab.com/api/v4/groups/10107405/-/packages/maven</url>
             <snapshots>
                 <enabled>true</enabled>
