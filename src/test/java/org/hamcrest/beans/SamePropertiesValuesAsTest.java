@@ -33,7 +33,6 @@ public class SamePropertiesValuesAsTest<T extends SamePropertiesValuesAsTest.Exa
         private final int    intProperty;
         private final Value  valueProperty;
 
-
         public ExampleBean(String stringProperty, int intProperty, Value valueProperty) {
             this.stringProperty = stringProperty;
             this.intProperty = intProperty;
@@ -79,7 +78,7 @@ public class SamePropertiesValuesAsTest<T extends SamePropertiesValuesAsTest.Exa
         }
     }
 
-    //FIXME: This must be unnified
+    //FIXME: This must be unified
     protected static final String FIELD_INT    = "intProperty";
     protected static final String FIELD_STRING = "stringProperty";
     protected static final String FIELD_VALUE  = "valueProperty";
