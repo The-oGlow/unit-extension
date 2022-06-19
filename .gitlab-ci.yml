@@ -2,6 +2,7 @@ default:
   image: maven:3-openjdk-11
 
 include:
+  - template: Code-Quality.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
 
 stages:
@@ -10,6 +11,7 @@ stages:
   - test
   - analyze
   - deploy
+  - dast
   - .post
 
 variables:
@@ -29,6 +31,17 @@ cache:
   paths:
     - $REPO_DIR
     - target
+
+code_quality:
+  artifacts:
+    paths: [ gl-code-quality-report.json ]
+
+code_quality_html:
+  extends: code_quality
+  variables:
+    REPORT_FORMAT: html
+  artifacts:
+    paths: [ gl-code-quality-report.html ]
 
 .show_env: &show_env
   - echo "show_env"
