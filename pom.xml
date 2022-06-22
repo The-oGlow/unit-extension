@@ -31,10 +31,8 @@
     <!-- Section Properties -->
     <properties>
         <!-- Gitlab Properties -->
+        <!-- This gitlab repository -->
         <project.env.CI_PROJECT_ID>22436268</project.env.CI_PROJECT_ID>
-
-        <!-- Sonar Properties -->
-        <sonar.projectKey>ollily_unit-extension</sonar.projectKey>
     </properties>
 
     <!-- Section Dependencies -->
