@@ -92,5 +92,4 @@ sonarcloud:
     - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_OPTS_SONAR sonar:sonar
   allow_failure: true
   only:
-    - merge_requests
     - develop
