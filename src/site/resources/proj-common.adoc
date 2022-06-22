@@ -32,7 +32,7 @@ include::proj-env.adoc[opts=optional]
 :proj_vcsid: {proj_gitgroup}/{proj_module}
 :proj_id_org: {proj_user_org}/{proj_module}
 :proj_gav: {proj_group}/{proj_module}
-:proj_sonarid: {proj_user}_{proj_module}
+:proj_sonarid: {proj_user_org}_{proj_module}
 :proj_cright: (c) {proj_year} by {proj_author_url}
 :proj_user_url: {proj_vcs_url}/{proj_user_org}
 :proj_vcsid_url: {proj_vcs_url}/{proj_vcsid}

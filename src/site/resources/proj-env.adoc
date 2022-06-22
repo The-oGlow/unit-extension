@@ -1,7 +1,7 @@
 // project settings (from pom-file)
 // user data
 :proj_user: ollily
-:proj_user_org: ollily
+:proj_user_org: the-oglow
 :proj_author: Oliver Glowa
 :proj_user_email: coding at glowa-net dot com
 :proj_vcs_url: https://gitlab.com
