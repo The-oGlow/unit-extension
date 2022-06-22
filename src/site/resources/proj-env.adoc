@@ -1,7 +1,7 @@
 // project settings (from pom-file)
 // user data
 :proj_user: ollily
-:proj_user_org: ollily
+:proj_user_org: the-oglow
 :proj_author: Oliver Glowa
 :proj_user_email: coding at glowa-net dot com
 :proj_vcs_url: https://gitlab.com
@@ -19,3 +19,6 @@
 :proj_module: unit-extension
 :proj_version: [latest release]
 :proj_description: Some useful extensions for unit testings.
+:proj_id_codacy: 58c9e7e6c7be40bab0071b1704afbe18
+:proj_id_coverity: -1
+:proj_id_openssf: -1

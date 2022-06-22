@@ -127,8 +127,10 @@ public class IsBetweenTest {
         assertThat(description.toString(), containsString(IsBetween.DESC_DESCRIPTION.toString()));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testDescribeToNullValueDescription() {
-        o2T.describeTo(null);
+        assertThrows(NullPointerException.class, () ->
+                o2T.describeTo(null)
+        );
     }
 }

@@ -1,10 +1,9 @@
 default:
   image: maven:3-openjdk-11
-  
+
 include:
+  - template: Code-Quality.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
-
-
 
 stages:
   - .pre
@@ -12,6 +11,7 @@ stages:
   - test
   - analyze
   - deploy
+  - dast
   - .post
 
 variables:
@@ -21,12 +21,29 @@ variables:
   MVN_REPO_OPTS: -B -s $CI_PROJECT_DIR/.m2/settings.xml -Dmaven.repo.local=$CI_PROJECT_DIR/.repo
   MVN_OPTS_TEST: -fae -DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=true
   MVN_OPTS_CLI: -fae -DskipTests -DskipITs
+  MVN_OPTS_SONAR: -DskipTests=false -DskipITs=false -Dsonar.qualitygate.wait=true -Dsonar.login=$SONAR_TOKEN_GITLAB
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  SONAR_TOKEN: "$SONAR_TOKEN_GITLAB"
+  SONAR_HOST_URL: "$SONAR_HOST_GITLAB"
+  GIT_DEPTH: "0"
 
 cache:
   key: $CI_PROJECT_PATH_SLUG
   paths:
     - $REPO_DIR
+    - .sonar/cache
     - target
+
+code_quality:
+  artifacts:
+    paths: [ gl-code-quality-report.json ]
+
+code_quality_html:
+  extends: code_quality
+  variables:
+    REPORT_FORMAT: html
+  artifacts:
+    paths: [ gl-code-quality-report.html ]
 
 .show_env: &show_env
   - echo "show_env"
@@ -68,3 +85,12 @@ build:
     - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_OPTS_CLI deploy
   after_script:
     - *show_build
+
+sonarcloud:
+  stage: analyze
+  script:
+    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_OPTS_SONAR sonar:sonar
+  allow_failure: true
+  only:
+    - develop
+    - master

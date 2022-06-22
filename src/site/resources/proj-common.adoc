@@ -4,15 +4,25 @@
 :cmmn_img_style: &style=plastic
 :cmmn_img_gitlab_style: &logo=gitlab{cmmn_img_style}
 :cmmn_badge_url: https://img.shields.io/badge
+:cmmn_badge_codacy_url: https://img.shields.io/codacy/grade
+:cmmn_badge_coverity_url: https://img.shields.io/coverity/scan
+:cmmn_badge_openssf_url: https://bestpractices.coreinfrastructure.org/projects
 :cmmn_badge_maven_url: https://img.shields.io/maven-central
 :cmmn_badge_sonar_url: https://img.shields.io/sonar
 :cmmn_badge_gitlab_status_url: https://img.shields.io/gitlab/pipeline-status
+:cmmn_badge_coveralls_url: https://coveralls.io/repos/gitlab
+:cmmn_codacy_dash_url: https://www.codacy.com/gl
+:cmmn_coverity_dash_url: https://scan.coverity.com/projects
+:cmmn_openssf_dash_url: https://bestpractices.coreinfrastructure.org/projects
+:cmmn_coveralls_dash_url: https://coveralls.io/gitlab
 :cmmn_sonar_dash_url: https://sonarcloud.io/dashboard
 :cmmn_sonar_api_url: https://sonarcloud.io/api
 :cmmn_sonar_badge_url: https://sonarcloud.io/images/project_badges
 :cmmn_sonar_ref: logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io
+:cmmn_coverity: logo=coverity
+:cmmn_codacy_ref: logo=codacy
 :cmmn_maven_url: https://mvnrepository.com/artifact
-:cmmn_backlink: link:README.adoc[image:{cmmn_badge_url}/%3C%3D%3D%20GO-Back-lightgrey[Go Back]]
+:cmmn_backlink: link:README.adoc[image:{cmmn_badge_url}/%3C%3D%3D%20GO-Back-lightgrey[title="go 2 previous page"]]
 :cmmn_pipelink: -/pipelines?ref=
 
 // project settings
@@ -22,7 +32,7 @@ include::proj-env.adoc[opts=optional]
 :proj_vcsid: {proj_gitgroup}/{proj_module}
 :proj_id_org: {proj_user_org}/{proj_module}
 :proj_gav: {proj_group}/{proj_module}
-:proj_sonarid: {proj_user}_{proj_module}
+:proj_sonarid: {proj_user_org}_{proj_module}
 :proj_cright: (c) {proj_year} by {proj_author_url}
 :proj_user_url: {proj_vcs_url}/{proj_user_org}
 :proj_vcsid_url: {proj_vcs_url}/{proj_vcsid}

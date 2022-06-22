@@ -27,11 +27,11 @@ To use, set in your `pom.xml`:
 .pom.xml
 [source,html,subs="attributes"]
 ----
-&lt;parent&gt;
+&lt;dependency&gt;
   &lt;groupId&gt;{proj_group}&lt;/groupId&gt;
   &lt;artifactId&gt;{proj_module}&lt;/artifactId&gt;
   &lt;version&gt;{proj_version}&lt;/version&gt;
-&lt;/parent&gt;
+&lt;/dependency&gt;
 ----
 
 include::readme-project.adoc[opts=optional]
