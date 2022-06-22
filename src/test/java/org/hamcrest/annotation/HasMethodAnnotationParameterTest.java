@@ -20,7 +20,7 @@ public class HasMethodAnnotationParameterTest {
     @Retention(RetentionPolicy.RUNTIME)
     @interface HasMethodAnnotationParameterTestAnnotation {
 
-        int expected() default 0;
+        int parameterSize() default 0;
 
     }
 
@@ -30,7 +30,7 @@ public class HasMethodAnnotationParameterTest {
             return true;
         }
 
-        @HasMethodAnnotationParameterTestAnnotation(expected = 1)
+        @HasMethodAnnotationParameterTestAnnotation(parameterSize = 1)
         public boolean methodWithAnnnotationTest() {
             return false;
         }
@@ -43,7 +43,7 @@ public class HasMethodAnnotationParameterTest {
     protected final String                                wrongMethodName               = "wrongMethodName";
     protected final String                                wrongAnnotationParameterKey   = "wrongAnnotationParameterKey";
     protected final Class<? extends Annotation>           annotationClazz               = HasMethodAnnotationParameterTestAnnotation.class;
-    protected final String                                annotationParameterKey        = "expected";
+    protected final String                                annotationParameterKey        = "parameterSize";
     protected final int                                   annotationParameterValue      = 1;
     protected final Long                                  annotationParameterValueWrong = 2L;
 
