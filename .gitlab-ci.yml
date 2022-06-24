@@ -18,7 +18,8 @@ variables:
   REPO_DIR: $CI_PROJECT_DIR/.repo
   MVN_USR_HOME: /root/.m2
   # Maven Goal Configuration
-  MVN_TEST_OPTS: -DskipTests=true -DskipITs=true
+  MVN_TEST_OPTS_N: -DskipTests=true -DskipITs=true
+  MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false
   MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
   MVN_REPO_OPTS: -B -s $CI_PROJECT_DIR/.m2/settings.xml -Dmaven.repo.local=$CI_PROJECT_DIR/.repo
   MVN_OPTS_BUILD: -fae -Dmaven.test.failure.ignore=true
@@ -92,7 +93,7 @@ code_quality_html:
 sonarcloud:
   stage: analyze
   script:
-    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS $MVN_OPTS_SONAR surefire:test failsafe:integration-test sonar:sonar
+    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS_Y $MVN_OPTS_SONAR surefire:test failsafe:integration-test sonar:sonar
   allow_failure: true
   needs: ["build"]
   rules:
@@ -110,6 +111,6 @@ build:
     - *show_env
     - *prep_repo
   script:
-    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS $MVN_OPTS_BUILD clean deploy
+    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS_Y $MVN_OPTS_BUILD clean deploy
   after_script:
     - *show_build
