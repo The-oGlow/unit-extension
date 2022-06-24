@@ -8,6 +8,7 @@ import org.hamcrest.StringDescription;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,30 +24,30 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
     private static final String      DELIMITER        = ", ";
     static final         Description DESC_DESCRIPTION = new StringDescription();
 
-    protected static final String HAS_EXTRA_PROPERTIES_CALLED = "has extra properties called %s "; // trailing space is needed
-    protected static final String IS_INCOMPATIBLE_TYPE        = "is incompatible type: %s";
-    protected static final String COULD_NOT_INVOKE            = "Could not invoke %s on %s";
-    protected static final String SAME_PROPERTY_VALUES_AS     = "same property values as %s";
-    protected static final String LIST_START                  = "{";
-    protected static final String LIST_END                    = "}";
+    static final String HAS_EXTRA_PROPERTIES_CALLED = "has extra properties called %s "; // trailing space is needed
+    static final String IS_INCOMPATIBLE_TYPE        = "is incompatible type: %s";
+    static final String COULD_NOT_INVOKE            = "Could not invoke %s on %s";
+    static final String SAME_PROPERTY_VALUES_AS     = "same property values as %s";
+    static final String LIST_START                  = "{";
+    static final String LIST_END                    = "}";
 
     private final T                        expectedBean;
     private final Set<String>              propertyNames;
     private final List<PropertyMatcher<?>> propertyMatchers;
     private final List<String>             ignoredFields;
 
-    public static <T> Matcher<T> samePropertiesValuesAs(T expectedBean, String... ignoredProperties) {
-        return new SamePropertiesValuesAs<>(expectedBean, asList(ignoredProperties));
-    }
-
     private SamePropertiesValuesAs(T expectedBean, List<String> ignoredProperties) {
         verifyInput(expectedBean);
 
         PropertyDescriptor[] descriptors = propertyDescriptorsFor(expectedBean, Object.class);
         this.expectedBean = expectedBean;
-        this.ignoredFields = ignoredProperties;
+        this.ignoredFields = Collections.unmodifiableList(ignoredProperties);
         this.propertyNames = propertyNamesFrom(descriptors, ignoredProperties);
         this.propertyMatchers = propertyMatchersFor(expectedBean, descriptors, ignoredProperties);
+    }
+
+    public static <T> Matcher<T> samePropertiesValuesAs(T expectedBean, String... ignoredProperties) {
+        return new SamePropertiesValuesAs<>(expectedBean, asList(ignoredProperties));
     }
 
     private void verifyInput(final T expectedBean) {
@@ -70,7 +71,7 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
         }
     }
 
-    protected boolean hasAllMatchingValues(Object actual, Description mismatchDescription) {
+    boolean hasAllMatchingValues(Object actual, Description mismatchDescription) {
         boolean result = true;
         int idxLoop = 0;
         for (Matcher<?> propertyMatcher : propertyMatchers) {
@@ -129,10 +130,10 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
         return !ignoredFields.contains(propertyDescriptor.getDisplayName());
     }
 
-    private Object readProperty(Method method, Object target) {
+    private static Object readProperty(Method method, Object target) {
         try {
             return method.invoke(target, NO_ARGUMENTS);
-        } catch (Exception e) {
+        } catch (Exception e) { // NOSONAR: java:S2221
             throw new IllegalArgumentException(String.format(COULD_NOT_INVOKE, method, target), e);
         }
     }

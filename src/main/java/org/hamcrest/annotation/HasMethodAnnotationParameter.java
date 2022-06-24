@@ -6,8 +6,6 @@ import org.hamcrest.Description;
 
 import java.lang.annotation.Annotation;
 
-;
-
 /**
  * A matcher, which verifies if a class has a specific annotation-parameter and value.
  *
@@ -27,6 +25,20 @@ public class HasMethodAnnotationParameter<T extends Annotation> extends BaseMatc
     private final Object                       annotationParameterValue;
 
     /**
+     * @param methodName               the name of the method to check for the annotation
+     * @param annotationClazz          the class of the {@code methodName}
+     * @param annotationParameterKey   the name of the annotation-parameter
+     * @param annotationParameterValue the value of the annotation-parameter
+     */
+    private HasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey, Object annotationParameterValue) {
+        this.methodName = methodName;
+        this.annotationClazz = annotationClazz;
+        this.annotationParameterKey = annotationParameterKey;
+        this.annotationParameterValue = annotationParameterValue;
+        this.validator = new AnnotationParameterValidator();
+    }
+
+    /**
      * Creates a matcher that matches if the examined {@link Object} has the
      * specified method with the specific annotation and a specfic annotation
      * parameter.
@@ -42,23 +54,10 @@ public class HasMethodAnnotationParameter<T extends Annotation> extends BaseMatc
      *
      * @return newly created matcher
      */
-    public static <T extends Annotation> HasMethodAnnotationParameter<T> hasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
-                                                                                                      Object annotationParameterValue) {
+    public static <T extends Annotation> HasMethodAnnotationParameter<T> hasMethodAnnotationParameter(
+            String methodName, Class<T> annotationClazz, String annotationParameterKey,
+            Object annotationParameterValue) {
         return new HasMethodAnnotationParameter<>(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
-    }
-
-    /**
-     * @param methodName               the name of the method to check for the annotation
-     * @param annotationClazz          the class of the {@code methodName}
-     * @param annotationParameterKey   the name of the annotation-parameter
-     * @param annotationParameterValue the value of the annotation-parameter
-     */
-    private HasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey, Object annotationParameterValue) {
-        this.methodName = methodName;
-        this.annotationClazz = annotationClazz;
-        this.annotationParameterKey = annotationParameterKey;
-        this.annotationParameterValue = annotationParameterValue;
-        this.validator = new AnnotationParameterValidator();
     }
 
     @Override
