@@ -83,7 +83,7 @@ code_quality_html:
 sonarcloud:
   stage: analyze
   script:
-    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS $MVN_OPTS_SONAR sonar:sonar
+    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS $MVN_OPTS_SONAR surefire:test failsafe:test sonar:sonar
   allow_failure: true
   needs: ["build"]
   rules:
