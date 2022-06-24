@@ -14,18 +14,24 @@ stages:
   - .post
 
 variables:
+  # Maven Paths
   REPO_DIR: $CI_PROJECT_DIR/.repo
   MVN_USR_HOME: /root/.m2
+  # Maven Goal Configuration
   MVN_TEST_OPTS: -DskipTests=true -DskipITs=true
   MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
   MVN_REPO_OPTS: -B -s $CI_PROJECT_DIR/.m2/settings.xml -Dmaven.repo.local=$CI_PROJECT_DIR/.repo
   MVN_OPTS_BUILD: -fae -Dmaven.test.failure.ignore=true
   MVN_OPTS_CLI: -fae
   MVN_OPTS_SONAR: -Dsonar.qualitygate.wait=true -Dsonar.login=$SONAR_TOKEN_GITLAB
+  # Sonarcloud Settings
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   SONAR_TOKEN: "$SONAR_TOKEN_GITLAB"
   SONAR_HOST_URL: "$SONAR_HOST_GITLAB"
   GIT_DEPTH: "0"
+  # Gitlab Code Analysis, comment out to activate
+  CODE_QUALITY_DISABLED: "true"
+  SAST_DISABLED: "true"
 
 cache:
   key: $CI_PROJECT_PATH_SLUG
@@ -65,10 +71,10 @@ cache:
 
 code_quality:
   variables:
+    CODECLIMATE_DEBUG: 1
     CODE_QUALITY_IMAGE: "registry.gitlab.com/gitlab-org/ci-cd/codequality:0.85.27"
   artifacts:
     paths: [gl-code-quality-report.json]
-
   rules:
     - if: $CODE_QUALITY_DISABLED
       when: never
