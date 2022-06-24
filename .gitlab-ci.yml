@@ -64,8 +64,11 @@ cache:
   - cp .m2/settings.xml $MVN_USR_HOME
 
 code_quality:
+  variables:
+    CODE_QUALITY_IMAGE: "registry.gitlab.com/gitlab-org/ci-cd/codequality:0.85.29"
   artifacts:
     paths: [gl-code-quality-report.json]
+
   rules:
     - if: $CODE_QUALITY_DISABLED
       when: never
@@ -83,7 +86,7 @@ code_quality_html:
 sonarcloud:
   stage: analyze
   script:
-    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS $MVN_OPTS_SONAR surefire:test failsafe:test sonar:sonar
+    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS $MVN_OPTS_SONAR surefire:test failsafe:integration-test sonar:sonar
   allow_failure: true
   needs: ["build"]
   rules:
