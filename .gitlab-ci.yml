@@ -15,37 +15,43 @@ stages:
 
 variables:
   # Maven Paths
-  REPO_DIR: $CI_PROJECT_DIR/.repo
-  SCRIPT_DIR: $CI_PROJECT_DIR/.script
+  REPO_DIR: ${CI_PROJECT_DIR}/.repo
+  SCRIPT_DIR: ${CI_PROJECT_DIR}/.script
   MVN_USR_HOME: /root/.m2
-  VCS_CLEAN_REPO_URL: https://raw.githubusercontent.com/the-oglow/maven-repository-cleaner/main
+  VCS_CLEAN_REPO_URL: https://raw.githubusercontent.com/the-oglow/maven-repository-cleaner
+  VCS_CLEAN_REPO_VER: 1.00.00
+  VCS_CLEAN_REPO_NAME: maven-repository-cleaner.sh
+
   # Maven Goal Configuration
   MVN_TEST_OPTS_N: -DskipTests=true -DskipITs=true
   MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false
   MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
-  MVN_REPO_OPTS: -B -s $CI_PROJECT_DIR/.m2/settings.xml -Dmaven.repo.local=$CI_PROJECT_DIR/.repo
+  MVN_REPO_OPTS: -B -s ${CI_PROJECT_DIR}/.m2/settings.xml -Dmaven.repo.local=${CI_PROJECT_DIR}/.repo
   MVN_OPTS_BUILD: -fae -Dmaven.test.failure.ignore=true
   MVN_OPTS_CLI: -fae
-  MVN_OPTS_SONAR: -Dsonar.qualitygate.wait=true -Dsonar.login=$SONAR_TOKEN_GITLAB
+  MVN_OPTS_SONAR: -Dsonar.qualitygate.wait=true -Dsonar.login=${SONAR_TOKEN_GITLAB}
+
   # Sonarcloud Settings
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
-  SONAR_TOKEN: "$SONAR_TOKEN_GITLAB"
-  SONAR_HOST_URL: "$SONAR_HOST_GITLAB"
+  SONAR_TOKEN: "${SONAR_TOKEN_GITLAB}"
+  SONAR_HOST_URL: "${SONAR_HOST_GITLAB}"
+  #SONAR_DISABLED: "true"
   GIT_DEPTH: "0"
+
   # Gitlab Code Analysis, comment out to activate
   CODE_QUALITY_DISABLED: "true"
   SAST_DISABLED: "true"
 
 cache:
-  key: $CI_PROJECT_PATH_SLUG
+  key: ${CI_PROJECT_PATH_SLUG}
   paths:
-    - $REPO_DIR
+    - ${REPO_DIR}
     - .sonar/cache
     - target
 
 .show_build: &show_build
   - echo "**** show_build ****"
-  - find $CI_BUILDS_DIR -type d ! -regex ".+\.repo.*" ! -regex ".+\.git.*" ! -regex ".+\.sonar.*" -print
+  - find ${CI_BUILDS_DIR} -type d ! -regex ".+\.repo.*" ! -regex ".+\.git.*" ! -regex ".+\.sonar.*" -print
 
 .show_env: &show_env
   - echo "**** show_env ****"
@@ -53,35 +59,34 @@ cache:
 
 .show_m2: &show_m2
   - echo "**** show_m2 ****"
-  - test -f $HOME/.m2/settings.xml && cat $HOME/.m2/settings.xml
+  - test -f ${HOME}/.m2/settings.xml && cat ${HOME}/.m2/settings.xml
 
 .show_pom: &show_pom
   - echo "**** show_pom ****"
-  - mvn $MVN_CH_OPTS_CLI help:effective-pom
+  - mvn ${MVN_CH_OPTS_CLI} help:effective-pom
 
 .show_repo: &show_repo
   - echo "**** show_repo ****"
-  - du --max-depth=1 -h $REPO_DIR
+  - du --max-depth=1 -h ${REPO_DIR}
 
 .prep_repo: &prep_repo
-  - echo "**** prepare repo $REPO_DIR ****"
-  - mkdir -p $REPO_DIR
+  - echo "**** prepare repo ${REPO_DIR} ****"
+  - mkdir -p ${REPO_DIR}
 
 .prep_sec: &prep_sec
-  - echo "**** prepare mvnuser home $MVN_USR_HOME ****"
-  - mkdir -p $MVN_USR_HOME
-  - cp .m2/settings.xml $MVN_USR_HOME
+  - echo "**** prepare mvnuser home ${MVN_USR_HOME} ****"
+  - mkdir -p ${MVN_USR_HOME}
+  - cp .m2/settings.xml ${MVN_USR_HOME}
 
 .clean_repo: &clean_repo
-  - echo "**** clean up repo $REPO_DIR ****"
+  - echo "**** clean up repo ${REPO_DIR} ****"
   - mkdir -p ${SCRIPT_DIR}
-  #  - if [[ ! -f "${SCRIPT_DIR}/maven-repository-cleaner.sh" ]]; then wget -q ${VCS_CLEAN_REPO_URL}/maven-repository-cleaner.sh ${SCRIPT_DIR}; fi
-  - chmod +x ${SCRIPT_DIR}/maven-repository-cleaner.sh
+  #  - if [[ ! -f "${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME}" ]]; then wget -S -N ${VCS_CLEAN_REPO_URL}/${VCS_CLEAN_REPO_VER}/${VCS_CLEAN_REPO_NAME} ${SCRIPT_DIR}; fi
+  - chmod +x ${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME}
   - ls -la ${SCRIPT_DIR}
-  - ls -la ${REPO_DIR}
   - cd ${REPO_DIR}
-  - ${SCRIPT_DIR}/maven-repository-cleaner.sh -y
-  - cd $CI_PROJECT_DIR
+  - ${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME} -y
+  - cd ${CI_PROJECT_DIR}
 
 code_quality:
   variables:
@@ -90,11 +95,11 @@ code_quality:
   artifacts:
     paths: [gl-code-quality-report.json]
   rules:
-    - if: $CODE_QUALITY_DISABLED
+    - if: ${CODE_QUALITY_DISABLED}
       when: never
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run code quality job in merge request pipelines
-    - if: $CI_COMMIT_BRANCH == "develop"               # Run code quality job in pipelines on the DEVELOP branch (but not in other branch pipelines)
-    - if: $CI_COMMIT_TAG                               # Run code quality job in pipelines for tags
+    - if: ${CI_PIPELINE_SOURCE} == "merge_request_event" # Run code quality job in merge request pipelines
+    - if: ${CI_COMMIT_BRANCH} == "develop"               # Run code quality job in pipelines on the DEVELOP branch (but not in other branch pipelines)
+    - if: ${CI_COMMIT_TAG}                               # Run code quality job in pipelines for tags
 
 code_quality_html:
   extends: code_quality
@@ -106,15 +111,15 @@ code_quality_html:
 sonarcloud:
   stage: analyze
   script:
-    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS_Y $MVN_OPTS_SONAR integration-test sonar:sonar
+    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_SONAR} integration-test sonar:sonar
   allow_failure: true
   needs: ["build"]
   rules:
-    - if: $SONAR_DISABLED
+    - if: ${SONAR_DISABLED}
       when: never
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run job in merge request pipelines
-    - if: $CI_COMMIT_BRANCH == "develop"               # Run job in pipelines on the DEVELOP branch
-    - if: $CI_COMMIT_BRANCH == "master"                # Run job in pipelines on the MASTER branch
+    - if: ${CI_PIPELINE_SOURCE} == "merge_request_event" # Run job in merge request pipelines
+    - if: ${CI_COMMIT_BRANCH} == "develop"               # Run job in pipelines on the DEVELOP branch
+    - if: ${CI_COMMIT_BRANCH} == "master"                # Run job in pipelines on the MASTER branch
 
 build:
   stage: build
@@ -125,10 +130,10 @@ build:
     - *prep_repo
     - *clean_repo
   script:
-    - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS_Y $MVN_OPTS_BUILD clean deploy
+    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_BUILD} clean deploy
   after_script:
     - *show_build
   rules:
-    - if: $CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never                                      # Run job in merge request pipelines, but not on master
-    - if: $CI_COMMIT_BRANCH == "develop"               # Run job in pipelines on the DEVELOP branch
+    - if: ${CI_COMMIT_BRANCH} == "master" && ${CI_PIPELINE_SOURCE} == "merge_request_event"
+      when: never                                        # Run job in merge request pipelines, but not on master
+    - if: ${CI_COMMIT_BRANCH} == "develop"               # Run job in pipelines on the DEVELOP branch

@@ -27,14 +27,19 @@
 # - Verify, that the chosen folder is a maven repository
 # - Flag to simulate the process
 # - Some more log output
+# 25.06.22:
+# - rewrite 'verifyRepo()'
+#
 # Done in 2022 by ollily (https://github.com/The-oGlow)
 #
 # Usage
 # -----
-# ./maven-repository-cleaner.sh [-y]
+# ./maven-repository-cleaner.sh [-i][-y]
 #
 # Options
 # -------
+# -i    Ignore the maven repository folder check
+#
 # -y    Dependencies will be really deleted.
 #       Without, it's only a dry run.
 #
@@ -44,14 +49,14 @@
 #
 verifyRepo() {
     echo -en "check '${1}' -> "
-    local repoDir="${1}/.cache"
-    if [[ ! -d $repoDir ]]; then
-        echo "this is not the maven repository"
-        exit 10
-    else
+    local repoDir="${1}"
+    if [[ $(find ${repoDir} -name "_maven.repositorie") ]]; then
         echo "found a maven repository"
+        return 0
+    else
+        echo "this is not the maven repository"
+        return 10
     fi
-    return 0
 }
 
 #
@@ -60,22 +65,22 @@ cleanDirectory() {
     local previousVersion=""
     for d in $(ls -d * | sort -V); do
         if [ "${d}" = "0" ] || [ "${d}" = "0]" ]; then
-            echo "    > !!! deleting awkward version: '${PWD}/${d}' !!!"
+            echo "    > !!! delete-1: '${PWD}/${d}' !!!"
             ${sim} rm -Rf "${PWD}/${d}"
         elif [[ -d "${d}" ]]; then
             if [[ ${d} =~ ^[0-9]+\.[0-9]+((\.|-).*)?$ ]]; then
                 # echo "  > checking version: ${PWD}/${d}"
                 if ((${#previousVersion} > 0)); then
                     if test $(find "${PWD}/$previousVersion" -mmin +360 -print -quit); then
-                        echo "    > !!! deleting previous version: '${PWD}/${previousVersion}' !!!"
+                        echo "    > !!! delete-2: '${PWD}/${previousVersion}' !!!"
                         ${sim} rm -Rf "${PWD}/${previousVersion}"
                     else
-                        echo "    > skipping previous version aged 6 hours or less: '${PWD}/${previousVersion}'"
+                        echo "    > skipping version (aged <=6h): '${PWD}/${previousVersion}'"
                     fi
                 fi
                 previousVersion="${d}"
             else
-                echo "checking artifact: ${PWD}/${d}"
+                echo "checking: '${PWD}/${d}'"
                 cd "${d}"
                 previousVersion=""
                 cleanDirectory
@@ -89,7 +94,7 @@ cleanDirectory() {
 # $1    the folder to check
 #
 checkSize() {
-    echo -en "the repository needs"
+    echo -en "The repository needs "
     local repoSize=$(du -sm "${1}" | cut -f1)
     echo " ${repoSize}MB"
     return 0
@@ -102,20 +107,44 @@ echo -e "\nMaven Repository Cleaner"
 echo -e "========================"
 echo -e "running on '${workDir}'"
 
-# de-/activating simulation
-if [[ "-y" = "${1}" ]]; then
-    echo "Deletion is active"
-    sim=
-else
-    echo "Simulation active"
-    sim=echo
+# parsing parameter
+opt_ign=0
+if [[ "-i" = "${1}" || "-i" = "${2}" ]]; then
+	opt_ign=1
+fi
+opt_sim=1
+if [[ "-y" = "${1}" || "-y" = "${2}" ]]; then
+	opt_sim=0
 fi
 
-# verifyRepo ${workDir} || $?==0
+# de-/activating simulation
+if [[ "1" = "${opt_sim}" ]]; then
+    echo "Deletion id DISABLED"
+    sim=echo
+else
+    echo "Deletion is ACTIVE"
+    sim=
+fi
+
+# de-/activating folder check
+if [[ "0" = "${opt_ign}" ]]; then
+	verifyRepo ${workDir}
+	res=$?
+	if [[ ${res} != 0 ]]; then
+		exit $res
+	fi
+else
+	echo "Folder check DISABLED"
+fi
+
+# size before deletion
 checkSize ${workDir}
 
+# now clean!
 cd ${workDir}
 cleanDirectory ${workDir}
 
+# size After deletion
 checkSize ${workDir}
+
 echo -e "\nTHX 4 using!"
