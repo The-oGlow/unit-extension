@@ -119,6 +119,7 @@ build:
   before_script:
     - *show_env
     - *prep_repo
+    - *clean_repo
   script:
     - mvn $MVN_REPO_OPTS $MVN_SIGN_OPTS $MVN_TEST_OPTS_Y $MVN_OPTS_BUILD clean deploy
   after_script:
