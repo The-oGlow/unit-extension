@@ -111,7 +111,7 @@ else
     sim=echo
 fi
 
-verifyRepo ${workDir} || $?==0
+# verifyRepo ${workDir} || $?==0
 checkSize ${workDir}
 
 cd ${workDir}
