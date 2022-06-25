@@ -73,8 +73,9 @@ cache:
   - cp .m2/settings.xml $MVN_USR_HOME
 
 .clean_repo: &clean_repo
+  - echo "**** clean up repo $REPO_DIR ****"
   - mkdir -p ${SCRIPT_DIR}
-  - if [[ ! -f "${SCRIPT_DIR}/maven-repository-cleaner.sh" ]]; then wget ${VCS_CLEAN_REPO_URL}/maven-repository-cleaner.sh ${SCRIPT_DIR} fi
+  - if [[ ! -f "${SCRIPT_DIR}/maven-repository-cleaner.sh" ]]; then wget ${VCS_CLEAN_REPO_URL}/maven-repository-cleaner.sh ${SCRIPT_DIR}; fi
   - chmod +x ${SCRIPT_DIR}/maven-repository-cleaner.sh
   - cd ${MVN_USR_HOME}/repository
   - ${SCRIPT_DIR}/maven-repository-cleaner.sh
