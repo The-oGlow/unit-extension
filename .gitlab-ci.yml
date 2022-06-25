@@ -76,12 +76,12 @@ cache:
   - echo "**** clean up repo $REPO_DIR ****"
   - mkdir -p ${SCRIPT_DIR}
   #  - if [[ ! -f "${SCRIPT_DIR}/maven-repository-cleaner.sh" ]]; then wget -q ${VCS_CLEAN_REPO_URL}/maven-repository-cleaner.sh ${SCRIPT_DIR}; fi
-  - if [[ ! -f "${SCRIPT_DIR}/maven-repository-cleaner.sh" ]]; then echo "Missing"; fi
   - chmod +x ${SCRIPT_DIR}/maven-repository-cleaner.sh
   - ls -la ${SCRIPT_DIR}
   - ls -la ${REPO_DIR}
   - cd ${REPO_DIR}
-  - ${SCRIPT_DIR}/maven-repository-cleaner.sh
+  - ${SCRIPT_DIR}/maven-repository-cleaner.sh -y
+  - cd $CI_PROJECT_DIR
 
 code_quality:
   variables:
