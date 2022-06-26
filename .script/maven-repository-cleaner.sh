@@ -50,7 +50,7 @@
 verifyRepo() {
     echo -en "check '${1}' -> "
     local repoDir="${1}"
-    if [[ $(find ${repoDir} -name "_maven.repositorie") ]]; then
+    if [[ $(find ${repoDir} -name "_maven.repositories") ]]; then
         echo "found a maven repository"
         return 0
     else
@@ -110,11 +110,11 @@ echo -e "running on '${workDir}'"
 # parsing parameter
 opt_ign=0
 if [[ "-i" = "${1}" || "-i" = "${2}" ]]; then
-	opt_ign=1
+    opt_ign=1
 fi
 opt_sim=1
 if [[ "-y" = "${1}" || "-y" = "${2}" ]]; then
-	opt_sim=0
+    opt_sim=0
 fi
 
 # de-/activating simulation
@@ -128,13 +128,13 @@ fi
 
 # de-/activating folder check
 if [[ "0" = "${opt_ign}" ]]; then
-	verifyRepo ${workDir}
-	res=$?
-	if [[ ${res} != 0 ]]; then
-		exit $res
-	fi
+    verifyRepo ${workDir}
+    res=$?
+    if [[ ${res} != 0 ]]; then
+        exit $res
+    fi
 else
-	echo "Folder check DISABLED"
+    echo "Folder check DISABLED"
 fi
 
 # size before deletion
