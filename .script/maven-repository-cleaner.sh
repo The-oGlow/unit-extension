@@ -75,12 +75,12 @@ cleanDirectory() {
                         echo "    > !!! delete-2: '${PWD}/${previousVersion}' !!!"
                         ${sim} rm -Rf "${PWD}/${previousVersion}"
                     else
-                        echo "    > skipping version (aged <=6h): '${PWD}/${previousVersion}'"
+                        # echo "    > skipping version (aged <=6h): '${PWD}/${previousVersion}'"
                     fi
                 fi
                 previousVersion="${d}"
             else
-                echo "checking: '${PWD}/${d}'"
+                # echo "checking: '${PWD}/${d}'"
                 cd "${d}"
                 previousVersion=""
                 cleanDirectory
