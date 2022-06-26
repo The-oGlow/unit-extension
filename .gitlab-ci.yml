@@ -88,7 +88,7 @@ cache:
   - chmod +x ${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME}
   - ls -la ${SCRIPT_DIR}
   - cd ${REPO_DIR}
-  - ${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME} -y
+  - ${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME} -i -y
   - cd ${CI_PROJECT_DIR}
 
 code_quality:
