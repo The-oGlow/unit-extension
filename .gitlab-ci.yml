@@ -14,6 +14,9 @@ stages:
   - .post
 
 variables:
+  # Java Compiler Options
+  JAVA_TOOL_OPTIONS: --illegal-access=permit
+
   # Maven Paths
   REPO_DIR: ${CI_PROJECT_DIR}/.repo
   SCRIPT_DIR: ${CI_PROJECT_DIR}/.script
@@ -27,9 +30,9 @@ variables:
   MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false
   MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
   MVN_REPO_OPTS: -B -s ${CI_PROJECT_DIR}/.m2/settings.xml -Dmaven.repo.local=${CI_PROJECT_DIR}/.repo
-  MVN_OPTS_BUILD: -fae -Dmaven.test.failure.ignore=true
-  MVN_OPTS_CLI: -fae
-  MVN_OPTS_SONAR: -Dsonar.qualitygate.wait=true -Dsonar.login=${SONAR_TOKEN_GITLAB}
+  MVN_OPTS_BUILD: -fae
+  MVN_OPTS_CLI: -ff
+  MVN_OPTS_SONAR: -fn -Dmaven.test.failure.ignore=true -Dsonar.qualitygate.wait=true -Dsonar.login=${SONAR_TOKEN_GITLAB}
 
   # Sonarcloud Settings
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
@@ -81,7 +84,7 @@ cache:
 .clean_repo: &clean_repo
   - echo "**** clean up repo ${REPO_DIR} ****"
   - mkdir -p ${SCRIPT_DIR}
-  - wget -S -N ${VCS_CLEAN_REPO_URL}/${VCS_CLEAN_REPO_VER}/${VCS_CLEAN_REPO_NAME} ${SCRIPT_DIR}
+  # - wget -S -N ${VCS_CLEAN_REPO_URL}/${VCS_CLEAN_REPO_VER}/${VCS_CLEAN_REPO_NAME} ${SCRIPT_DIR}
   - chmod +x ${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME}
   - ls -la ${SCRIPT_DIR}
   - cd ${REPO_DIR}
