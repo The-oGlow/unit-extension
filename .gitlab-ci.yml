@@ -26,13 +26,14 @@ variables:
   VCS_CLEAN_REPO_NAME: maven-repository-cleaner.sh
 
   # Maven Goal Configuration
-  MVN_TEST_OPTS_N: -DskipTests=true -DskipITs=true
-  MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false
-  MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
-  MVN_REPO_OPTS: -B -s ${CI_PROJECT_DIR}/.m2/settings.xml -Dmaven.repo.local=${CI_PROJECT_DIR}/.repo
-  MVN_OPTS_BUILD: -fae
-  MVN_OPTS_CLI: -ff
-  MVN_OPTS_SONAR: -fae -Dmaven.test.failure.ignore=true -Dsonar.qualitygate.wait=true -Dsonar.login=${SONAR_TOKEN_GITLAB}
+  MVN_TEST_CFG_N: -DskipTests=true -DskipITs=true
+  MVN_TEST_CFG_Y: -DskipTests=false -DskipITs=false
+  MVN_SIGN_CFG: -P!generate-gpgkey -P!sign-jar
+  MVN_REPO_CFG: -B -s ${CI_PROJECT_DIR}/.m2/settings.xml -Dmaven.repo.local=${CI_PROJECT_DIR}/.repo
+  MVN_CLI_OPTS: -ff
+  MVN_BUILD_OPTS: -fae
+  MVN_TEST_OPTS: -fae -P!build-javadoc
+  MVN_SONAR_OPTS: -fae -P!build-javadoc -Dmaven.test.failure.ignore=true -Dsonar.qualitygate.wait=true -Dsonar.login=${SONAR_TOKEN_GITLAB}
 
   # Sonarcloud Settings
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
@@ -115,7 +116,7 @@ sonarcloud:
   before_script:
     - echo "** sonarcloud analyze the artifact '$CI_PROJECT_NAME' **"
   script:
-    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_SONAR} verify sonar:sonar
+    - mvn ${MVN_REPO_CFG} ${MVN_SIGN_CFG} ${MVN_TEST_CFG_Y} ${MVN_SONAR_OPTS} verify sonar:sonar
   allow_failure: true
   needs: ["build"]
   rules:
@@ -125,24 +126,17 @@ sonarcloud:
     - if: $CI_COMMIT_BRANCH == "develop"               # Run job in pipelines on the DEVELOP branch
     - if: $CI_COMMIT_BRANCH == "master"                # Run job in pipelines on the MASTER branch
 
-pre:
-  stage: .pre
-  tags:
-    - docker
-  script:
-    - echo "** prepare '$CI_PROJECT_NAME' **"
-    - *show_env
-    - *prep_repo
-    - *clean_repo
-
 build:
   stage: build
   tags:
     - docker
   before_script:
     - echo "** build the artifact '$CI_PROJECT_NAME' **"
+    - *show_env
+    - *prep_repo
+    - *clean_repo
   script:
-    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} ${MVN_OPTS_BUILD} clean install
+    - mvn ${MVN_REPO_CFG} ${MVN_SIGN_CFG} ${MVN_TEST_CFG_N} ${MVN_BUILD_OPTS} clean install
   after_script:
     - *show_build
   rules:
@@ -157,7 +151,7 @@ test:
   before_script:
     - echo "** run the tests on artifact '$CI_PROJECT_NAME' **"
   script:
-    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_BUILD} integration-test
+    - mvn ${MVN_REPO_CFG} ${MVN_SIGN_CFG} ${MVN_TEST_CFG_Y} ${MVN_TEST_OPTS} integration-test
   needs: ["build"]
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run job in merge request pipelines
