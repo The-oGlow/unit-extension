@@ -45,10 +45,11 @@ public class PrimaryId<T> implements ArgumentMatcher<T>, IArgumentMatcher {
         boolean result = false;
         if (expectedInstance == null && actual == null) {
             // nothing to do
-        } else if ((expectedInstance != null && actual != null) //
-                && (expectClazz.isAssignableFrom(actual.getClass()))) {
+        } else if ((expectedInstance != null && actual != null) && (expectClazz.isAssignableFrom(actual.getClass()))) {
             final Object actualValue = ReflectionHelper.readField(expectedField, actual);
             result = Objects.equals(actualValue, expectedValue);
+        } else {
+            // nothing to do
         }
         return result;
     }

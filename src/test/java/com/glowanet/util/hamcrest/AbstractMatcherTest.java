@@ -110,7 +110,7 @@ public abstract class AbstractMatcherTest<T> {
      * @see #fail(String)
      */
     protected static void fail() {
-        Assert.fail();
+        Assert.fail("This test has failed!");
     }
 
     /**
@@ -340,7 +340,7 @@ public abstract class AbstractMatcherTest<T> {
     public void testGeneric_testMatches_objectsAreDifferent_throw_assertError() {
         T argument = prepareArgumentToCompareWith();
 
-        Throwable actualThrowable = assertThrows(Throwable.class, () -> assertThat(argument, o2T));
+        Throwable actualThrowable = assertThrows("Throwable raised!", Throwable.class, () -> assertThat(argument, o2T));
         verifyThrowable(actualThrowable, prepareMatcher_objectsAreDifferent_check());
     }
 

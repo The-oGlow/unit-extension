@@ -11,6 +11,9 @@ import org.easymock.internal.matchers.PrimaryId;
  */
 public class EasyMockMatcher {
 
+    private EasyMockMatcher() {
+    }
+
     /**
      * @param expectedInstance an instance of the expected type
      * @param primIdFieldName  the field name which is used as primary-id.
@@ -18,6 +21,7 @@ public class EasyMockMatcher {
      *
      * @return {@code null}.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T> T eqPrimaryId(final T expectedInstance, final String primIdFieldName) {
         EasyMock.reportMatcher(new PrimaryId(expectedInstance, primIdFieldName));
         return null;

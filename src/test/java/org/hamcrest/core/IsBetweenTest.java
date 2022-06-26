@@ -96,7 +96,9 @@ public class IsBetweenTest {
 
     @Test
     public void testDescribeMismatchSafelyNullValueDescription() {
-        assertThrows(NullPointerException.class, () -> o2T.describeMismatchSafely(LBOUND, null));
+        assertThrows("Exception raised!", NullPointerException.class, () ->
+                o2T.describeMismatchSafely(LBOUND, null)
+        );
     }
 
     @Test
@@ -129,7 +131,7 @@ public class IsBetweenTest {
 
     @Test
     public void testDescribeToNullValueDescription() {
-        assertThrows(NullPointerException.class, () ->
+        assertThrows("Exception raised!", NullPointerException.class, () ->
                 o2T.describeTo(null)
         );
     }

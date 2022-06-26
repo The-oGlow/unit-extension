@@ -8,16 +8,27 @@ import org.hamcrest.Matchers;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.beans.PropertyUtil.NO_ARGUMENTS;
-import static org.hamcrest.core.IsEqual.equalTo;
 
-class PropertyMatcher<T> extends DiagnosingMatcher<T> {
-    protected static final String COULD_NOT_INVOKE = "Could not invoke %s on %s";
-    protected static final String LIST_EQU         = "=";
+final class PropertyMatcher<T> extends DiagnosingMatcher<T> {
+    static final String COULD_NOT_INVOKE = "Could not invoke %s on %s";
+    static final String LIST_EQU         = "=";
 
     private final Method          readMethod;
     private final Matcher<Object> matcher;
     private final String          propertyName;
+
+    private PropertyMatcher(PropertyDescriptor descriptor, Object expectedObject) {
+        this.propertyName = descriptor.getDisplayName();
+        this.readMethod = descriptor.getReadMethod();
+        if (this.readMethod != null) {
+            this.matcher = equalTo(readProperty(this.readMethod, expectedObject));
+        } else {
+            this.matcher = not(Matchers.anything());
+        }
+    }
 
     /**
      * @param descriptor     the descriptor for this property
@@ -27,16 +38,6 @@ class PropertyMatcher<T> extends DiagnosingMatcher<T> {
      */
     public static PropertyMatcher<Object> matchProperty(PropertyDescriptor descriptor, Object expectedObject) {
         return new PropertyMatcher<>(descriptor, expectedObject);
-    }
-
-    private PropertyMatcher(PropertyDescriptor descriptor, Object expectedObject) {
-        this.propertyName = descriptor.getDisplayName();
-        this.readMethod = descriptor.getReadMethod();
-        if (this.readMethod != null) {
-            this.matcher = equalTo(readProperty(this.readMethod, expectedObject));
-        } else {
-            this.matcher = Matchers.not(Matchers.anything());
-        }
     }
 
     @Override
@@ -60,10 +61,10 @@ class PropertyMatcher<T> extends DiagnosingMatcher<T> {
         description.appendText(propertyName + LIST_EQU).appendDescriptionOf(matcher);
     }
 
-    protected final Object readProperty(Method method, Object target) {
+    static Object readProperty(Method method, Object target) {
         try {
             return method.invoke(target, NO_ARGUMENTS);
-        } catch (Exception e) {
+        } catch (Exception e) { // NOSONAR: java:S2221
             throw new IllegalArgumentException(String.format(COULD_NOT_INVOKE, method, target), e);
         }
     }
