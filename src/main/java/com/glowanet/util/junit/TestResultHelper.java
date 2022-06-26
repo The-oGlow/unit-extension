@@ -243,7 +243,7 @@ public class TestResultHelper {
      *
      * @throws AssertionError is thrown, if the {@code instance} does not contain a {@link ErrorCollector}
      */
-    protected static ErrorCollector extractCollector(Object instance) {
+    static ErrorCollector extractCollector(Object instance) {
         Object field = ReflectionHelper.readField(COLLECTOR_NAME, instance);
 
         assertThat(field, notNullValue());
@@ -258,7 +258,7 @@ public class TestResultHelper {
      *
      * @throws AssertionError is thrown, if the {@code collectorOrInstance} is no {@link ErrorCollector) or }does not contain a {@link ErrorCollector}
      */
-    protected static ErrorCollector prepareCollector(Object collectorOrInstance) {
+    static ErrorCollector prepareCollector(Object collectorOrInstance) {
         ErrorCollector collector;
         if (isCollector(collectorOrInstance)) {
             collector = (ErrorCollector) collectorOrInstance;
@@ -273,7 +273,7 @@ public class TestResultHelper {
      *
      * @return TRUE=the {@code collectorOrInstance} is an {@link ErrorCollector}, else FALSE
      */
-    protected static boolean isCollector(Object collectorOrInstance) {
+    static boolean isCollector(Object collectorOrInstance) {
         return (instanceOf(ErrorCollector.class).matches(collectorOrInstance));
     }
 
@@ -282,7 +282,7 @@ public class TestResultHelper {
      *
      * @return TRUE=the {@code collector} is an {@link ErrorCollectorExt}, else FALSE
      */
-    protected static boolean isExtend(ErrorCollector collector) {
+    static boolean isExtend(ErrorCollector collector) {
         return (instanceOf(ErrorCollectorExt.class).matches(collector));
     }
 
@@ -291,12 +291,12 @@ public class TestResultHelper {
      *
      * @param collectorOrInstance an instance of a collector
      */
-    protected static void logTheErrors(Object collectorOrInstance) {
+    static void logTheErrors(Object collectorOrInstance) {
         ErrorCollector collector = prepareCollector(collectorOrInstance);
         if (isExtend(collector)) {
             ErrorCollectorExt collectorExt = (ErrorCollectorExt) collector;
             if (collectorExt.getErrorSize() > 0) {
-                LOGGER.error(String.format("These are the collected errors :\n%s", collectorExt.getErrorTextsToString()));
+                LOGGER.error("These are the collected errors :\n{}", collectorExt.getErrorTextsToString());
             } else {
                 LOGGER.error("No errors collected!");
             }

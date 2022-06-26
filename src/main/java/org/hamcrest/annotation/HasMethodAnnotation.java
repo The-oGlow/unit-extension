@@ -22,7 +22,17 @@ public class HasMethodAnnotation<T extends Annotation> extends BaseMatcher<T> {
     private final Class<T>                     annotationClazz;
     private final AnnotationParameterValidator validator;
 
-    /*
+    /**
+     * @param methodName      the name of the method to look for
+     * @param annotationClazz the class of the annotation
+     */
+    private HasMethodAnnotation(String methodName, Class<T> annotationClazz) {
+        this.methodName = methodName;
+        this.annotationClazz = annotationClazz;
+        this.validator = new AnnotationParameterValidator();
+    }
+
+    /**
      * Creates a matcher that matches if the examined {@link Object} has the
      * specified method with the specific annotation.
      * <p>
@@ -31,18 +41,12 @@ public class HasMethodAnnotation<T extends Annotation> extends BaseMatcher<T> {
      *
      * @param methodName      the name of the method to look for
      * @param annotationClazz the class of the annotation
-     * @param <T> type of the values
+     * @param <T>             type of the values
      *
      * @return newly created matcher
      */
     public static <T extends Annotation> HasMethodAnnotation<T> hasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         return new HasMethodAnnotation<>(methodName, annotationClazz);
-    }
-
-    private HasMethodAnnotation(String methodName, Class<T> annotationClazz) {
-        this.methodName = methodName;
-        this.annotationClazz = annotationClazz;
-        this.validator = new AnnotationParameterValidator();
     }
 
     @Override

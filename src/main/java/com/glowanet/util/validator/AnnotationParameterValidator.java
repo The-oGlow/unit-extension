@@ -10,7 +10,6 @@ import java.lang.reflect.Method;
  * @see org.hamcrest.AnnotationMatchers
  * @since 0.02.000
  */
-//@SuppressWarnings({"rawtypes", "java:S3740"})
 public class AnnotationParameterValidator {
 
     private final Class<?>[] noparams = {};
@@ -63,6 +62,7 @@ public class AnnotationParameterValidator {
      *
      * @return an {@code Annotation} or null
      */
+    @SuppressWarnings({"MultiCatchCanBeSplit", "java:S1166", "java:S1696"})
     <T extends Annotation> Annotation getAnnotation(Class<?> clazz, String methodName, Class<T> annotationClazz) {
         Method method2t;
         T annotation2t = null;

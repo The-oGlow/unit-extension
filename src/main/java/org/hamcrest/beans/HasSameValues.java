@@ -30,27 +30,23 @@ import static org.hamcrest.Matchers.notNullValue;
  */
 public class HasSameValues<T> extends TypeSafeMatcher<T> {
 
-    private static final   String INDENT                       = "     ";
-    protected static final String SAME_CONTENT                 = "The bean must have the total same content";
-    protected static final String ACTUAL_ITEM_CANT_BE_COMPARED = "Actual item is 'null' and can't be compared!";
-    protected static final String DELIMITER                    = ", ";
-    protected static final String LIST_START                   = "{";
-    protected static final String LIST_END                     = "}";
-    protected static final String LIST_EQU                     = "=";
+    static final String INDENT                       = "     ";
+    static final String SAME_CONTENT                 = "The bean must have the total same content";
+    static final String ACTUAL_ITEM_CANT_BE_COMPARED = "Actual item is 'null' and can't be compared!";
+    static final String DELIMITER                    = ", ";
+    static final String LIST_START                   = "{";
+    static final String LIST_END                     = "}";
+    static final String LIST_EQU                     = "=";
 
     private final T                                    expectedBean;
     private final Map<String, Object>                  fields         = new HashMap<>();
     private final List<Triple<String, Object, Object>> mismatchFields = new LinkedList<>();
 
-    public static <T> HasSameValues<T> hasSameValues(final T expectedBean) {
-        return new HasSameValues<>(expectedBean);
-    }
-
     private HasSameValues(final T expectedBean) {
         super(expectedBean == null ? null : expectedBean.getClass());
         this.expectedBean = expectedBean;
         verifyInput(this.expectedBean);
-        Field[] allFields = FieldUtils.getAllFields(this.expectedBean.getClass());
+        Field[] allFields = FieldUtils.getAllFields(this.expectedBean.getClass()); // NOSONAR: java:S2259
         for (Field singleField : allFields) {
             try {
                 fields.put(singleField.getName(), FieldUtils.readField(singleField, this.expectedBean, true));
@@ -58,6 +54,10 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
                 throw new IllegalArgumentException(e);
             }
         }
+    }
+
+    public static <T> HasSameValues<T> hasSameValues(final T expectedBean) {
+        return new HasSameValues<>(expectedBean);
     }
 
     private void verifyInput(final T expectedBean) {
@@ -113,7 +113,7 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
         }
     }
 
-    private <F> String checkThat(String reason, F actual, Matcher<? super F> matcher) {
+    private static <F> String checkThat(String reason, F actual, Matcher<? super F> matcher) {
         if (!matcher.matches(actual)) {
             Description description = new StringDescription();
             description.appendText(reason).appendText(" expected: ").appendDescriptionOf(matcher).appendText(" but: ");

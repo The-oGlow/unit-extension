@@ -1,7 +1,6 @@
 package com.glowanet.util.junit.rules;
 
 import com.glowanet.util.reflect.ReflectionHelper;
-import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
 import java.util.ArrayList;
@@ -48,16 +47,6 @@ public class ErrorCollectorExt extends ErrorCollector {
         return size;
     }
 
-    @Test
-    public void t() {
-        Object a = null;
-
-        int b = 2;
-
-        System.out.println(Optional.ofNullable(a).orElse(b));
-
-    }
-
     /**
      * @return List of collected error messages
      *
@@ -89,6 +78,6 @@ public class ErrorCollectorExt extends ErrorCollector {
      * Clear the collector.
      */
     public void reset() {
-        writeErrors(new ArrayList<Throwable>());
+        writeErrors(new ArrayList<>());
     }
 }

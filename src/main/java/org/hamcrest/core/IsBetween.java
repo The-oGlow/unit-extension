@@ -22,6 +22,8 @@ import static org.hamcrest.Matchers.notNullValue;
 public class IsBetween<T extends Comparable<T>> extends TypeSafeMatcher<T> {
 
     public static class Range<T> extends MutablePair<T, T> {
+        private static final long serialVersionUID = 1; // NOSONAR: java:S4926
+
         /**
          * Create a new range instance.
          *
@@ -42,6 +44,7 @@ public class IsBetween<T extends Comparable<T>> extends TypeSafeMatcher<T> {
 
     protected Pair<T, T> fromTo;
 
+    @SuppressWarnings("java:S1699")
     protected IsBetween(Range<T> fromTo) {
         super();
         verifyInput(fromTo);
