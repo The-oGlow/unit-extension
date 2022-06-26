@@ -115,7 +115,7 @@ code_quality_html:
 sonarcloud:
   stage: analyze
   script:
-    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_SONAR} integration-test sonar:sonar
+    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_SONAR} verify sonar:sonar
   allow_failure: true
   needs: ["build"]
   rules:
@@ -147,7 +147,7 @@ test:
   tags:
     - docker
   script:
-    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_BUILD} integration-test
+    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_BUILD} verify
   needs: ["build"]
   rules:
     - if: $CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "merge_request_event"
