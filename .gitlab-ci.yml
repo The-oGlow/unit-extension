@@ -122,7 +122,6 @@ sonarcloud:
   rules:
     - if: $SONAR_DISABLED
       when: never
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run job in merge request pipelines
     - if: $CI_COMMIT_BRANCH == "develop"               # Run job in pipelines on the DEVELOP branch
     - if: $CI_COMMIT_BRANCH == "master"                # Run job in pipelines on the MASTER branch
 
@@ -140,7 +139,6 @@ build:
   after_script:
     - *show_build
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run job in merge request pipelines
     - if: $CI_COMMIT_BRANCH == "develop"               # Run job in pipelines on the DEVELOP branch
     - if: $CI_COMMIT_BRANCH == "master"                # Run job in pipelines on the MASTER branch
 
@@ -154,6 +152,5 @@ test:
     - mvn ${MVN_REPO_CFG} ${MVN_SIGN_CFG} ${MVN_TEST_CFG_Y} ${MVN_TEST_OPTS} integration-test
   needs: ["build"]
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run job in merge request pipelines
     - if: $CI_COMMIT_BRANCH == "develop"               # Run job in pipelines on the DEVELOP branch
     - if: $CI_COMMIT_BRANCH == "master"                # Run job in pipelines on the MASTER branch
