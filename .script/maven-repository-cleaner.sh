@@ -74,7 +74,7 @@ cleanDirectory() {
                     if test $(find "${PWD}/$previousVersion" -mmin +360 -print -quit); then
                         echo "    > !!! delete-2: '${PWD}/${previousVersion}' !!!"
                         ${sim} rm -Rf "${PWD}/${previousVersion}"
-                    else
+                        # else
                         # echo "    > skipping version (aged <=6h): '${PWD}/${previousVersion}'"
                     fi
                 fi

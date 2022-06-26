@@ -55,7 +55,7 @@ cache:
 
 .show_build: &show_build
   - echo "**** show_build ****"
-  - find ${CI_BUILDS_DIR} -type d ! -regex ".+\.repo.*" ! -regex ".+\.git.*" ! -regex ".+\.sonar.*" -print
+  - find ${CI_BUILDS_DIR} -maxdepth 3 -type d ! -regex ".+\.repo.*" ! -regex ".+\.git.*" ! -regex ".+\.sonar.*" ! -regex ".*src.+" -print
 
 .show_env: &show_env
   - echo "**** show_env ****"
@@ -87,7 +87,6 @@ cache:
   - mkdir -p ${SCRIPT_DIR}
   #  - wget -S -N ${VCS_CLEAN_REPO_URL}/${VCS_CLEAN_REPO_VER}/${VCS_CLEAN_REPO_NAME} ${SCRIPT_DIR}
   - chmod +x ${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME}
-  - ls -la ${SCRIPT_DIR}
   - cd ${REPO_DIR}
   - ${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME} -i -y
   - cd ${CI_PROJECT_DIR}
@@ -126,14 +125,23 @@ sonarcloud:
     - if: $CI_COMMIT_BRANCH == "develop"               # Run job in pipelines on the DEVELOP branch
     - if: $CI_COMMIT_BRANCH == "master"                # Run job in pipelines on the MASTER branch
 
+pre:
+  stage: .pre
+  tags:
+    - docker
+  script:
+    - *show_env
+    - *prep_repo
+    - *clean_repo
+  only:
+    - merge_requests
+    - master
+    - develop
+
 build:
   stage: build
   tags:
     - docker
-  before_script:
-    - *show_env
-    - *prep_repo
-    - *clean_repo
   script:
     - echo "**** build the artifact '$CI_PROJECT_NAME' ****
     - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} ${MVN_OPTS_BUILD} clean install
