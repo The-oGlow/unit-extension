@@ -33,7 +33,7 @@ variables:
   MVN_REPO_OPTS: -B -s ${CI_PROJECT_DIR}/.m2/settings.xml -Dmaven.repo.local=${CI_PROJECT_DIR}/.repo
   MVN_OPTS_BUILD: -fae
   MVN_OPTS_CLI: -ff
-  MVN_OPTS_SONAR: -fn -Dmaven.test.failure.ignore=true -Dsonar.qualitygate.wait=true -Dsonar.login=${SONAR_TOKEN_GITLAB}
+  MVN_OPTS_SONAR: -fae -Dmaven.test.failure.ignore=true -Dsonar.qualitygate.wait=true -Dsonar.login=${SONAR_TOKEN_GITLAB}
 
   # Sonarcloud Settings
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
