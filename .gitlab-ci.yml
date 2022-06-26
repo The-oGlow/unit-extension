@@ -31,9 +31,9 @@ variables:
   MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false
   MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
   MVN_REPO_OPTS: -B -s ${CI_PROJECT_DIR}/.m2/settings.xml -Dmaven.repo.local=${CI_PROJECT_DIR}/.repo
-  MVN_OPTS_BUILD: -fn -Dmaven.test.failure.ignore=true
+  MVN_OPTS_BUILD: -fae
   MVN_OPTS_CLI: -ff
-  MVN_OPTS_SONAR: -fn -Dsonar.qualitygate.wait=true -Dsonar.login=${SONAR_TOKEN_GITLAB}
+  MVN_OPTS_SONAR: -fn -Dmaven.test.failure.ignore=true -Dsonar.qualitygate.wait=true -Dsonar.login=${SONAR_TOKEN_GITLAB}
 
   # Sonarcloud Settings
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
@@ -115,9 +115,9 @@ code_quality_html:
 sonarcloud:
   stage: analyze
   script:
-    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_SONAR} sonar:sonar
+    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_SONAR} integration-test sonar:sonar
   allow_failure: true
-  # needs: ["build"]
+  needs: ["build"]
   rules:
     - if: $SONAR_DISABLED
       when: never
@@ -134,7 +134,7 @@ build:
     - *prep_repo
     - *clean_repo
   script:
-    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} ${MVN_OPTS_BUILD} clean verify
+    - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} ${MVN_OPTS_BUILD} clean install
   after_script:
     - *show_build
   rules:
@@ -148,6 +148,7 @@ test:
     - docker
   script:
     - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_BUILD} integration-test
+  needs: ["build"]
   rules:
     - if: $CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "merge_request_event"
       when: never                                       # Run job in merge request pipelines, but not on master
