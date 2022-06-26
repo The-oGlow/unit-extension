@@ -81,7 +81,7 @@ cache:
 .clean_repo: &clean_repo
   - echo "**** clean up repo ${REPO_DIR} ****"
   - mkdir -p ${SCRIPT_DIR}
-  #  - if [[ ! -f "${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME}" ]]; then wget -S -N ${VCS_CLEAN_REPO_URL}/${VCS_CLEAN_REPO_VER}/${VCS_CLEAN_REPO_NAME} ${SCRIPT_DIR}; fi
+  - wget -S -N ${VCS_CLEAN_REPO_URL}/${VCS_CLEAN_REPO_VER}/${VCS_CLEAN_REPO_NAME} ${SCRIPT_DIR}
   - chmod +x ${SCRIPT_DIR}/${VCS_CLEAN_REPO_NAME}
   - ls -la ${SCRIPT_DIR}
   - cd ${REPO_DIR}
@@ -95,11 +95,11 @@ code_quality:
   artifacts:
     paths: [gl-code-quality-report.json]
   rules:
-    - if: ${CODE_QUALITY_DISABLED}
+    - if: $CODE_QUALITY_DISABLED
       when: never
-    - if: ${CI_PIPELINE_SOURCE} == "merge_request_event" # Run code quality job in merge request pipelines
-    - if: ${CI_COMMIT_BRANCH} == "develop"               # Run code quality job in pipelines on the DEVELOP branch (but not in other branch pipelines)
-    - if: ${CI_COMMIT_TAG}                               # Run code quality job in pipelines for tags
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run code quality job in merge request pipelines
+    - if: $CI_COMMIT_BRANCH == "develop"               # Run code quality job in pipelines on the DEVELOP branch (but not in other branch pipelines)
+    - if: $CI_COMMIT_TAG                               # Run code quality job in pipelines for tags
 
 code_quality_html:
   extends: code_quality
@@ -115,11 +115,11 @@ sonarcloud:
   allow_failure: true
   needs: ["build"]
   rules:
-    - if: ${SONAR_DISABLED}
+    - if: $SONAR_DISABLED
       when: never
-    - if: ${CI_PIPELINE_SOURCE} == "merge_request_event" # Run job in merge request pipelines
-    - if: ${CI_COMMIT_BRANCH} == "develop"               # Run job in pipelines on the DEVELOP branch
-    - if: ${CI_COMMIT_BRANCH} == "master"                # Run job in pipelines on the MASTER branch
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run job in merge request pipelines
+    - if: $CI_COMMIT_BRANCH == "develop"               # Run job in pipelines on the DEVELOP branch
+    - if: $CI_COMMIT_BRANCH == "master"                # Run job in pipelines on the MASTER branch
 
 build:
   stage: build
@@ -134,6 +134,6 @@ build:
   after_script:
     - *show_build
   rules:
-    - if: ${CI_COMMIT_BRANCH} == "master" && ${CI_PIPELINE_SOURCE} == "merge_request_event"
-      when: never                                        # Run job in merge request pipelines, but not on master
-    - if: ${CI_COMMIT_BRANCH} == "develop"               # Run job in pipelines on the DEVELOP branch
+    - if: $CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never                                       # Run job in merge request pipelines, but not on master
+    - if: $CI_COMMIT_BRANCH == "develop"                # Run job in pipelines on the DEVELOP branch
