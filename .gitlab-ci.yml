@@ -6,6 +6,7 @@ default:
 #  - template: Security/SAST.gitlab-ci.yml
 
 stages:
+  - .pre
   - build
   - test
   - analyze
@@ -112,7 +113,7 @@ cache:
 sonarcloud:
   stage: analyze
   before_script:
-    - echo "** sonarcloud analyze the artifact '$CI_PROJECT_NAME' **
+    - echo "** sonarcloud analyze the artifact '$CI_PROJECT_NAME' **"
   script:
     - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_SONAR} verify sonar:sonar
   allow_failure: true
@@ -124,15 +125,22 @@ sonarcloud:
     - if: $CI_COMMIT_BRANCH == "develop"               # Run job in pipelines on the DEVELOP branch
     - if: $CI_COMMIT_BRANCH == "master"                # Run job in pipelines on the MASTER branch
 
+pre:
+  stage: .pre
+  tags:
+    - docker
+  script:
+    - echo "** prepare '$CI_PROJECT_NAME' **"
+    - *show_env
+    - *prep_repo
+    - *clean_repo
+
 build:
   stage: build
   tags:
     - docker
   before_script:
-    - echo "** build the artifact '$CI_PROJECT_NAME' **
-    - *show_env
-    - *prep_repo
-    - *clean_repo
+    - echo "** build the artifact '$CI_PROJECT_NAME' **"
   script:
     - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} ${MVN_OPTS_BUILD} clean install
   after_script:
@@ -147,7 +155,7 @@ test:
   tags:
     - docker
   before_script:
-    - echo "** run the tests on artifact '$CI_PROJECT_NAME' **
+    - echo "** run the tests on artifact '$CI_PROJECT_NAME' **"
   script:
     - mvn ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_OPTS_BUILD} integration-test
   needs: ["build"]
