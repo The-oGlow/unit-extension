@@ -1,0 +1,107 @@
+name: maven-build
+
+on:
+  workflow_dispatch:
+    inputs:
+      branches:
+        description: 'which branch'
+        required: true
+        default: 'master'
+        type: choice
+        options:
+          - master
+          - develop
+  push:
+    branches:
+      - master
+      - develop
+    paths-ignore:
+      - '.github/**'
+      - '.run/**'
+      - '.m2/**'
+  pull_request:
+    branches:
+      - master
+
+env:
+  # Github Configuration
+  GZITHUB_REPO_NAME: ${{ github.event.repository.name }}
+  GZITHUB_PROJECT_DIR: ${{ github.workspace }}
+  GZITHUB_TARGET_DIR: ${{ github.workspace }}/target
+  GZITHUB_UPLOAD_DIR: ${{ github.workspace }}/staging
+  # Maven Paths
+  REPO_DIR: ${{ github.workspace }}/.repo
+  MVN_USR_HOME: /root/.m2
+  # Maven Goal Configuration
+  MVN_TEST_OPTS_N: -DskipTests=true -DskipITs=true
+  MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false
+  MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
+  MVN_REPO_OPTS: -B -s "${{ github.workspace}}/.m2/settings.xml" -Dmaven.repo.local="${{ github.workspace}}/.repo"
+  MVN_OPTS_BUILD: -fae -Dmaven.test.failure.ignore=true
+  MVN_OPTS_CLI: -fae
+  MVN_OPTS_SONAR: -Dsonar.qualitygate.wait=true -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+  # Sonarcloud Settings
+  SONAR_HOST_URL: "https://sonarcloud.io"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        version: [11]
+        distribution: [adopt]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: show env
+        run: |
+          echo "**** show_env ****"
+          printenv | sort
+
+      - name: setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '${{ matrix.version }}'
+          distribution: '${{ matrix.distribution }}'
+          architecture: x64
+          #cache: 'maven'
+
+      - name: cache maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ matrix.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ matrix.os }}-m2
+
+      - name: maven build
+        run: mvn ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} $MVN_OPTS_BUILD clean install
+
+      - name: show build
+        run: |
+          echo "**** show_build ****"
+          find "${{ env.GZITHUB_PROJECT_DIR }}" -type d ! -regex ".+\.repo.*" ! -regex ".+\.git.*" ! -regex ".+\.sonar.*" -print
+
+      - name: prepare upload
+        env:
+          PU_JAR: ${{ env.GZITHUB_TARGET_DIR }}/*.jar
+          PU_POM: ${{ env.GZITHUB_PROJECT_DIR }}/pom.xml
+        run: |
+          mkdir "${{ env.GZITHUB_UPLOAD_DIR }}"
+          ls -la "${{ env.GZITHUB_PROJECT_DIR }}"
+          ls -la "${{ env.GZITHUB_TARGET_DIR }}"
+          test -f "${{ env.PU_JAR }}" && cp -v "${{ env.PU_JAR }}" "${{ env.GZITHUB_UPLOAD_DIR }}"
+          test -f "${{ env.PU_POM }}" && cp -v "${{ env.PU_POM }}" "${{ env.GZITHUB_UPLOAD_DIR }}"
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.GZITHUB_REPO_NAME }}
+          path: ${{ env.GZITHUB_UPLOAD_DIR }}
+          if-no-files-found: warn
+
+      - name: deploy artifact
+        run: mvn ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} $MVN_OPTS_BUILD deploy
+
