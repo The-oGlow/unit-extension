@@ -2,15 +2,6 @@ name: sonarcloud-analysis
 
 on:
   workflow_dispatch:
-    inputs:
-      branches:
-        description: 'which branch'
-        required: true
-        default: 'master'
-        type: choice
-        options:
-          - master
-          - develop
   push:
     branches:
       - master
@@ -19,28 +10,36 @@ on:
       - '.github/**'
       - '.run/**'
       - '.m2/**'
+      - '.repo/**'
   pull_request:
     branches:
       - master
 
 env:
-  # Github Configuration
-  GZITHUB_REPO_NAME: ${{ github.event.repository.name }}
-  GZITHUB_PROJECT_DIR: ${{ github.workspace }}
-  GZITHUB_TARGET_DIR: ${{ github.workspace }}/target
-  GZITHUB_UPLOAD_DIR: ${{ github.workspace }}/staging
-  # Maven Paths
-  REPO_DIR: ${{ github.workspace }}/.repo
-  MVN_USR_HOME: /root/.m2
-  # Maven Goal Configuration
+  # Github Additional Configuration
+  GITHUB_REPO_NAME: ${{ github.event.repository.name }}
+  GITHUB_PROJECT_DIR: ${{ github.workspace }}
+  GITHUB_TARGET_DIR: ${{ github.workspace }}/target
+  GITHUB_UPLOAD_DIR: ${{ github.workspace }}/staging
+
+  # Maven Common Configuration
+  MVN_HOME_DIR: ~/.m2
+  MVN_REPO_JOB_DIR: ${{ github.workspace }}/.repo
+  MVN_SETT_OPTS: -B -s "${{ github.workspace}}/.m2/settings.xml"
+  MVN_REPO_OPTS: -Dmaven.repo.local="${{ github.workspace}}/.repo"
+  MVN_BUILD_OPTS: -fae -Dmaven.test.failure.ignore=true
+  MVN_CLI_OPTS: -fae
+
+  # Maven Sign Configuration
+  MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
+
+  # Maven Test Configuration
   MVN_TEST_OPTS_N: -DskipTests=true -DskipITs=true
   MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false
-  MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
-  MVN_REPO_OPTS: -B -s "${{ github.workspace}}/.m2/settings.xml" -Dmaven.repo.local="${{ github.workspace}}/.repo"
-  MVN_OPTS_BUILD: -fae -Dmaven.test.failure.ignore=true
-  MVN_OPTS_CLI: -fae
-  MVN_OPTS_SONAR: -Dsonar.qualitygate.wait=true -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-  # Sonarcloud Settings
+
+  # Sonarcloud Configuration
+  MVN_SONAR_OPTS: -Dsonar.qualitygate.wait=true -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+  SONAR_CACHE_DIR: ~/.sonar/cache
   SONAR_HOST_URL: "https://sonarcloud.io"
 
 jobs:
@@ -51,9 +50,10 @@ jobs:
         version: [11]
         distribution: [adopt]
     runs-on: ${{ matrix.os }}
+
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
 
@@ -63,29 +63,36 @@ jobs:
           printenv | sort
 
       - name: setup JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v3.5.0
         with:
           java-version: '${{ matrix.version }}'
           distribution: '${{ matrix.distribution }}'
           architecture: x64
-          # cache: 'maven'
-
-      - name: cache sonarcloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ matrix.os }}-sonar
-          restore-keys: ${{ matrix.os }}-sonar
 
       - name: cache maven packages
-        uses: actions/cache@v3
+        uses: actions/cache@v3.0.8
         with:
-          path: ~/.m2
+          path: ${{ env.MVN_HOME_DIR }}
           key: ${{ matrix.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ matrix.os }}-m2
 
+      #- name: maven settings
+      #  uses: s4u/maven-settings-action@v2.6.0
+      #  with:
+      #    servers: '[{ "id": "coding.github-ss",  "username": "${{ github.github_actor }}", "configuration": { "httpHeaders": { "property": { "name": "Authorization", "value": "Bearer ${{ secrets.PCK_READ_TOKEN }}" }}}}, { "id": "coding.github.deploy-ss",  "username": "${{ github.github_actor }}", "configuration": { "httpHeaders": { "property": { "name": "Authorization", "value": "Bearer ${{ secrets.PCK_WRITE_TOKEN }}" }}}}]'
+
+      #- name: show settings
+      #  run: cat ${{ env.MVN_HOME_DIR }}/settings.xml
+
+      - name: cache sonarcloud packages
+        uses: actions/cache@v3.0.8
+        with:
+          path: ${{ env.SONAR_CACHE_DIR }}
+          key: ${{ matrix.os }}-sonar
+          restore-keys: ${{ matrix.os }}-sonar
+
       - name: sonarcloud scan
-        run: mvn $MVN_SIGN_OPTS $MVN_TEST_OPTS_N $MVN_OPTS_SONAR verify sonar:sonar
+        run: mvn ${{ env.MVN_SETT_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} ${{ env.MVN_SONAR_OPTS }} verify sonar:sonar
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PCK_READ_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
