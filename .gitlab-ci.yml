@@ -21,7 +21,7 @@ variables:
   REPO_DIR: ${CI_PROJECT_DIR}/.repo
   SCRIPT_DIR: ${CI_PROJECT_DIR}/.script
   MVN_USR_HOME: /root/.m2
-  VCS_CLEAN_REPO_URL: https://raw.githubusercontent.com/the-oglow/maven-repository-cleaner
+  VCS_CLEAN_REPO_URL: https://raw.githubusercontent.com/The-oGlow/maven-repository-cleaner
   VCS_CLEAN_REPO_VER: 1.00.00
   VCS_CLEAN_REPO_NAME: maven-repository-cleaner.sh
 

@@ -144,8 +144,8 @@
             </activation>
 
             <!--            <scm>-->
-            <!--            <connection>scm:git:https://github.com/The-oGlow/unit-extension.git</connection>-->
-            <!--            <developerConnection>scm:git:https://github.com/The-oGlow/unit-extension.git</developerConnection>-->
+            <!--                <connection>scm:git:https://github.com/The-oGlow/unit-extension.git</connection>-->
+            <!--                <developerConnection>scm:git:https://github.com/The-oGlow/unit-extension.git</developerConnection>-->
             <!--                <url>${project.env.GH_PROJECT_URL}</url>-->
             <!--                <tag>HEAD</tag>-->
             <!--            </scm>-->
@@ -232,9 +232,45 @@
                 <!-- ============================================== -->
                 <!-- The ID of this gitlab repository -->
                 <project.env.CI_PROJECT_ID>22436268</project.env.CI_PROJECT_ID>
-                <!-- The ID of this organization of this gitlab repository -->
-                <project.env.CI_GROUP_ID>10107405</project.env.CI_GROUP_ID>
             </properties>
+
+            <!-- Section Repositories -->
+            <!-- ============================================== -->
+            <repositories>
+                <repository>
+                    <id>coding.gitlab</id>
+                    <name>CASSI-Central Awesome Snap Shot Index</name>
+                    <url>https://gitlab.com/api/v4/groups/10107405/-/packages/maven</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </releases>
+                </repository>
+            </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>coding.gitlab</id>
+                    <name>CASSI-Central Awesome Snap Shot Index</name>
+                    <url>https://gitlab.com/api/v4/groups/10107405/-/packages/maven</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>interval:10</updatePolicy>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>daily</updatePolicy>
+                        <checksumPolicy>warn</checksumPolicy>
+                    </releases>
+                </pluginRepository>
+            </pluginRepositories>
         </profile>
     </profiles>
 </project>
