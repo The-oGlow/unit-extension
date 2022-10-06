@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="81-mvn [signed-install]" type="ShConfigurationType" folderName="unit-extension-shell">
+    <configuration default="false" name="81-mvn [signed-install-win]" type="ShConfigurationType" folderName="unit-extension-shell">
         <option name="SCRIPT_TEXT" value="%USERPROFILE%\.sign-env.bat &amp; mvn -DskipTests -DskipITs sign-jar,generate-gpgkey,artifact-release clean install"/>
         <option name="INDEPENDENT_SCRIPT_PATH" value="true"/>
         <option name="SCRIPT_PATH" value=""/>

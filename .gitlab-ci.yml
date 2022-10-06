@@ -122,7 +122,6 @@ sonarcloud:
   rules:
     - if: $SONAR_DISABLED
       when: never
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run job in merge request pipelines
     - if: $CI_COMMIT_BRANCH == "develop"               # Run job in pipelines on the DEVELOP branch
     - if: $CI_COMMIT_BRANCH == "master"                # Run job in pipelines on the MASTER branch
 

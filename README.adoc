@@ -1,14 +1,87 @@
-// import settings
-:site_resource: src/site/resources
-include::{site_resource}/proj-common.adoc[opts=optional]
+:hide-uri-scheme:
+// project settings (from pom-file)
+// user data
+:proj_user: ollily
+:proj_user_org: the-oglow
+:proj_author: Oliver Glowa
+:proj_user_email: coding at glowa-net dot com
+:proj_vcs_url: https://github.com
+:proj_author_url: {proj_vcs_url}/{proj_user}[{proj_author}]
+
+// organization
+:org_user: The-oGlow
+:org_author: The oGlow
+:org_team_user: oteam
+:org_team: The oTeam
+:org_url: http://coding.glowa-net.com
+:org_email:
+:org_vcs_url: {proj_vcs_url}
+:org_author_url: {org_vcs_url}/{org_user}[{org_author}]
+:org_team_url: {org_vcs_url}/orgs/{org_user}/teams/{org_team_user}[{org_team}]
+
+// module data
+:proj_gitgroup: {org_user}
+:proj_group: com.glowa-net.maven.tools
+:proj_module: unit-extension
+:proj_version: [latest version]
+:proj_description: Some useful extensions for unit testings
+:proj_year: 2020
+:proj_id_codacy: XXX
+:proj_id_coverity: -1
+:proj_id_openssf: -1
+
+// common settings
+:cmmn_img_style: &style=plastic
+:cmmn_img_gitlab_style: &logo=github{cmmn_img_style}
+:cmmn_badge_url: https://img.shields.io/badge
+:cmmn_badge_github_url: https://img.shields.io/github
+:cmmn_badge_codacy_grade_url: https://img.shields.io/codacy/grade
+:cmmn_badge_codacy_cov_url: https://img.shields.io/codacy/coverage
+:cmmn_badge_coverity_url: https://img.shields.io/coverity/scan
+:cmmn_badge_openssf_url: https://bestpractices.coreinfrastructure.org/projects
+:cmmn_badge_maven_url: https://img.shields.io/maven-central
+:cmmn_badge_sonar_url: https://img.shields.io/sonar
+:cmmn_badge_gitlab_status_url: https://img.shields.io/gitlab/pipeline-status
+:cmmn_badge_github_status_url: https://img.shields.io/github/workflow/status
+:cmmn_badge_coveralls_url: https://coveralls.io/repos/github
+:cmmn_codacy_dash_gl_url: https://www.codacy.com/gl
+:cmmn_codacy_dash_gh_url: https://www.codacy.com/gh
+:cmmn_coverity_dash_url: https://scan.coverity.com/projects
+:cmmn_openssf_dash_url: https://bestpractices.coreinfrastructure.org/projects
+:cmmn_coveralls_dash_gl_url: https://coveralls.io/gitlab
+:cmmn_coveralls_dash_gh_url: https://coveralls.io/github
+:cmmn_sonar_dash_url: https://sonarcloud.io/dashboard
+:cmmn_sonar_api_url: https://sonarcloud.io/api
+:cmmn_sonar_badge_url: https://sonarcloud.io/images/project_badges
+:cmmn_sonar_ref: logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io
+:cmmn_coverity: logo=coverity
+:cmmn_codacy_ref: logo=codacy
+:cmmn_maven_url: https://mvnrepository.com/artifact
+:cmmn_backlink: link:README.adoc[image:{cmmn_badge_url}/%3C%3D%3D%20GO-Back-lightgrey[title="go 2 previous page"]]
+:cmmn_pipelink: -/pipelines?ref=
+:cmmn_workflowLink: actions/workflows
+
+// project settings (generated)
+:proj_vcsid: {proj_gitgroup}/{proj_module}
+:proj_id_org: {proj_user_org}/{proj_module}
+:proj_gav: {proj_group}/{proj_module}
+:proj_sonarid: {proj_user_org}_{proj_module}
+:proj_cright_user: (c) {proj_year} by {proj_author_url}
+:proj_cright_org: (c) {proj_year} by {org_author_url}
+:proj_user_url: {proj_vcs_url}/{proj_user_org}
+:proj_vcsid_url: {proj_vcs_url}/{proj_vcsid}
+:proj_mvnid_url: {cmmn_maven_url}/{proj_gav}
+:proj_pipe_url: {proj_vcsid_url}/{cmmn_pipelink}
+:proj_wflow_url: {proj_vcsid_url}/{cmmn_workflowLink}
+
 :source-highlighter: highlight.js
 
 = {proj_module}
 :toc: preamble
-:toclevels: 1
+:toclevels: 2
 
-link:{proj_vcsid_url}/-/releases[image:{proj_vcsid_url}/-/badges/release.svg[title="Latest Release"]]
-link:LICENSE[image:{cmmn_badge_url}/license-license-brightgreen?logo=gitlab{cmmn_img_style}[title="Software License"]]
+link:{proj_vcsid_url}/releases[image:{cmmn_badge_github_url}/v/release/{proj_vcsid}?sort=semver&logo=github{cmmn_img_style}[title="Latest Release"]]
+link:LICENSE[image:{cmmn_badge_url}/license-license-brightgreen?logo=github{cmmn_img_style}[title="Software License"]]
 link:{proj_mvnid_url}[image:{cmmn_badge_maven_url}/v/{proj_gav}?logo=apache-maven{cmmn_img_style}[title="Maven Repository"]]
 
 {proj_description}
@@ -34,22 +107,49 @@ To use, set in your `pom.xml`:
 &lt;/dependency&gt;
 ----
 
-include::readme-project.adoc[opts=optional]
+== Instructions
+
+The detailed instructions for this artifact are found link:readme-project.adoc[here].
 
 == Project Status
 
-See link:readme-status.adoc[Project Status].
-
 link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_badge_url}/sonarcloud-black.svg[title="SonarCloud"]]
+
+=== Quality Information
+
+link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_api_url}/project_badges/quality_gate?project={proj_sonarid}[title="Quality Gate"]]
+link:{cmmn_coverity_dash_url}/{proj_module}[image:{cmmn_badge_coverity_url}/{proj_id_coverity}?{cmmn_coverity_ref}{cmmn_img_style}[title="Coverity Scan Status"]]
+link:{cmmn_codacy_dash_gh_url}/{proj_vcsid}[image:{cmmn_badge_codacy_grade_url}/{proj_id_codacy}?{cmmn_codacy_ref}{cmmn_img_style}[title="Codacy Scan Status"]]
+link:{cmmn_badge_openssf_url}/{proj_id_openssf}[image:{cmmn_openssf_dash_url}/{proj_id_openssf}/badge[title="CII Best Practices"]]
+
+=== Build Information
+:brnch_1: master
+:brnch_2: develop
+
+link:{proj_wflow_url}/maven.yml?query=branch%3A{brnch_1}[
+image:{cmmn_badge_gitlab_status_url}/{proj_vcsid}?branch={brnch_1}&label={brnch_1}{cmmn_img_gitlab_style}[title="Pipeline status on {brnch_1} branch"]]
+link:{proj_wflow_url}/maven.yml?query=branch%3A{brnch_2}[
+image:{cmmn_badge_gitlab_status_url}/{proj_vcsid}?branch={brnch_2}&label={brnch_2}{cmmn_img_gitlab_style}[title="Pipeline status on {brnch_2} branch"]]
+
+=== Test Information
+
+link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/test_success_density/{proj_sonarid}?{cmmn_sonar_ref}{cmmn_img_style}[title="Test Status"]]
+link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/tests/{proj_sonarid}?{cmmn_sonar_ref}{cmmn_img_style}[title="Test Count"]]
+link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/coverage/{proj_sonarid}?{cmmn_sonar_ref}{cmmn_img_style}[title="Coverage by Gitlab"]]
+link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_api_url}/project_badges/measure?project={proj_sonarid}&metric=coverage[title="Coverage by Sonarqube"]]
+link:{cmmn_coveralls_dash_gh_url}/{proj_vcsid}?branch={brnch_1}[image:{cmmn_badge_coveralls_url}/{proj_vcsid}/badge.svg?branch={brnch_1}[title="{brnch_1} Coveralls Status"]]
+link:{cmmn_coveralls_dash_gh_url}/{proj_vcsid}?branch={brnch_2}[image:{cmmn_badge_coveralls_url}/{proj_vcsid}/badge.svg?branch={brnch_2}[title="{brnch_2} Coveralls Status"]]
+link:{cmmn_codacy_dash_gh_url}/{proj_vcsid}[image:{cmmn_badge_codacy_cov_url}/{proj_id_codacy}?{cmmn_codacy_ref}{cmmn_img_style}[title="Codacy Coverage"]]
 
 == Author
 
-{proj_author_url}
+{proj_author_url} from {org_team_url} of {org_author_url}.
 
 == License
 
-This project is released under version 2.0 of the link:{proj_vcsid_url}/-/blob/master/LICENSE[Apache License].
-Please see the link:{proj_vcsid_url}/-/blob/master/LICENSE[license file] for more information.
+This project is released under the link:{proj_vcsid_url}/LICENSE[Apache License Version 2.0].
+Please see the link:{proj_vcsid_url}/LICENSE[license file] for more information.
 
 ''''
-~{proj_cright}~
+
+~{proj_cright_org}~

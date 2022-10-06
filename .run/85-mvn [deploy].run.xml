@@ -34,7 +34,6 @@
           <option name="profilesMap">
             <map>
               <entry key="artifact-release" value="true" />
-              <entry key="sign-jar" value="true" />
             </map>
           </option>
           <option name="resolveToWorkspace" value="true" />
