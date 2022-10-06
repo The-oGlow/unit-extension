@@ -18,17 +18,28 @@ on:
 env:
   # Github Additional Configuration
   GITHUB_REPO_NAME: ${{ github.event.repository.name }}
+  GITHUB_ACTOR: ${{ github.actor }}
   GITHUB_PROJECT_DIR: ${{ github.workspace }}
   GITHUB_TARGET_DIR: ${{ github.workspace }}/target
   GITHUB_UPLOAD_DIR: ${{ github.workspace }}/staging
+  GITHUB_UPLOAD_NAME: ${{ github.event.repository.name }}.zip
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  PCK_READ_TOKEN: ${{ secrets.PCK_READ_TOKEN }}
+  PCK_WRITE_TOKEN: ${{ secrets.PCK_WRITE_TOKEN }}
 
   # Maven Common Configuration
   MVN_HOME_DIR: ~/.m2
   MVN_REPO_JOB_DIR: ${{ github.workspace }}/.repo
-  MVN_SETT_OPTS: -B -s "${{ github.workspace}}/.m2/settings.xml"
+  MVN_SETT_OPTS: -V -B
+  MVN_SETS_OPTS: -V -B -s "${{ github.workspace}}/.m2/settings.xml"
   MVN_REPO_OPTS: -Dmaven.repo.local="${{ github.workspace}}/.repo"
   MVN_BUILD_OPTS: -fae -Dmaven.test.failure.ignore=true
-  MVN_CLI_OPTS: -fae
+  MVN_CLI_OPTS: -ff
+  MVN_DISTRIB_URL: https://maven.pkg.github.com
+  MVN_DISTRIB_REPO_SS: The-oGlow/Awesome-Snap-Shots
+  MVN_DISTRIB_REPO_REL: The-oGlow/Central-Awesome-Index
+  CHK_FILE: com/glowa-net/maven/parent/global-appl-pom/3-SNAPSHOT/maven-metadata.xml
+  CHK_FUNC: echo SUCCESS || echo FAIL
 
   # Maven Sign Configuration
   MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
@@ -41,6 +52,7 @@ env:
   MVN_SONAR_OPTS: -Dsonar.qualitygate.wait=true -Dsonar.login=${{ secrets.SONAR_TOKEN }}
   SONAR_CACHE_DIR: ~/.sonar/cache
   SONAR_HOST_URL: "https://sonarcloud.io"
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
   build:
@@ -52,6 +64,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      #      - name: validate deploy repos
+      #        run: |
+      #          curl -fH "Authorization: Bearer ${{ secrets.PCK_READ_TOKEN }}"  "${{ env.MVN_DISTRIB_URL }}/${{ env.MVN_DISTRIB_REPO_SS }}/${{ env.CHK_FILE }}" && ${{ env.CHK_FUNC }}
+      #          curl -fH "Authorization: Bearer ${{ secrets.PCK_WRITE_TOKEN }}" "${{ env.MVN_DISTRIB_URL }}/${{ env.MVN_DISTRIB_REPO_SS }}/${{ env.CHK_FILE }}" && ${{ env.CHK_FUNC }}
+      #          curl -f -u "${{ env.GITHUB_ACTOR }}:${{ secrets.PCK_WRITE_TOKEN }}" "${{ env.MVN_DISTRIB_URL }}/${{ env.MVN_DISTRIB_REPO_SS }}/${{ env.CHK_FILE }}" && ${{ env.CHK_FUNC }}
+      #          curl -f -u "${{ env.GITHUB_ACTOR }}:${{ secrets.GITHUB_TOKEN }}" "${{ env.MVN_DISTRIB_URL }}/${{ env.MVN_DISTRIB_REPO_SS }}/${{ env.CHK_FILE }}" && ${{ env.CHK_FUNC }}
+
       - name: checkout
         uses: actions/checkout@v3.0.2
         with:
@@ -79,13 +98,18 @@ jobs:
       #- name: maven settings
       #  uses: s4u/maven-settings-action@v2.6.0
       #  with:
-      #    servers: '[{ "id": "coding.github-ss",  "username": "${{ github.github_actor }}", "configuration": { "httpHeaders": { "property": { "name": "Authorization", "value": "Bearer ${{ secrets.PCK_READ_TOKEN }}" }}}}, { "id": "coding.github.deploy-ss",  "username": "${{ github.github_actor }}", "configuration": { "httpHeaders": { "property": { "name": "Authorization", "value": "Bearer ${{ secrets.PCK_WRITE_TOKEN }}" }}}}]'
+      #          servers: '[{"id": "coding.github.ss", "username": "${env.GITHUB_ACTOR}", "password": "${env.GITHUB_TOKEN}"}, {"id": "coding.github.ss.deploy", "username": "${env.GITHUB_ACTOR}", "password": "${env.GITHUB_TOKEN}"}]'
+      #        with:
+      #          servers: '[{ "id": "coding.github.ss",  "username": "${{ github.github_actor }}", "configuration": { "httpHeaders": { "property": { "name": "Authorization", "value": "Bearer ${{ secrets.PCK_READ_TOKEN }}" }}}}, { "id": "coding.github.ss.deploy",  "username": "${{ github.github_actor }}", "configuration": { "httpHeaders": { "property": { "name": "Authorization", "value": "Bearer ${{ secrets.PCK_WRITE_TOKEN }}" }}}}]'
 
       #- name: show settings
       #  run: cat ${{ env.MVN_HOME_DIR }}/settings.xml
 
+      - name: show settings
+        run: cat ${{ github.workspace}}/.m2/settings.xml
+
       - name: maven build
-        run: mvn ${{ env.MVN_SETT_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} ${{ env.MVN_BUILD_OPTS }} clean install
+        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_BUILD_OPTS }} help:active-profiles clean install
 
       - name: show build
         run: |
@@ -106,10 +130,11 @@ jobs:
       - name: upload artifact
         uses: actions/upload-artifact@v3.1.0
         with:
-          name: ${{ env.GITHUB_REPO_NAME }}
+          name: ${{ env.GITHUB_UPLOAD_NAME }}
           path: ${{ env.GITHUB_UPLOAD_DIR }}
           if-no-files-found: warn
+          retention-days: 14
 
       - name: deploy artifact
-        run: mvn ${{ env.MVN_SETT_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} ${{ env.MVN_BUILD_OPTS }} deploy
+        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} ${{ env.MVN_CLI_OPTS }} help:active-profiles deploy
 
