@@ -116,4 +116,4 @@ jobs:
           restore-keys: ${{ matrix.os }}-sonar
 
       - name: sonarcloud scan
-        run: mvn ${{ env.MVN_SETT_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_SONAR_OPTS }} verify sonar:sonar
+        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_SONAR_OPTS }} verify sonar:sonar
