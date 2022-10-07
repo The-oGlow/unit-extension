@@ -26,9 +26,9 @@
 :proj_version: [latest version]
 :proj_description: Some useful extensions for unit testings
 :proj_year: 2020
-:proj_id_codacy: XXX
+:proj_id_codacy: dba747d3491447a5a0ccb938af70e6c1
 :proj_id_coverity: -1
-:proj_id_openssf: -1
+:proj_id_openssf: 6559
 
 // common settings
 :cmmn_img_style: &style=plastic
@@ -118,7 +118,7 @@ link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_badge_url}/sonarc
 === Quality Information
 
 link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_api_url}/project_badges/quality_gate?project={proj_sonarid}[title="Quality Gate"]]
-link:{cmmn_coverity_dash_url}/{proj_module}[image:{cmmn_badge_coverity_url}/{proj_id_coverity}?{cmmn_coverity_ref}{cmmn_img_style}[title="Coverity Scan Status"]]
+//link:{cmmn_coverity_dash_url}/{proj_module}[image:{cmmn_badge_coverity_url}/{proj_id_coverity}?{cmmn_coverity_ref}{cmmn_img_style}[title="Coverity Scan Status"]]
 link:{cmmn_codacy_dash_gh_url}/{proj_vcsid}[image:{cmmn_badge_codacy_grade_url}/{proj_id_codacy}?{cmmn_codacy_ref}{cmmn_img_style}[title="Codacy Scan Status"]]
 link:{cmmn_badge_openssf_url}/{proj_id_openssf}[image:{cmmn_openssf_dash_url}/{proj_id_openssf}/badge[title="CII Best Practices"]]
 
