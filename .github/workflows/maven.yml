@@ -135,5 +135,5 @@ jobs:
           retention-days: 14
 
       - name: deploy artifact
-        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} ${{ env.MVN_DEPLOY_OPTS }} help:active-profiles deploy:deploy
+        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} ${{ env.MVN_DEPLOY_OPTS }} help:active-profiles deploy
 
