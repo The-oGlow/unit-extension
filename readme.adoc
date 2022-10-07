@@ -32,7 +32,8 @@
 
 // common settings
 :cmmn_img_style: &style=plastic
-:cmmn_img_gitlab_style: &logo=github{cmmn_img_style}
+:cmmn_img_gitlab_style: &logo=gitlab{cmmn_img_style}
+:cmmn_img_github_style: &logo=github{cmmn_img_style}
 :cmmn_badge_url: https://img.shields.io/badge
 :cmmn_badge_github_url: https://img.shields.io/github
 :cmmn_badge_codacy_grade_url: https://img.shields.io/codacy/grade
@@ -127,15 +128,15 @@ link:{cmmn_badge_openssf_url}/{proj_id_openssf}[image:{cmmn_openssf_dash_url}/{p
 :brnch_2: develop
 
 link:{proj_wflow_url}/maven.yml?query=branch%3A{brnch_1}[
-image:{cmmn_badge_gitlab_status_url}/{proj_vcsid}?branch={brnch_1}&label={brnch_1}{cmmn_img_gitlab_style}[title="Pipeline status on {brnch_1} branch"]]
+image:{cmmn_badge_github_status_url}/{proj_vcsid}/maven-build/{brnch_1}?label={brnch_1}{cmmn_img_github_style}[title="Pipeline status on {brnch_1} branch"]]
 link:{proj_wflow_url}/maven.yml?query=branch%3A{brnch_2}[
-image:{cmmn_badge_gitlab_status_url}/{proj_vcsid}?branch={brnch_2}&label={brnch_2}{cmmn_img_gitlab_style}[title="Pipeline status on {brnch_2} branch"]]
+image:{cmmn_badge_github_status_url}/{proj_vcsid}/maven-build/{brnch_2}?label={brnch_2}{cmmn_img_github_style}[title="Pipeline status on {brnch_2} branch"]]
 
 === Test Information
 
 link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/test_success_density/{proj_sonarid}?{cmmn_sonar_ref}{cmmn_img_style}[title="Test Status"]]
 link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/tests/{proj_sonarid}?{cmmn_sonar_ref}{cmmn_img_style}[title="Test Count"]]
-link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/coverage/{proj_sonarid}?{cmmn_sonar_ref}{cmmn_img_style}[title="Coverage by Gitlab"]]
+link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/coverage/{proj_sonarid}?{cmmn_sonar_ref}{cmmn_img_style}[title="Coverage by Github"]]
 link:{cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_sonar_api_url}/project_badges/measure?project={proj_sonarid}&metric=coverage[title="Coverage by Sonarqube"]]
 link:{cmmn_coveralls_dash_gh_url}/{proj_vcsid}?branch={brnch_1}[image:{cmmn_badge_coveralls_url}/{proj_vcsid}/badge.svg?branch={brnch_1}[title="{brnch_1} Coveralls Status"]]
 link:{cmmn_coveralls_dash_gh_url}/{proj_vcsid}?branch={brnch_2}[image:{cmmn_badge_coveralls_url}/{proj_vcsid}/badge.svg?branch={brnch_2}[title="{brnch_2} Coveralls Status"]]

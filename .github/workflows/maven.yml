@@ -48,7 +48,7 @@ env:
   MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false
 
   # Sonarcloud Configuration
-  MVN_SONAR_OPTS: -Dsonar.qualitygate.wait=true -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+  MVN_SONAR_OPTS: -Dmaven.test.failure.ignore=true -Dsonar.qualitygate.wait=true -Dsonar.login=${{ secrets.SONAR_TOKEN }}
   SONAR_CACHE_DIR: ~/.sonar/cache
   SONAR_HOST_URL: "https://sonarcloud.io"
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
