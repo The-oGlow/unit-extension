@@ -23,7 +23,7 @@
 :cmmn_codacy_ref: logo=codacy
 :cmmn_maven_url: https://mvnrepository.com/artifact
 :cmmn_backlink: link:README.adoc[image:{cmmn_badge_url}/%3C%3D%3D%20GO-Back-lightgrey[title="go 2 previous page"]]
-:cmmn_pipelink: -/pipelines?ref=
+:cmmn_gitlab_pipe_link: -/pipelines?ref=
 
 // project settings
 include::proj-env.adoc[opts=optional]
@@ -37,4 +37,4 @@ include::proj-env.adoc[opts=optional]
 :proj_user_url: {proj_vcs_url}/{proj_user_org}
 :proj_vcsid_url: {proj_vcs_url}/{proj_vcsid}
 :proj_mvnid_url: {cmmn_maven_url}/{proj_gav}
-:proj_pipe_url: {proj_vcsid_url}/{cmmn_pipelink}
+:proj_gitlab_pipe_url: {proj_vcsid_url}/{cmmn_gitlab_pipe_link}
