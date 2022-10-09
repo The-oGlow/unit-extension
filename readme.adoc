@@ -34,76 +34,83 @@
 :proj_id_codacy: dba747d3491447a5a0ccb938af70e6c1
 :proj_id_codacy_cov: -1
 :proj_id_coverity: -1
-:proj_id_openssf: -1
-//6559
+:proj_id_openssf: 6569
+//6569
 :proj_id_coveralls: -1
 //{proj_gitgroup}/{proj_module}
 
-// common settings
-:cmmn_badge_url: https://img.shields.io/badge
-:cmmn_img_style: &style=plastic
-:cmmn_backlink: link:readme.adoc[image:{cmmn_badge_url}/%3C%3D%3D%20GO-Back-lightgrey[title="go 2 previous page"]]
+// common settings - for all modules the same
+:cmmn_shields_hp: https://img.shields.io
+:cmmn_shields_badge_url: {cmmn_shields_hp}/badge
+:cmmn_shields_img_style: &style=plastic
+:cmmn_backlink: link:readme.adoc[image:{cmmn_shields_badge_url}/%3C%3D%3D%20GO-Back-lightgrey[title="go 2 previous page"]]
 :brnch_1: master
 :brnch_2: develop
-:cmmn_notsupp_link: [image:{cmmn_badge_url}/info-not%20supported-lightgrey?{cmmn_img_style}[title="not available"]]
-:cmmn_notneed_link: image:{cmmn_badge_url}/info-not%20needed-lightgrey?{cmmn_img_style}[title="not needed"]
+:cmmn_notsupp_link: [image:{cmmn_shields_badge_url}/info-not%20supported-lightgrey?{cmmn_shields_img_style}[title="not available"]]
+:cmmn_notneed_link: image:{cmmn_shields_badge_url}/info-not%20needed-lightgrey?{cmmn_shields_img_style}[title="not needed"]
 
 // maven
 :cmmn_maven_ref: logo=apache-maven
-:cmmn_img_maven_style: &{cmmn_maven_ref}{cmmn_img_style}
-:cmmn_badge_maven_url: https://img.shields.io/maven-central
+:cmmn_img_maven_style: &{cmmn_maven_ref}{cmmn_shields_img_style}
+:cmmn_badge_maven_url: {cmmn_shields_hp}/maven-central
 :cmmn_maven_url: https://mvnrepository.com/artifact
 
 // github
 :cmmn_github_ref: logo=github
-:cmmn_img_github_style: &{cmmn_github_ref}{cmmn_img_style}
+:cmmn_img_github_style: &{cmmn_github_ref}{cmmn_shields_img_style}
 :cmmn_github_workflow_link: actions/workflows
-:cmmn_badge_github_url: https://img.shields.io/github
-:cmmn_badge_github_status_url: https://img.shields.io/github/workflow/status
-:cmmn_badge_github_issues_url: https://img.shields.io/github/issues
-:cmmn_badge_github_pulls_url: https://img.shields.io/github/issues-pr
+:cmmn_badge_github_url: {cmmn_shields_hp}/github
+:cmmn_badge_github_status_url: {cmmn_badge_github_url}/workflow/status
+:cmmn_badge_github_issues_url: {cmmn_badge_github_url}/issues
+:cmmn_badge_github_pulls_url: {cmmn_badge_github_url}/issues-pr
 
 // gitlab
 :cmmn_gitlab_ref: logo=gitlab
-:cmmn_img_gitlab_style: &{cmmn_gitlab_ref}{cmmn_img_style}
+:cmmn_img_gitlab_style: &{cmmn_gitlab_ref}{cmmn_shields_img_style}
 :cmmn_gitlab_pipe_link: -/pipelines?ref=
-:cmmn_badge_gitlab_status_url: https://img.shields.io/gitlab/pipeline-status
+:cmmn_badge_gitlab_url: {cmmn_shields_hp}/gitlab
+:cmmn_badge_gitlab_status_url: {cmmn_badge_gitlab_url}/pipeline-status
 
 // sonarqube
+:cmmn_sonar_hp: https://sonarcloud.io
 :cmmn_sonar_ref: logo=sonarcloud&server=https%3A%2F%2Fsonarcloud.io
-:cmmn_img_sonar_style: &{cmmn_sonar_ref}{cmmn_img_style}
-:cmmn_badge_sonar_url: https://img.shields.io/sonar
-:cmmn_sonar_badge_url: https://sonarcloud.io/images/project_badges
-:cmmn_sonar_dash_url: https://sonarcloud.io/dashboard
-:cmmn_sonar_api_url: https://sonarcloud.io/api
+:cmmn_img_sonar_style: &{cmmn_sonar_ref}{cmmn_shields_img_style}
+:cmmn_badge_sonar_url: {cmmn_shields_hp}/sonar
+:cmmn_sonar_badge_url: {cmmn_sonar_hp}/images/project_badges
+:cmmn_sonar_dash_url: {cmmn_sonar_hp}/dashboard
+:cmmn_sonar_api_url: {cmmn_sonar_hp}/api
 :cmmn_sonar_mes_tsd: component_measures?metric=test_success_density&view=list
 :cmmn_sonar_mes_test: component_measures?metric=tests&view=list
 :cmmn_sonar_mes_cov: component_measures?metric=coverage&view=list
 
 // coveralls
+:cmmn_coveralls_hp: https://coveralls.io
 :cmmn_coveralls_ref: logo=coveralls
-:cmmn_img_coveralls_style: &{cmmn_coveralls_ref}{cmmn_img_style}
-:cmmn_badge_coveralls_url: https://img.shields.io/coveralls/github
-:cmmn_coveralls_dash_gl_url: https://coveralls.io/gitlab
-:cmmn_coveralls_dash_gh_url: https://coveralls.io/github
+:cmmn_img_coveralls_style: &{cmmn_coveralls_ref}{cmmn_shields_img_style}
+:cmmn_badge_coveralls_url: {cmmn_shields_hp}/coveralls/github
+:cmmn_coveralls_dash_gl_url: {cmmn_coveralls_hp}/gitlab
+:cmmn_coveralls_dash_gh_url: {cmmn_coveralls_hp}/github
 
 // codacy
+:cmmn_codacy_hp: https://www.codacy.com
 :cmmn_codacy_ref: logo=codacy
-:cmmn_img_codacy_style: &{cmmn_codacy_ref}{cmmn_img_style}
-:cmmn_badge_codacy_grade_url: https://img.shields.io/codacy/grade
-:cmmn_badge_codacy_cov_url: https://img.shields.io/codacy/coverage
-:cmmn_codacy_dash_gl_url: https://www.codacy.com/gl
-:cmmn_codacy_dash_gh_url: https://www.codacy.com/gh
+:cmmn_img_codacy_style: &{cmmn_codacy_ref}{cmmn_shields_img_style}
+:cmmn_badge_codacy_grade_url: {cmmn_shields_hp}/codacy/grade
+:cmmn_badge_codacy_cov_url: {cmmn_shields_hp}/codacy/coverage
+:cmmn_codacy_dash_gl_url: {cmmn_codacy_hp}/gl
+:cmmn_codacy_dash_gh_url: {cmmn_codacy_hp}/gh
 
 // coverity
+:cmmn_coverity_hp: https://scan.coverity.com
 :cmmn_coverity_ref: logo=coverity
-:cmmn_img_coverity_style: &{cmmn_coverity_ref}{cmmn_img_style}
-:cmmn_badge_coverity_url: https://img.shields.io/coverity/scan
-:cmmn_coverity_dash_url: https://scan.coverity.com/projects
+:cmmn_img_coverity_style: &{cmmn_coverity_ref}{cmmn_shields_img_style}
+:cmmn_badge_coverity_url: {cmmn_shields_hp}/coverity/scan
+:cmmn_coverity_dash_url: {cmmn_coverity_hp}/projects
 
 // openssf
-:cmmn_badge_openssf_url: https://bestpractices.coreinfrastructure.org/projects
-:cmmn_openssf_dash_url: https://bestpractices.coreinfrastructure.org/projects
+:cmmn_openssf_hp: https://bestpractices.coreinfrastructure.org
+:cmmn_badge_openssf_url: {cmmn_openssf_hp}/projects
+:cmmn_openssf_dash_url: {cmmn_openssf_hp}/projects
 
 // project settings (generated)
 :proj_vcsid: {proj_gitgroup}/{proj_module}
@@ -122,7 +129,7 @@
 :proj_ps_github_license_link: LICENSE[image:{cmmn_badge_github_url}/license/{proj_vcsid}?{cmmn_img_github_style}[title="Software License"]]
 :proj_ps_issues_link: {proj_vcsid_url}/issues[image:{cmmn_badge_github_issues_url}/{proj_vcsid}?{cmmn_img_github_style}[title="Open Issues"]]
 :proj_ps_pulls_link: {proj_vcsid_url}/pulls[image:{cmmn_badge_github_pulls_url}/{proj_vcsid}?{cmmn_img_github_style}[title="Open Pull Requests"]]
-:proj_ps_maven_latest_link: [image:{cmmn_badge_url}/maven%20central-no%20releases-red?{cmmn_img_maven_style}[title="Maven Repository"]]
+:proj_ps_maven_latest_link: [image:{cmmn_shields_badge_url}/maven%20central-no%20releases-red?{cmmn_img_maven_style}[title="Maven Repository"]]
 ifeval::["{proj_id_gavid}" != "-1"]
 :proj_ps_maven_latest_link: {cmmn_maven_url}/{proj_id_gavid}[image:{cmmn_badge_maven_url}/v/{proj_id_gavid}?{cmmn_img_maven_style}[title="Maven Repository"]]
 endif::[]
@@ -195,7 +202,7 @@ link:{proj_ps_maven_latest_link} +
 link:{proj_ps_issues_link}
 link:{proj_ps_pulls_link}
 
-{proj_description}
+{proj_description}. +
 See link:{proj_user_url}[Homepage].
 
 == Installation
@@ -208,14 +215,19 @@ Install link:https://maven.apache.org/install.html[Maven].
 
 To use, set in your `pom.xml`:
 
+:dep_tag: dependency
+ifeval::["{proj_mvn_type}" == "pom"]
+:dep_tag: parent
+endif::[]
+
 .pom.xml
 [source,html,subs="attributes"]
 ----
-&lt;dependency&gt;
+&lt;{dep_tag}&gt;
   &lt;groupId&gt;{proj_group}&lt;/groupId&gt;
   &lt;artifactId&gt;{proj_module}&lt;/artifactId&gt;
   &lt;version&gt;{proj_version}&lt;/version&gt;
-&lt;/dependency&gt;
+&lt;/{dep_tag}&gt;
 ----
 
 == Instructions
@@ -229,32 +241,32 @@ The detailed instructions for this artifact are found link:readme-project.adoc[h
 | ^|Branch '{brnch_1}' ^|Branch '{brnch_2}'
 
 3+|*Build*
-|Build
+|github.com
 |link:{proj_bs_brnch1_link}
 |link:{proj_bs_brnch2_link}
 3+|*Quality Information*
-|Sonarcloud.io
+|link:{cmmn_sonar_hp}[sonarcloud.io]
 2+^|link:{proj_qi_sonar_qg_link}
-|OpenSSF
+|link:{cmmn_openssf_hp}[openSSF BP]
 2+^|link:{proj_qi_openssf_status_link}
-|Codacy.com
+|link:{cmmn_codacy_hp}[codacy.com]
 |link:{proj_qi_codacy_brnch1_status_link}
 |link:{proj_qi_codacy_brnch2_status_link}
-|Coverity.com
+|link:{cmmn_coverity_hp}[coverity.com]
 2+^|link:{proj_qi_coverity_brnch1_status_link}
 ifeval::["{proj_mvn_type}" != "pom"]
 3+|*Test Information*
-|Sonarcloud.io
+|link:{cmmn_sonar_hp}[sonarcloud.io]
 |link:{proj_ti_sonar_brnch1_tsd_link} +
 link:{proj_ti_sonar_brnch1_test_link} +
 link:{proj_ti_sonar_brnch1_coverage_link}
 |link:{proj_ti_sonar_brnch2_tsd_link} +
 link:{proj_ti_sonar_brnch2_test_link} +
 link:{proj_ti_sonar_brnch2_coverage_link}
-|Coveralls.io
+|link:{cmmn_coveralls_hp}[coveralls.io]
 |link:{proj_ti_coveralls_brnch1_link}
 |link:{proj_ti_coveralls_brnch2_link}
-|Codacy.com
+|link:{cmmn_codacy_hp}[codacy.com]
 |link:{proj_ti_codacy_brnch1_link}
 |link:{proj_ti_codacy_brnch1_link}
 endif::[]
