@@ -6,7 +6,6 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
@@ -262,7 +261,6 @@ public class ReflectionHelperTest {
     }
 
     @Test
-    @Ignore("Not working on gitlab docker")
     public void test_setFinalStaticValue_with_fieldNameAndValueAndClazz_replaceValue() throws IllegalAccessException {
         final float valueBefore = CONST_FLOAT_VALUE;
         final float valueAfter = valueBefore + 20f;
@@ -327,5 +325,4 @@ public class ReflectionHelperTest {
 
         assertValid(actual, containsString(NoSuchMethodException.class.getName()), AssertionError.class);
     }
-
 }

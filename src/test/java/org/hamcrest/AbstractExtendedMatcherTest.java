@@ -1,6 +1,9 @@
 package org.hamcrest;
 
+import com.glowanet.annotation.ExcludeFromTesting;
 import com.glowanet.util.hamcrest.AbstractMatcherTest;
+import com.glowanet.util.junit.rules.ExcludeFromTestingRule;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,6 +24,9 @@ import static org.junit.Assume.assumeThat;
  * @see org.hamcrest.TypeSafeMatcher
  */
 public abstract class AbstractExtendedMatcherTest<T> extends AbstractMatcherTest<T> {
+
+    @Rule
+    public ExcludeFromTestingRule excludeFromTestingRule = new ExcludeFromTestingRule();
 
     /**
      * @return the {@code o2T} as {@link TypeSafeMatcher} to test against
@@ -44,23 +50,28 @@ public abstract class AbstractExtendedMatcherTest<T> extends AbstractMatcherTest
 
     /**
      * Call to assume that {@link #o2T()} satisfies the condition that is a {@link TypeSafeMatcher}.
+     *
+     * @return
      */
-    protected void assumeIsTypeSafeMatcher() {
-        assumeThat("No TypeSafeMatcher available!", isMatcherType(TypeSafeMatcher.class, o2T()), is(true));
+    public boolean assumeIsTypeSafeMatcher() {
+        LOGGER.debug("No TypeSafeMatcher available!");
+        return !isMatcherType(TypeSafeMatcher.class, o2T());
+        //assumeThat("No TypeSafeMatcher available!", isMatcherType(TypeSafeMatcher.class, o2T()), is(true));
     }
 
     /**
      * Call to assume that {@link #o2T()} satisfies the condition that is a {@link DiagnosingMatcher}.
      */
-    protected void assumeIsDiagnosingMatcher() {
+    public void assumeIsDiagnosingMatcher() {
         assumeThat("No DiagnosingMatcher available!", isMatcherType(DiagnosingMatcher.class, o2T()), is(true));
     }
 
     /* Section for {@link org.hamcrest.TypeSafeMatcher} unit tests */
 
+    @ExcludeFromTesting(assumeTrue = "assumeIsTypeSafeMatcher")
     @Test
     public void testGeneric_testMatchesSafely_objectsAreTheSame_return_true() {
-        assumeIsTypeSafeMatcher();
+        //assumeIsTypeSafeMatcher();
         TypeSafeMatcher<T> tsO2T = tsO2T();
 
         T item = prepareArgumentInMatcher();
@@ -69,9 +80,10 @@ public abstract class AbstractExtendedMatcherTest<T> extends AbstractMatcherTest
         assertThat(actual, is(true));
     }
 
+    @ExcludeFromTesting(assumeTrue = "assumeIsTypeSafeMatcher")
     @Test
     public void testGeneric_testMatchesSafely_objectsAreDifferent_return_false() {
-        assumeIsTypeSafeMatcher();
+        //assumeIsTypeSafeMatcher();
         TypeSafeMatcher<T> tsO2T = tsO2T();
 
         T item = prepareArgumentToCompareWith();
@@ -87,9 +99,10 @@ public abstract class AbstractExtendedMatcherTest<T> extends AbstractMatcherTest
      */
     protected abstract Matcher<String> prepareMatcherDescriptionText_missmatchSafely_sameObject_check();
 
+    @ExcludeFromTesting(assumeTrue = "assumeIsTypeSafeMatcher")
     @Test
     public void testGeneric_testDescribeMismatchSafely_sameObject_description_notChanged() {
-        assumeIsTypeSafeMatcher();
+        //assumeIsTypeSafeMatcher();
         TypeSafeMatcher<T> tsO2T = tsO2T();
 
         Description description = prepareDefaultDescription();
@@ -106,9 +119,10 @@ public abstract class AbstractExtendedMatcherTest<T> extends AbstractMatcherTest
      */
     protected abstract Matcher<String> prepareMatcherDescriptionText_missmatchSafely_differentObject_check();
 
+    @ExcludeFromTesting(assumeTrue = "assumeIsTypeSafeMatcher")
     @Test
     public void testGeneric_testDescribeMismatchSafely_differenObject_description_isAdded() {
-        assumeIsTypeSafeMatcher();
+        //assumeIsTypeSafeMatcher();
         TypeSafeMatcher<T> tsO2T = tsO2T();
 
         Description description = prepareDefaultDescription();
@@ -125,9 +139,10 @@ public abstract class AbstractExtendedMatcherTest<T> extends AbstractMatcherTest
      */
     protected abstract Matcher<String> prepareMatcherDescriptionText_missmatchSafely_nullObject_check();
 
+    @ExcludeFromTesting(assumeTrue = "assumeIsTypeSafeMatcher")
     @Test
     public void testGeneric_testDescribeMismatchSafely_nullObject_description_isAddedWithNull() {
-        assumeIsTypeSafeMatcher();
+        //assumeIsTypeSafeMatcher();
         TypeSafeMatcher<T> tsO2T = tsO2T();
 
         Description description = prepareDefaultDescription();
