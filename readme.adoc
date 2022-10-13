@@ -32,7 +32,6 @@
 :proj_id_gavid: -1
 //{proj_group}/{proj_module}
 :proj_id_codacy: dba747d3491447a5a0ccb938af70e6c1
-:proj_id_codacy_cov: -1
 :proj_id_coverity: -1
 :proj_id_openssf: 6569
 //6569
@@ -93,12 +92,15 @@
 
 // codacy
 :cmmn_codacy_hp: https://www.codacy.com
+:cmmn_codacy_app: https://app.codacy.com
 :cmmn_codacy_ref: logo=codacy
 :cmmn_img_codacy_style: &{cmmn_codacy_ref}{cmmn_shields_img_style}
 :cmmn_badge_codacy_grade_url: {cmmn_shields_hp}/codacy/grade
 :cmmn_badge_codacy_cov_url: {cmmn_shields_hp}/codacy/coverage
-:cmmn_codacy_dash_gl_url: {cmmn_codacy_hp}/gl
-:cmmn_codacy_dash_gh_url: {cmmn_codacy_hp}/gh
+:cmmn_codacy_badge_grade_url: {cmmn_codacy_app}/project/badge/Grade
+:cmmn_codacy_badge_cov_url: {cmmn_codacy_app}/project/badge/Coverage
+:cmmn_codacy_dash_gl_url: {cmmn_codacy_app}/gl
+:cmmn_codacy_dash_gh_url: {cmmn_codacy_app}/gh
 
 // coverity
 :cmmn_coverity_hp: https://scan.coverity.com
@@ -149,8 +151,8 @@ endif::[]
 :proj_qi_codacy_brnch1_status_link: {cmmn_notsupp_link}
 :proj_qi_codacy_brnch2_status_link: {cmmn_notsupp_link}
 ifeval::["{proj_id_codacy}" != "-1"]
-:proj_qi_codacy_brnch1_status_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}[image:{cmmn_badge_codacy_grade_url}/{proj_id_codacy}/{brnch_1}?{cmmn_img_codacy_style}[title="Codacy Scan Status"]]
-:proj_qi_codacy_brnch2_status_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}[image:{cmmn_badge_codacy_grade_url}/{proj_id_codacy}/{brnch_2}?{cmmn_img_codacy_style}[title="Codacy Scan Status"]]
+:proj_qi_codacy_brnch1_status_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}/dashboard?branch={brnch_1}[image:{cmmn_badge_codacy_grade_url}/{proj_id_codacy}/{brnch_1}?{cmmn_img_codacy_style}[title="Codacy Scan Status {brnch_1}"]]
+:proj_qi_codacy_brnch2_status_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}/dashboard?branch={brnch_2}[image:{cmmn_badge_codacy_grade_url}/{proj_id_codacy}/{brnch_2}?{cmmn_img_codacy_style}[title="Codacy Scan Status {brnch_2}"]]
 endif::[]
 
 // qa openssf
@@ -165,29 +167,29 @@ endif::[]
 
 // test information
 // ti sonarqube
-:proj_ti_sonar_brnch1_tsd_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/test_success_density/{proj_sonarid}/{brnch_1}?{cmmn_img_sonar_style}[title="Test Status"]]
-:proj_ti_sonar_brnch2_tsd_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/test_success_density/{proj_sonarid}/{brnch_2}?{cmmn_img_sonar_style}[title="Test Status"]]
-:proj_ti_sonar_brnch1_test_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/tests/{proj_sonarid}/{brnch_1}?{cmmn_img_sonar_style}[title="Test Count"]]
-:proj_ti_sonar_brnch2_test_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/tests/{proj_sonarid}/{brnch_2}?{cmmn_img_sonar_style}[title="Test Count"]]
-:proj_ti_sonar_brnch1_coverage_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/coverage/{proj_sonarid}/{brnch_1}?{cmmn_img_sonar_style}[title="Overall Coverage"]]
-:proj_ti_sonar_brnch2_coverage_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/coverage/{proj_sonarid}/{brnch_2}?{cmmn_img_sonar_style}[title="Overall Coverage"]]
-:proj_ti_sonar_brnch1_violations_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/violations/{proj_sonarid}/{brnch_1}?format=long{cmmn_img_sonar_style}[title="Violations"]]
-:proj_ti_sonar_brnch2_violations_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/violations/{proj_sonarid}/{brnch_2}?format=long{cmmn_img_sonar_style}[title="Violations"]]
+:proj_ti_sonar_brnch1_tsd_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/test_success_density/{proj_sonarid}/{brnch_1}?{cmmn_img_sonar_style}[title="Test Status {brnch_1}"]]
+:proj_ti_sonar_brnch2_tsd_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/test_success_density/{proj_sonarid}/{brnch_2}?{cmmn_img_sonar_style}[title="Test Status {brnch_2}"]]
+:proj_ti_sonar_brnch1_test_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/tests/{proj_sonarid}/{brnch_1}?{cmmn_img_sonar_style}[title="Test Count {brnch_1}"]]
+:proj_ti_sonar_brnch2_test_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/tests/{proj_sonarid}/{brnch_2}?{cmmn_img_sonar_style}[title="Test Count {brnch_2}"]]
+:proj_ti_sonar_brnch1_coverage_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/coverage/{proj_sonarid}/{brnch_1}?{cmmn_img_sonar_style}[title="Overall Coverage {brnch_1}"]]
+:proj_ti_sonar_brnch2_coverage_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/coverage/{proj_sonarid}/{brnch_2}?{cmmn_img_sonar_style}[title="Overall Coverage {brnch_2}"]]
+:proj_ti_sonar_brnch1_violations_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/violations/{proj_sonarid}/{brnch_1}?format=long{cmmn_img_sonar_style}[title="Violations {brnch_1}"]]
+:proj_ti_sonar_brnch2_violations_link: {cmmn_sonar_dash_url}?id={proj_sonarid}[image:{cmmn_badge_sonar_url}/violations/{proj_sonarid}/{brnch_2}?format=long{cmmn_img_sonar_style}[title="Violations {brnch_2}"]]
 
 // ti coveralls
 :proj_ti_coveralls_brnch1_link: {cmmn_notsupp_link}
 :proj_ti_coveralls_brnch2_link: {cmmn_notsupp_link}
 ifeval::["{proj_id_coveralls}" != "-1"]
-:proj_ti_coveralls_brnch1_link: {cmmn_coveralls_dash_gh_url}/{proj_id_coveralls}?branch={brnch_1}[image:{cmmn_badge_coveralls_url}/{proj_id_coveralls}/{brnch_1}?{cmmn_img_coveralls_style}[title="Coveralls Status"]]
-:proj_ti_coveralls_brnch2_link: {cmmn_coveralls_dash_gh_url}/{proj_id_coveralls}?branch={brnch_2}[image:{cmmn_badge_coveralls_url}/{proj_id_coveralls}/{brnch_2}?{cmmn_img_coveralls_style}[title="Coveralls Status"]]
+:proj_ti_coveralls_brnch1_link: {cmmn_coveralls_dash_gh_url}/{proj_id_coveralls}?branch={brnch_1}[image:{cmmn_badge_coveralls_url}/{proj_id_coveralls}/{brnch_1}?{cmmn_img_coveralls_style}[title="Coveralls Status {brnch_1}"]]
+:proj_ti_coveralls_brnch2_link: {cmmn_coveralls_dash_gh_url}/{proj_id_coveralls}?branch={brnch_2}[image:{cmmn_badge_coveralls_url}/{proj_id_coveralls}/{brnch_2}?{cmmn_img_coveralls_style}[title="Coveralls Status {brnch_2}"]]
 endif::[]
 
 // ti codacy
 :proj_ti_codacy_brnch1_link: {cmmn_notsupp_link}
 :proj_ti_codacy_brnch2_link: {cmmn_notsupp_link}
-ifeval::["{proj_id_codacy_cov}" != "-1"]
-:proj_ti_codacy_brnch1_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}[image:{cmmn_badge_codacy_cov_url}/{proj_id_codacy}/{brnch_1}?{cmmn_img_codacy_style}[title="Codacy Coverage"]]
-:proj_ti_codacy_brnch2_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}[image:{cmmn_badge_codacy_cov_url}/{proj_id_codacy}/{brnch_2}?{cmmn_img_codacy_style}[title="Codacy Coverage"]]
+ifeval::["{proj_id_codacy}" != "-1"]
+:proj_ti_codacy_brnch1_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}/dashboard?branch={brnch_1}[image:{cmmn_codacy_badge_cov_url}/{proj_id_codacy}?branch={brnch_1}{cmmn_img_codacy_style}[title="Codacy Coverage {brnch_1}"]]
+:proj_ti_codacy_brnch2_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}/dashboard?branch={brnch_2}[image:{cmmn_codacy_badge_cov_url}/{proj_id_codacy}?branch={brnch_2}{cmmn_img_codacy_style}[title="Codacy Coverage {brnch_2}"]]
 endif::[]
 
 :source-highlighter: highlight.js
@@ -268,7 +270,7 @@ link:{proj_ti_sonar_brnch2_coverage_link}
 |link:{proj_ti_coveralls_brnch2_link}
 |link:{cmmn_codacy_hp}[codacy.com]
 |link:{proj_ti_codacy_brnch1_link}
-|link:{proj_ti_codacy_brnch1_link}
+|link:{proj_ti_codacy_brnch2_link}
 endif::[]
 |===
 

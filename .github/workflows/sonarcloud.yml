@@ -54,6 +54,9 @@ env:
   SONAR_HOST_URL: "https://sonarcloud.io"
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  # Codacy Configuration
+  MVN_CODACY_OPTS: -fae -DcoverageReportFile=target/jacoco/ut/jacoco.xml -DprojectToken=${{ secrets.CODACY_PROJECT_TOKEN }} -DapiToken=${{ secrets.CODACY_API_TOKEN }}
+
 jobs:
   sonarcloud:
     strategy:
@@ -117,3 +120,6 @@ jobs:
 
       - name: sonarcloud scan
         run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_SONAR_OPTS }} help:active-profiles verify sonar:sonar
+
+      - name: codacy coverage upload
+        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_CODACY_OPTS }} com.gavinmogan:codacy-maven-plugin:coverage
