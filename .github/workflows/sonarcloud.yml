@@ -118,8 +118,8 @@ jobs:
           key: ${{ matrix.os }}-sonar
           restore-keys: ${{ matrix.os }}-sonar
 
-      - name: sonarcloud scan
-        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_SONAR_OPTS }} help:active-profiles verify sonar:sonar
-
       - name: codacy coverage upload
         run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_CODACY_OPTS }} help:active-profiles verify com.gavinmogan:codacy-maven-plugin:coverage
+
+      - name: sonarcloud scan
+        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_SONAR_OPTS }} help:active-profiles verify sonar:sonar
