@@ -54,6 +54,9 @@ env:
   SONAR_HOST_URL: "https://sonarcloud.io"
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  # Codacy Configuration
+  MVN_CODACY_OPTS: -fae -DcoverageReportFile=target/jacoco/comm/jacoco.xml -DprojectToken=${{ secrets.CODACY_PROJECT_TOKEN }} -DapiToken=${{ secrets.CODACY_API_TOKEN }}
+
 jobs:
   build:
     strategy:

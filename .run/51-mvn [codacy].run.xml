@@ -12,7 +12,7 @@
           <option name="mavenProperties">
             <map>
               <entry key="apiToken" value="${CODACY_API_TOKEN}" />
-              <entry key="coverageReportFile" value="target/jacoco/ut/jacoco.xml" />
+              <entry key="coverageReportFile" value="target/jacoco/comm/jacoco.xml" />
               <entry key="projectToken" value="${CPT_unit-extension}" />
             </map>
           </option>
