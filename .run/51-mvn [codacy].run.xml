@@ -13,7 +13,10 @@
             <map>
               <entry key="apiToken" value="${CODACY_API_TOKEN}" />
               <entry key="coverageReportFile" value="target/jacoco/comm/jacoco.xml" />
+              <entry key="maven.test.failure.ignore" value="true" />
               <entry key="projectToken" value="${CPT_unit-extension}" />
+              <entry key="skipITs" value="false" />
+              <entry key="skipTests" value="false" />
             </map>
           </option>
           <option name="passParentEnv" value="true" />
@@ -29,6 +32,7 @@
           </option>
           <option name="goals">
             <list>
+              <option value="verify" />
               <option value="com.gavinmogan:codacy-maven-plugin:coverage" />
             </list>
           </option>
@@ -36,7 +40,7 @@
           <option name="profilesMap">
             <map />
           </option>
-          <option name="resolveToWorkspace" value="false" />
+          <option name="resolveToWorkspace" value="true" />
           <option name="workingDirPath" value="$PROJECT_DIR$" />
         </MavenRunnerParameters>
       </option>

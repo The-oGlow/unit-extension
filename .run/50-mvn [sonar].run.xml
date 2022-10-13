@@ -7,7 +7,7 @@
           <option name="delegateBuildToMaven" value="false" />
           <option name="environmentProperties">
             <map>
-              <entry key="GITHUB_BRANCH_NAME" value="develop"  />
+              <entry key="GITHUB_BRANCH_NAME" value="develop" />
             </map>
           </option>
           <option name="jreName" value="#USE_PROJECT_JDK" />
@@ -15,6 +15,7 @@
             <map>
               <entry key="maven.test.failure.ignore" value="true" />
               <entry key="skipITs" value="false" />
+              <entry key="skipTests" value="false" />
               <entry key="sonar.login" value="${SONAR_TOKEN}" />
             </map>
           </option>
