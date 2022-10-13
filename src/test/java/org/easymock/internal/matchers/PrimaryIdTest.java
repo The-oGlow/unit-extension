@@ -67,7 +67,6 @@ public class PrimaryIdTest {
         assertThat(actual, Matchers.equalTo(expected));
     }
 
-
     @Test
     public void testAppendTo_withValues() {
         StringBuffer actual = new StringBuffer();

@@ -9,7 +9,6 @@ public class SimpleSerializable extends SimplePojo implements Serializable {
 
     private transient Float simpleFloat;
 
-
     public Float getSimpleFloat() {
         return simpleFloat;
     }

@@ -2,7 +2,6 @@ package org.hamcrest.beans;
 
 import org.hamcrest.AbstractExtendedMatcherTest;
 import org.hamcrest.Matcher;
-import org.junit.Test;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -203,7 +202,6 @@ public class SamePropertiesValuesAsTest<T extends SamePropertiesValuesAsTest.Exa
                 new SubBeanWithExtraProperty(DEFAULT_STRING, DEFAULT_INT, DEFAULT_OBJECT));
     }
 
-    @Test
     public void test_ignores_extra_subtype_properties() {
         final SubBeanWithExtraProperty withExtraProperty = new SubBeanWithExtraProperty(DEFAULT_STRING, DEFAULT_INT, DEFAULT_OBJECT);
         assertMatches(TXT_EXTRA_PROPERTY, SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN, VAL_EXTRA_PROPERTY), withExtraProperty);

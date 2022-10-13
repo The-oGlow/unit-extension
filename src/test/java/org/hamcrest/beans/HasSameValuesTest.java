@@ -3,15 +3,12 @@ package org.hamcrest.beans;
 import com.glowanet.data.SimplePojo;
 import org.hamcrest.AbstractExtendedMatcherTest;
 import org.hamcrest.Matcher;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
 
 import java.util.regex.Pattern;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 
 public class HasSameValuesTest<T extends SimplePojo> extends AbstractExtendedMatcherTest<T> {
 
@@ -86,10 +83,5 @@ public class HasSameValuesTest<T extends SimplePojo> extends AbstractExtendedMat
     @Override
     protected Matcher<String> prepareMatcherDescriptionText_missmatchSafely_nullObject_check() {
         return containsString(DESCRIPTION_DEFAULT + FIELD_NULL);
-    }
-
-    @Test
-    public void testMatchesSafely_noGetter_throw_IAE() {
-        MatcherAssert.assertThat(true, equalTo(true));
     }
 }

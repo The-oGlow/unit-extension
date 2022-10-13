@@ -435,8 +435,8 @@ public class ReflectionHelper {
     private static void failure(final Object param, final Object suffix, final Throwable throwable) throws AssertionError {
         final String msg = String.format("Can't find or access '%s%s' %s",
                 (param == null ? "NULL" : param),
-                (suffix == null || suffix.toString().isEmpty() ? "#NULL" : ("#" + suffix)), //
-                (throwable == null ? "!" : (":" + System.lineSeparator() + ExceptionUtils.getStackTrace(throwable))) //
+                (suffix == null || suffix.toString().isEmpty() ? "#NULL" : ("#" + suffix)),
+                (throwable == null ? "!" : (":" + System.lineSeparator() + ExceptionUtils.getStackTrace(throwable)))
         );
         fail(msg);
     }

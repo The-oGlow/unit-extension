@@ -130,10 +130,10 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
         return !ignoredFields.contains(propertyDescriptor.getDisplayName());
     }
 
-    private static Object readProperty(Method method, Object target) {
+    protected Object readProperty(Method method, Object target) {
         try {
             return method.invoke(target, NO_ARGUMENTS);
-        } catch (Exception e) { // NOSONAR: java:S2221
+        } catch (Exception e) { //NOSONAR java:S2221
             throw new IllegalArgumentException(String.format(COULD_NOT_INVOKE, method, target), e);
         }
     }

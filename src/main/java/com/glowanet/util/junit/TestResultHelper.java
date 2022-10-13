@@ -296,7 +296,7 @@ public class TestResultHelper {
         if (isExtend(collector)) {
             ErrorCollectorExt collectorExt = (ErrorCollectorExt) collector;
             if (collectorExt.getErrorSize() > 0) {
-                LOGGER.error("These are the collected errors :\n{}", collectorExt.getErrorTextsToString());
+                LOGGER.error(String.format("These are the collected errors :%n%s", collectorExt.getErrorTextsToString())); //NOSONAR java:S2629
             } else {
                 LOGGER.error("No errors collected!");
             }

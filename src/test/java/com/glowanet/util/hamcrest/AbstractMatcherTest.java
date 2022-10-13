@@ -1,7 +1,5 @@
 package com.glowanet.util.hamcrest;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.hamcrest.AbstractExtendedMatcherTest;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -43,7 +41,6 @@ public abstract class AbstractMatcherTest<T> {
     protected static final String DIFFERENT_CLAZZ_NAME        = AbstractMatcherTestDifferentClazz.class.getName();
     protected static final String DIFFERENT_CLAZZ_SIMPLE_NAME = AbstractMatcherTestDifferentClazz.class.getSimpleName();
     protected static final String UNKNOWN_TYPE_NAME           = UnknownType.class.getName();
-    protected static final Logger LOGGER                      = LogManager.getLogger();
 
     protected static final String DESCRIPTION_DEFAULT = " descriptionDefault ";
     protected static final String FIELD_WAS_NULL      = "was null";
@@ -113,7 +110,7 @@ public abstract class AbstractMatcherTest<T> {
      * @see #fail(String)
      */
     protected static void fail() {
-        Assert.fail("This test has failed!");
+        Assert.fail();//NOSONAR java:S2698
     }
 
     /**

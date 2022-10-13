@@ -46,7 +46,7 @@ public class HasSameValues<T> extends TypeSafeMatcher<T> {
         super(expectedBean == null ? null : expectedBean.getClass());
         this.expectedBean = expectedBean;
         verifyInput(this.expectedBean);
-        Field[] allFields = FieldUtils.getAllFields(this.expectedBean.getClass()); // NOSONAR: java:S2259
+        Field[] allFields = FieldUtils.getAllFields(this.expectedBean.getClass()); //NOSONAR java:S2259
         for (Field singleField : allFields) {
             try {
                 fields.put(singleField.getName(), FieldUtils.readField(singleField, this.expectedBean, true));

@@ -3,6 +3,8 @@ package org.hamcrest;
 import com.glowanet.annotation.ExcludeFromTesting;
 import com.glowanet.util.hamcrest.AbstractMatcherTest;
 import com.glowanet.util.junit.rules.ExcludeFromTestingRule;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -28,6 +30,8 @@ public abstract class AbstractExtendedMatcherTest<T> extends AbstractMatcherTest
     @Rule
     public ExcludeFromTestingRule excludeFromTestingRule = new ExcludeFromTestingRule();
 
+    private static final Logger LOGGER = LogManager.getLogger();
+    
     /**
      * @return the {@code o2T} as {@link TypeSafeMatcher} to test against
      *
