@@ -125,7 +125,7 @@ jobs:
         run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_CODACY_OPTS }} help:active-profiles verify com.gavinmogan:codacy-maven-plugin:coverage
 
       - name: coveralls scan
-        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_COVERALLS_OPT }} help:active-profiles verify coveralls:report
+        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_COVERALLS_OPTS }} help:active-profiles verify coveralls:report
 
       - name: sonarcloud scan
         run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_SONAR_OPTS }} help:active-profiles verify sonar:sonar
