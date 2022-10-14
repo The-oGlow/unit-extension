@@ -27,8 +27,6 @@ public class IsBetweenTest {
     private static class IsBetweenTestClazz {
         public IsBetweenTestClazz() {
         }
-
-        ;
     }
 
     @Before

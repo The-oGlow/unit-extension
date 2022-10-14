@@ -110,7 +110,7 @@ public abstract class AbstractMatcherTest<T> {
      * @see #fail(String)
      */
     protected static void fail() {
-        Assert.fail("This test has failed!");
+        Assert.fail();//NOSONAR java:S2698
     }
 
     /**

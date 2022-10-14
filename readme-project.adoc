@@ -1,0 +1,23 @@
+:hide-uri-scheme:
+:source-highlighter: highlight.js
+
+= Instructions
+:toc: preamble
+:toclevels: 2
+
+Here you find some more detailed information about this artifact.
+
+== Topic 1
+
+=== Pre-Requirements
+
+* Step 1
+* Step 2
+
+=== Usage
+
+.Usage
+[source,shell script]
+----
+mvn
+----

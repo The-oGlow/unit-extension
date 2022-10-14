@@ -261,8 +261,8 @@ public class ReflectionHelperTest {
         throwableAssErrValid(() -> ReflectionHelper.makeFieldAccessible((Field) null, pojo));
     }
 
+    @Ignore("Doesn't work on github docker")
     @Test
-    @Ignore("Not working on gitlab docker")
     public void test_setFinalStaticValue_with_fieldNameAndValueAndClazz_replaceValue() throws IllegalAccessException {
         final float valueBefore = CONST_FLOAT_VALUE;
         final float valueAfter = valueBefore + 20f;
@@ -327,5 +327,4 @@ public class ReflectionHelperTest {
 
         assertValid(actual, containsString(NoSuchMethodException.class.getName()), AssertionError.class);
     }
-
 }

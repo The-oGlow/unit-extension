@@ -57,5 +57,4 @@ public class PrimaryIdIT extends PrimaryIdTest {
         assertThat(actual, Matchers.equalTo(expected));
     }
 
-
 }

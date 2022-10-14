@@ -19,6 +19,6 @@
 :proj_module: unit-extension
 :proj_version: [latest release]
 :proj_description: Some useful extensions for unit testings.
-:proj_id_codacy: 58c9e7e6c7be40bab0071b1704afbe18
+:proj_id_codacy: dba747d3491447a5a0ccb938af70e6c1
 :proj_id_coverity: -1
-:proj_id_openssf: -1
+:proj_id_openssf: 6559

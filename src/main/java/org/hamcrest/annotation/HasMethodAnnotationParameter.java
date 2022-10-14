@@ -30,7 +30,8 @@ public class HasMethodAnnotationParameter<T extends Annotation> extends BaseMatc
      * @param annotationParameterKey   the name of the annotation-parameter
      * @param annotationParameterValue the value of the annotation-parameter
      */
-    private HasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey, Object annotationParameterValue) {
+    private HasMethodAnnotationParameter(String methodName, Class<T> annotationClazz, String annotationParameterKey,
+                                         Object annotationParameterValue) {
         this.methodName = methodName;
         this.annotationClazz = annotationClazz;
         this.annotationParameterKey = annotationParameterKey;
@@ -55,8 +56,7 @@ public class HasMethodAnnotationParameter<T extends Annotation> extends BaseMatc
      * @return newly created matcher
      */
     public static <T extends Annotation> HasMethodAnnotationParameter<T> hasMethodAnnotationParameter(
-            String methodName, Class<T> annotationClazz, String annotationParameterKey,
-            Object annotationParameterValue) {
+            String methodName, Class<T> annotationClazz, String annotationParameterKey, Object annotationParameterValue) {
         return new HasMethodAnnotationParameter<>(methodName, annotationClazz, annotationParameterKey, annotationParameterValue);
     }
 

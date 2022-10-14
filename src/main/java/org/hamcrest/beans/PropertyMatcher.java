@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.beans.PropertyUtil.NO_ARGUMENTS;
 
-final class PropertyMatcher<T> extends DiagnosingMatcher<T> {
+class PropertyMatcher<T> extends DiagnosingMatcher<T> {
     static final String COULD_NOT_INVOKE = "Could not invoke %s on %s";
     static final String LIST_EQU         = "=";
 
@@ -61,10 +61,10 @@ final class PropertyMatcher<T> extends DiagnosingMatcher<T> {
         description.appendText(propertyName + LIST_EQU).appendDescriptionOf(matcher);
     }
 
-    static Object readProperty(Method method, Object target) {
+    protected Object readProperty(Method method, Object target) {
         try {
             return method.invoke(target, NO_ARGUMENTS);
-        } catch (Exception e) { // NOSONAR: java:S2221
+        } catch (Exception e) { //NOSONAR java:S2221
             throw new IllegalArgumentException(String.format(COULD_NOT_INVOKE, method, target), e);
         }
     }

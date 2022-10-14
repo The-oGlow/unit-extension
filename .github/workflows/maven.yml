@@ -7,13 +7,11 @@ on:
       - master
       - develop
     paths-ignore:
-      - '.github/**'
+      # - '.github/**'
       - '.run/**'
-      - '.m2/**'
+      # - '.m2/**'
       - '.repo/**'
-  pull_request:
-    branches:
-      - master
+
 
 env:
   # Github Additional Configuration
@@ -23,6 +21,7 @@ env:
   GITHUB_TARGET_DIR: ${{ github.workspace }}/target
   GITHUB_UPLOAD_DIR: ${{ github.workspace }}/staging
   GITHUB_UPLOAD_NAME: ${{ github.event.repository.name }}.zip
+  GITHUB_BRANCH_NAME: ${{ github.ref_name }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   PCK_READ_TOKEN: ${{ secrets.PCK_READ_TOKEN }}
   PCK_WRITE_TOKEN: ${{ secrets.PCK_WRITE_TOKEN }}
@@ -35,6 +34,7 @@ env:
   MVN_REPO_OPTS: -Dmaven.repo.local="${{ github.workspace}}/.repo"
   MVN_BUILD_OPTS: -fae -Dmaven.test.failure.ignore=true
   MVN_CLI_OPTS: -ff
+  MVN_DEPLOY_OPTS: -DretryFailedDeploymentCount=10
   MVN_DISTRIB_URL: https://maven.pkg.github.com
   MVN_DISTRIB_REPO_SS: The-oGlow/Awesome-Snap-Shots
   MVN_DISTRIB_REPO_REL: The-oGlow/Central-Awesome-Index
@@ -45,14 +45,20 @@ env:
   MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
 
   # Maven Test Configuration
-  MVN_TEST_OPTS_N: -DskipTests=true -DskipITs=true
-  MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false
+  MVN_TEST_OPTS_N: -DskipTests=true -DskipITs=true -Dmaven.test.failure.ignore=true
+  MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=true
 
   # Sonarcloud Configuration
-  MVN_SONAR_OPTS: -Dsonar.qualitygate.wait=true -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+  MVN_SONAR_OPTS: -Dsonar.qualitygate.wait=false -Dsonar.login=${{ secrets.SONAR_TOKEN }}
   SONAR_CACHE_DIR: ~/.sonar/cache
   SONAR_HOST_URL: "https://sonarcloud.io"
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # Codacy Configuration
+  MVN_CODACY_OPTS: -DcoverageReportFile=target/jacoco/comm/jacoco.xml -DprojectToken=${{ secrets.CODACY_PROJECT_TOKEN }} -DapiToken=${{ secrets.CODACY_API_TOKEN }}
+
+  # Coveralls Configuration
+  MVN_COVERALLS_OPTS: -Dbranch=${{ github.ref_name }} -DrepoToken=${{ secrets.COVERALLS_REPO_TOKEN }}
 
 jobs:
   build:
@@ -136,5 +142,5 @@ jobs:
           retention-days: 14
 
       - name: deploy artifact
-        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} ${{ env.MVN_CLI_OPTS }} help:active-profiles deploy
+        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} ${{ env.MVN_DEPLOY_OPTS }} help:active-profiles deploy
 

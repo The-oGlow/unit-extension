@@ -12,6 +12,7 @@ import org.easymock.internal.matchers.PrimaryId;
 public class EasyMockMatcher {
 
     private EasyMockMatcher() {
+        // hide public constructor
     }
 
     /**
@@ -21,9 +22,8 @@ public class EasyMockMatcher {
      *
      * @return {@code null}.
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T> T eqPrimaryId(final T expectedInstance, final String primIdFieldName) {
-        EasyMock.reportMatcher(new PrimaryId(expectedInstance, primIdFieldName));
+        EasyMock.reportMatcher(new PrimaryId<>(expectedInstance, primIdFieldName));
         return null;
     }
 }

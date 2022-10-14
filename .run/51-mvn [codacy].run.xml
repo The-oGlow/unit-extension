@@ -1,22 +1,22 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="50-mvn [sonar]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
+  <configuration default="false" name="51-mvn [codacy]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
         <MavenRunnerSettings>
           <option name="delegateBuildToMaven" value="false" />
           <option name="environmentProperties">
-            <map>
-              <entry key="GITHUB_BRANCH_NAME" value="develop" />
-            </map>
+            <map />
           </option>
           <option name="jreName" value="#USE_PROJECT_JDK" />
           <option name="mavenProperties">
             <map>
+              <entry key="apiToken" value="${CODACY_API_TOKEN}" />
+              <entry key="coverageReportFile" value="target/jacoco/comm/jacoco.xml" />
               <entry key="maven.test.failure.ignore" value="true" />
+              <entry key="projectToken" value="${CPT_unit-extension}" />
               <entry key="skipITs" value="false" />
               <entry key="skipTests" value="false" />
-              <entry key="sonar.login" value="${SONAR_TOKEN}" />
             </map>
           </option>
           <option name="passParentEnv" value="true" />
@@ -33,7 +33,7 @@
           <option name="goals">
             <list>
               <option value="verify" />
-              <option value="org.sonarsource.scanner.maven:sonar-maven-plugin:sonar" />
+              <option value="com.gavinmogan:codacy-maven-plugin:coverage" />
             </list>
           </option>
           <option name="pomFileName" />
