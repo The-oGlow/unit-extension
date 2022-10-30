@@ -2,6 +2,7 @@ package com.glowanet.util.reflect;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
@@ -317,6 +318,38 @@ public class ReflectionHelper {
         final List<PropertyDescriptor> getterList = findGetter(instance);
         final PropertyDescriptor getter = getterList.stream().filter(item -> item.getReadMethod().getName().equals(getterName)).findFirst().orElse(null);
         return readGetterValue(getter, instance);
+    }
+
+    /**
+     * @param typeClazz the clazz of the new instance
+     * @param <I>       the generic type of the new instance
+     *
+     * @return a new instance
+     */
+    public static <I> I newInstance(Class<?> typeClazz) {
+        try {
+            //noinspection unchecked
+            return (I) ConstructorUtils.invokeConstructor(typeClazz);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
+            return null;
+        }
+    }
+
+    /**
+     * @param typeClazz      the clazz of the new instance
+     * @param parameterTypes the clazzes of the parameters
+     * @param initargs       the init values of the parameters
+     * @param <I>            the generic type of the new instance
+     *
+     * @return a new instance
+     */
+    public static <I> I newInstance(Class<?> typeClazz, Class<?>[] parameterTypes, Object[] initargs) {
+        try {
+            //noinspection unchecked
+            return (I) ConstructorUtils.invokeConstructor(typeClazz, initargs, parameterTypes);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
+            return null;
+        }
     }
 
     /**

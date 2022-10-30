@@ -1,5 +1,6 @@
 package com.glowanet.util.junit;
 
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -52,8 +53,8 @@ public class TestResultHelperErrorCollectorTest {
 
     public Throwable prepException(Class<?> throwableClazz) {
         try {
-            return (Throwable) EXCEPT_IAE.getConstructor((Class<?>[]) null).newInstance((Object[]) null);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            return (Throwable) ConstructorUtils.invokeConstructor(EXCEPT_IAE, null, null);
+        } catch (InstantiationException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new Error(e);
         }
     }
