@@ -129,4 +129,8 @@ public class MatchersExtend extends org.hamcrest.Matchers {
     public static <B> Matcher<B> hasSameValues(B expectedBean) {
         return org.hamcrest.BeanValuesMatcher.hasSameValues(expectedBean);
     }
+
+    public static <E extends Throwable> Matcher<E> failWith(Class<E> expectedException) {
+        return org.hamcrest.FailWithMatcher.failWith(expectedException);
+    }
 }
