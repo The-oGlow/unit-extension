@@ -32,7 +32,7 @@ public class FailWith<E extends Throwable> extends BaseMatcher<IThrowingRunnable
      * Creates a matcher, that matches when the examined {@link org.junit.function.ThrowingRunnable} has raised the {@code expectedException}.
      * <p>
      * For example:
-     * <pre>assertThat(()->myFunction(), failWith(MyException.class))</pre>
+     * <pre>assertThat(()-&gt;myFunction(), failWith(MyException.class))</pre>
      *
      * @param expectedException the class of the exception
      * @param <E>               type of the exception

@@ -134,7 +134,7 @@ public class MatchersExtend extends org.hamcrest.Matchers {
      * Creates a matcher, that matches when the examined {@link org.junit.function.ThrowingRunnable} has raised the {@code expectedException}.
      * <p>
      * For example:
-     * <pre>assertThat(()->myFunction(), failWith(MyException.class))</pre>
+     * <pre>assertThat(()-&gt;myFunction(), failWith(MyException.class))</pre>
      *
      * @param expectedException the class of the expected exception
      * @param <E>               type of the expected exception
