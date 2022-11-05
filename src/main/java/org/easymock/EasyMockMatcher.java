@@ -5,9 +5,8 @@ import org.easymock.internal.matchers.PrimaryId;
 /**
  * Additional EasyMockMatcher class. Contains a list of additional matchers.
  *
- * @author Oliver Glowa
  * @see EasyMock
- * @since 0.10.000
+ * @since 0.1.0
  */
 public class EasyMockMatcher {
 

@@ -1,15 +1,15 @@
 package org.hamcrest;
 
 import org.hamcrest.core.IsBetween;
+import org.junit.function.IThrowingRunnable;
 
 import java.lang.annotation.Annotation;
 
 /**
  * Contains matchers, which are missing in the original class of {@link org.hamcrest.Matchers}.
  *
- * @author Oliver Glowa
  * @see org.hamcrest.Matchers
- * @since 0.10.000
+ * @since 0.1.0
  */
 public class MatchersExtend extends org.hamcrest.Matchers {
 
@@ -130,7 +130,18 @@ public class MatchersExtend extends org.hamcrest.Matchers {
         return org.hamcrest.BeanValuesMatcher.hasSameValues(expectedBean);
     }
 
-    public static <E extends Throwable> Matcher<E> failWith(Class<E> expectedException) {
+    /**
+     * Creates a matcher, that matches when the examined {@link org.junit.function.ThrowingRunnable} has raised the {@code expectedException}.
+     * <p>
+     * For example:
+     * <pre>assertThat(()->myFunction(), failWith(MyException.class))</pre>
+     *
+     * @param expectedException the class of the expected exception
+     * @param <E>               type of the expected exception
+     *
+     * @return newly created matcher
+     */
+    public static <E extends Throwable> Matcher<IThrowingRunnable<E>> failWith(Class<E> expectedException) {
         return org.hamcrest.FailWithMatcher.failWith(expectedException);
     }
 }

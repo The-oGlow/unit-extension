@@ -1,34 +1,66 @@
 package org.hamcrest.core;
 
+import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.function.ThrowingRunnable;
+import org.junit.function.IThrowingRunnable;
 
 import static org.hamcrest.Matchers.instanceOf;
 
-public class FailWith<E extends Throwable> extends TypeSafeMatcher<ThrowingRunnable> {
+/**
+ * A matcher, which verifies if a function has raised a specific exception.
+ *
+ * @param <E> the type of the class of the exception
+ *
+ * @since 0.1.0
+ */
+@SuppressWarnings({"unchecked", "rawtypes"})
+public class FailWith<E extends Throwable> extends BaseMatcher<IThrowingRunnable<E>> {
 
-    //private final Class<E>   exceptionClazz;
-    private final Matcher<E> expectedMatcher;
+    private final Class<? super E>   exceptionClazz;
+    private final Matcher<? super E> expectedMatcher;
 
-//    @FunctionalInterface
-//    public interface FailWithRunnable<E extends Throwable> {
-//        void run() throws E;
-//    }
-
-    public FailWith(Class<E> exceptionClazz) {
-        super();
-        //this.exceptionClazz = exceptionClazz;
+    /**
+     * @param exceptionClazz the clazz which is expected to be raised
+     */
+    public FailWith(Class<? super E> exceptionClazz) {
+        this.exceptionClazz = exceptionClazz;
         this.expectedMatcher = instanceOf(exceptionClazz);
     }
 
-    public static <E extends Throwable> Matcher<E> failWith(Class<E> expectedException) {
+    /**
+     * Creates a matcher, that matches when the examined {@link org.junit.function.ThrowingRunnable} has raised the {@code expectedException}.
+     * <p>
+     * For example:
+     * <pre>assertThat(()->myFunction(), failWith(MyException.class))</pre>
+     *
+     * @param expectedException the class of the exception
+     * @param <E>               type of the exception
+     *
+     * @return newly created matcher
+     */
+    public static <E extends Throwable> Matcher<IThrowingRunnable<E>> failWith(Class<? extends E> expectedException) {
         return new FailWith(expectedException);
     }
 
-    protected boolean matchesSafely(ThrowingRunnable runnable) {
+    /**
+     * @return the clazz which is expected to be raised
+     */
+    public Class<? super E> getExceptionClazz() {
+        return exceptionClazz;
+    }
+
+    /**
+     * @return the matcher which verifies
+     */
+    public Matcher<? super E> getExpectedMatcher() { //NOSONAR java:S1452
+        return expectedMatcher;
+    }
+
+    @Override
+    public boolean matches(Object actual) {
         try {
+            var runnable = (IThrowingRunnable<E>) actual;
             runnable.run();
             return false;
         } catch (Throwable ex) { //NOSONAR java:S1181

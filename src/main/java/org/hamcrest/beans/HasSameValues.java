@@ -24,9 +24,8 @@ import static org.hamcrest.Matchers.notNullValue;
  *
  * @param <T> the type of the class which will be checked
  *
- * @author Oliver Glowa
  * @see org.hamcrest.MatchersExtend
- * @since 0.10.000
+ * @since 0.1.0
  */
 public class HasSameValues<T> extends TypeSafeMatcher<T> {
 

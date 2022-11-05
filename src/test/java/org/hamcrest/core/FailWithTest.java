@@ -5,7 +5,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import org.junit.function.IThrowingRunnable;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -21,68 +21,71 @@ import static org.hamcrest.Matchers.not;
 @RunWith(Parameterized.class)
 public class FailWithTest {
 
-    public static class FailWithTestException extends RuntimeException {
-        public FailWithTestException() {
-            super();
-        }
-    }
-
-    private static class FailWithTestValidException implements ThrowingRunnable {
-        @Override
-        public void run() {
-            throw new FailWithTestException();
-        }
-    }
-
-    private static class FailWithTestInvalidException implements ThrowingRunnable {
-        @Override
-        public void run() {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private static class FailWithTestNoException implements ThrowingRunnable {
-        @Override
-        public void run() {
-            //nothing2do
-        }
-    }
-
-    @Parameterized.Parameters(name = "{index} exception={0}, expected={1}")
+    @Parameterized.Parameters(name = "{index} runnable={0}, exception={1}, expected={2}")
     public static List<Object[]> data() {
         List<Object[]> testData = new ArrayList<>();
-        testData.add(new Object[]{new FailWithTestValidException(), true});
-        testData.add(new Object[]{new FailWithTestInvalidException(), false});
-        testData.add(new Object[]{new FailWithTestNoException(), false});
-        testData.add(new Object[]{null, false});
+
+        testData.add(new Object[]{
+                (IThrowingRunnable<?>) () -> FailWithHelper.getInstance().failWithValidException(),
+                FailWithHelper.FailWithValidException.class,
+                true
+        });
+        testData.add(new Object[]{
+                (IThrowingRunnable<?>) () -> FailWithHelper.getInstance().failWithInValidException(),
+                FailWithHelper.FailWithValidException.class,
+                false
+        });
+        testData.add(new Object[]{
+                (IThrowingRunnable<?>) () -> FailWithHelper.getInstance().failWithNoException(),
+                FailWithHelper.FailWithValidException.class,
+                false
+        });
+        testData.add(new Object[]{
+                null,
+                FailWithHelper.FailWithValidException.class,
+                false
+        });
         return testData;
     }
 
     @Parameterized.Parameter
-    public ThrowingRunnable actualThrowingRunnable;
+    public IThrowingRunnable<?> actualThrowingRunnable;
 
     @Parameterized.Parameter(1)
+    public Class<?> expectedExceptionClazz;
+
+    @Parameterized.Parameter(2)
     public boolean expectedResult;
 
     private FailWith<?> o2t;
 
     @Before
     public void setUp() throws Exception {
-        o2t = new FailWith<>(FailWithTestException.class);
+        o2t = new FailWith<>(FailWithHelper.FailWithValidException.class);
     }
 
     @Test
     public void testFailWith() {
-        Matcher<?> actual = FailWith.failWith(FailWithTestException.class);
-
+        Matcher<?> actual = FailWith.failWith(FailWithHelper.FailWithValidException.class);
         assertThat(actual, instanceOf(FailWith.class));
     }
 
     @Test
-    public void testMatchesSafely_validException_return_true() {
-        boolean actual = o2t.matchesSafely(actualThrowingRunnable);
+    public void testMatches() {
+        boolean actual = o2t.matches(actualThrowingRunnable);
         assertThat(actual, equalTo(expectedResult));
+    }
 
+    @Test
+    public void testGetExceptionClazz() {
+        Class<?> actual = o2t.getExceptionClazz();
+        assertThat(actual, equalTo(expectedExceptionClazz));
+    }
+
+    @Test
+    public void testGetExpectedMatcher() {
+        Matcher<?> actual = o2t.getExpectedMatcher();
+        assertThat(actual, instanceOf(IsInstanceOf.class));
     }
 
     @Test
@@ -91,7 +94,6 @@ public class FailWithTest {
         assertThat(description.toString(), emptyString());
 
         o2t.describeTo(description);
-
         assertThat(description.toString(), not(emptyString()));
     }
 }

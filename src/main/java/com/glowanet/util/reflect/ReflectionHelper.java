@@ -22,8 +22,7 @@ import static org.junit.Assert.fail;
 /**
  * Utility Helper for accessing class information without the use of Spring's "ReflectionTestUtils".
  *
- * @author Oliver Glowa
- * @since 0.10.000
+ * @since 0.1.0
  */
 public class ReflectionHelper {
 
@@ -327,11 +326,15 @@ public class ReflectionHelper {
      * @return a new instance
      */
     public static <I> I newInstance(Class<?> typeClazz) {
-        try {
-            //noinspection unchecked
-            return (I) ConstructorUtils.invokeConstructor(typeClazz);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
+        if (typeClazz == null) {
             return null;
+        } else {
+            try {
+                //noinspection unchecked
+                return (I) ConstructorUtils.invokeConstructor(typeClazz);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
+                return null;
+            }
         }
     }
 
@@ -344,11 +347,15 @@ public class ReflectionHelper {
      * @return a new instance
      */
     public static <I> I newInstance(Class<?> typeClazz, Class<?>[] parameterTypes, Object[] initargs) {
-        try {
-            //noinspection unchecked
-            return (I) ConstructorUtils.invokeConstructor(typeClazz, initargs, parameterTypes);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
+        if (typeClazz == null) {
             return null;
+        } else {
+            try {
+                //noinspection unchecked
+                return (I) ConstructorUtils.invokeConstructor(typeClazz, initargs, parameterTypes);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
+                return null;
+            }
         }
     }
 

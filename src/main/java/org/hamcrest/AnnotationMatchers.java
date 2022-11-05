@@ -8,8 +8,7 @@ import java.lang.annotation.Annotation;
 /**
  * Contains matchers, which checks if a class has an annotation and annotation-parameters.
  *
- * @author Oliver Glowa
- * @since 0.02.000
+ * @since 0.1.0
  */
 public class AnnotationMatchers {
 

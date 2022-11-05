@@ -12,9 +12,8 @@ import java.util.Objects;
  *
  * @param <T> type of the method argument to match
  *
- * @author Oliver Glowa
  * @see org.easymock.EasyMockMatcher
- * @since 0.10.000
+ * @since 0.1.0
  */
 public class PrimaryId<T> implements ArgumentMatcher<T>, IArgumentMatcher {
 

@@ -5,13 +5,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.MODULE;
+import static java.lang.annotation.ElementType.PACKAGE;
+import static java.lang.annotation.ElementType.TYPE;
 
 /**
  * Annotation to indicate, that an element <strong>must not</strong> be used in production code.
  *
- * @author Oliver Glowa
- * @since 0.10.000
+ * @since 0.1.0
  */
 @Documented
 @Retention(RetentionPolicy.SOURCE)
