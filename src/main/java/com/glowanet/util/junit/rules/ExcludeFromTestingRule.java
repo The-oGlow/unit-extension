@@ -2,6 +2,7 @@ package com.glowanet.util.junit.rules;
 
 import com.glowanet.annotation.ExcludeFromTesting;
 import com.glowanet.util.reflect.ReflectionHelper;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.internal.runners.statements.InvokeMethod;
@@ -10,7 +11,6 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class ExcludeFromTestingRule implements TestRule {
 
@@ -54,11 +54,8 @@ public class ExcludeFromTestingRule implements TestRule {
             Object result = true;
             if (methodName != null && !methodName.isEmpty()) {
                 try {
-                    String className = description.getClassName();
-                    Class<?> clazz = Class.forName(className);
-                    Method methodClazz = clazz.getMethod(methodName);
-                    result = methodClazz.invoke(instance, (Object[]) null);
-                } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    result = MethodUtils.invokeMethod(instance, methodName);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     result = true;
                 }
             }

@@ -6,8 +6,7 @@ import org.hamcrest.core.IsBetweenWithBound;
 /**
  * Contains matchers, which checks if a value is in a specific range.
  *
- * @author Oliver Glowa
- * @since 0.02.000
+ * @since 0.1.0
  */
 public class BetweenMatcher {
 

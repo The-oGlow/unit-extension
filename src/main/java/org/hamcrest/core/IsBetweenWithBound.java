@@ -11,8 +11,7 @@ import static org.hamcrest.Matchers.notNullValue;
  *
  * @param <T> the type of the class which will be checked
  *
- * @author Oliver Glowa
- * @since 0.01.000
+ * @since 0.1.0
  */
 public class IsBetweenWithBound<T extends Comparable<T>> extends IsBetween<T> {
 

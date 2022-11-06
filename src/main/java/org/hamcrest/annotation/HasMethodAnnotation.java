@@ -11,10 +11,9 @@ import java.lang.annotation.Annotation;
  *
  * @param <T> the type of the class which will be checked
  *
- * @author Oliver Glowa
  * @see org.hamcrest.MatchersExtend
  * @see HasMethodAnnotationParameter
- * @since 0.02.000
+ * @since 0.1.0
  */
 public class HasMethodAnnotation<T extends Annotation> extends BaseMatcher<T> {
 

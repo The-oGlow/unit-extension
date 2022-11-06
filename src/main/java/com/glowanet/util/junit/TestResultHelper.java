@@ -25,14 +25,16 @@ import static org.junit.Assert.assertThrows;
  */
 public class TestResultHelper {
 
-    public static final String                 COLLECTOR_NAME = "collector";
-    public static final String                 ERRORS_NAME    = "errors";
-    public static final String                 NOT_THROWN     = "expected %s to be thrown, but nothing was thrown";
-    public static final Matcher<Collection<?>> EMPTY_LIST     = Matchers.hasSize(0);
-    public static final Matcher<Collection<?>> SINGLE_LIST    = Matchers.hasSize(1);
-    public static final int                    NO_ERROR       = 0;
-    public static final int                    WITH_ERROR     = 1;
-    public static final int                    TWO_ERROR      = 2;
+    public static final String                 COLLECTOR_NAME    = "collector";
+    public static final String                 ERRORS_NAME       = "errors";
+    public static final String                 NOT_THROWN        = "expected %s to be thrown, but nothing was thrown";
+    public static final String                 ERR_MSG_WRONG_ARG = "TestResultHelper.resetCollector() needs an instance of "
+            + ErrorCollectorExt.class.getName();
+    public static final Matcher<Collection<?>> EMPTY_LIST        = Matchers.hasSize(0);
+    public static final Matcher<Collection<?>> SINGLE_LIST       = Matchers.hasSize(1);
+    public static final int                    NO_ERROR          = 0;
+    public static final int                    WITH_ERROR        = 1;
+    public static final int                    TWO_ERROR         = 2;
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -99,7 +101,9 @@ public class TestResultHelper {
             Object actualThrows = ReflectionHelper.readField(ERRORS_NAME, collector);
             assertThat(actualThrows, notNullValue());
             assertThat(actualThrows, instanceOf(Collection.class));
-            assertThat(((Collection<?>) actualThrows), (Matcher<Collection<?>>) errorSizeMatcher);
+            Collection<?> colActualThrows = ((Collection<?>) actualThrows);
+            Matcher<Collection<?>> colErrorSizeMatcher = (Matcher<Collection<?>>) errorSizeMatcher;
+            assertThat(colActualThrows, colErrorSizeMatcher);
         }
     }
 
@@ -146,8 +150,21 @@ public class TestResultHelper {
     public static void verifyCollectorWithReset(Object collectorOrInstance, Matcher<?> errorSizeMatcher) {
         ErrorCollector collector = prepareCollector(collectorOrInstance);
         verifyCollector(collector, errorSizeMatcher);
+        resetCollector(collector);
+    }
+
+    /**
+     * Removes all errors from the collector.
+     *
+     * @param collector the collector to reset
+     *
+     * @throws IllegalArgumentException collector is not a extended collector
+     */
+    private static void resetCollector(ErrorCollector collector) throws IllegalArgumentException {
         if (isExtend(collector)) {
             ((ErrorCollectorExt) collector).reset();
+        } else {
+            throw new IllegalArgumentException(ERR_MSG_WRONG_ARG);
         }
     }
 
@@ -162,9 +179,7 @@ public class TestResultHelper {
     public static void verifyCollectorWithReset(Object collectorOrInstance, int errorSize) {
         ErrorCollector collector = prepareCollector(collectorOrInstance);
         verifyCollector(collector, errorSize);
-        if (isExtend(collector)) {
-            ((ErrorCollectorExt) collector).reset();
-        }
+        resetCollector(collector);
     }
 
     /**
@@ -200,12 +215,19 @@ public class TestResultHelper {
      * @param expectedClazz the type of the expected {@code Throwable}
      * @param expectedMsg   the message of the expected {@code Throwable}
      *
+     * @return instance of {@code expectedClazz}
+     *
      * @throws AssertionError is thrown, if the {@code runnable} has raised no exception or a different exception or a different error message
      */
-    public static void verifyException(ThrowingRunnable runnable, Class<?> expectedClazz, String expectedMsg) {
+    public static Throwable verifyException(ThrowingRunnable runnable, Class<?> expectedClazz, String expectedMsg) {
         Throwable throwable = verifyException(runnable, expectedClazz);
 
-        assertThat(throwable.getMessage(), containsString(expectedMsg));
+        if (expectedMsg == null) {
+            assertThat(throwable.getMessage(), nullValue());
+        } else {
+            assertThat(throwable.getMessage(), containsString(expectedMsg));
+        }
+        return throwable;
     }
 
     /**

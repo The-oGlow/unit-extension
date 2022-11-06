@@ -321,10 +321,69 @@ public class ReflectionHelperTest {
     }
 
     @Test
-    public void test_handleInvokeMethod() throws IntrospectionException {
+    public void test_handleInvokeMethod_throws_NoSuchMethodException() throws IntrospectionException {
         PropertyDescriptor getter = new PropertyDescriptor(SIMPLE_STRING_NAME, pojo.getClass());
         final Throwable actual = assertThrows("Throwable raised!", Throwable.class, () -> ReflectionHelper.handleInvokeMethod(getter, SIMPLE_STRING_CLAZZ));
 
         assertValid(actual, containsString(NoSuchMethodException.class.getName()), AssertionError.class);
     }
+
+    @Test
+    public void testNewInstance_withClazz_return_instance() {
+        Class<?> typeClazz = pojo.getClass();
+
+        Object actual = ReflectionHelper.newInstance(typeClazz);
+
+        assertThat(actual, instanceOf(typeClazz));
+    }
+
+    @Test
+    public void testNewInstance_withNull_return_null() {
+        Object actual = ReflectionHelper.newInstance(null);
+
+        assertThat(actual, nullValue());
+    }
+
+    @Test
+    public void testNewInstance_withWrongConstructor_return_null() {
+        Object actual = ReflectionHelper.newInstance(Long.class);
+
+        assertThat(actual, nullValue());
+    }
+
+    @Test
+    public void testNewInstance_withClazzAndParameter_return_instance() {
+        Class<?> typeClazz = Exception.class;
+        Class<?>[] parameterTypes = {String.class};
+        String expectedMsg = "MSG";
+        Object[] initArgs = {expectedMsg};
+
+        Object actual = ReflectionHelper.newInstance(typeClazz, parameterTypes, initArgs);
+
+        assertThat(actual, instanceOf(typeClazz));
+        assertThat(((Exception) actual).getMessage(), equalTo(expectedMsg));
+    }
+
+    @Test
+    public void testNewInstance_withParameterAllNull_return_null() {
+        Class<?> typeClazz = null;
+        Class<?>[] parameterTypes = null;
+        Object[] initArgs = null;
+
+        Object actual = ReflectionHelper.newInstance(typeClazz, parameterTypes, initArgs);
+
+        assertThat(actual, nullValue());
+    }
+
+    @Test
+    public void testNewInstance_withParameterWrongConstructor_return_null() {
+        Class<?> typeClazz = Long.class;
+        Class<?>[] parameterTypes = {Boolean.class};
+        Object[] initArgs = {true};
+
+        Object actual = ReflectionHelper.newInstance(typeClazz, parameterTypes, initArgs);
+
+        assertThat(actual, nullValue());
+    }
+
 }

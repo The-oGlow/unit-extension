@@ -4,6 +4,7 @@ import com.glowanet.util.hamcrest.AbstractPublicTest;
 import org.hamcrest.annotation.HasMethodAnnotation;
 import org.hamcrest.annotation.HasMethodAnnotationParameter;
 import org.hamcrest.beans.HasSameValues;
+import org.hamcrest.core.FailWith;
 import org.hamcrest.core.IsBetween;
 import org.hamcrest.core.IsBetweenWithBound;
 import org.junit.Test;
@@ -55,4 +56,9 @@ public class MatchersExtendTest extends AbstractPublicTest {
         verifyMatcher(HasSameValues.class);
     }
 
+    @Test
+    public void testFailWith_return_aMatcher() {
+        actual = MatchersExtend.failWith(IllegalArgumentException.class);
+        verifyMatcher(FailWith.class);
+    }
 }

@@ -6,9 +6,8 @@ import java.lang.reflect.Method;
 /**
  * Verifies if an annotation has a specific parameter and parameter-value.
  *
- * @author Oliver Glowa
  * @see org.hamcrest.AnnotationMatchers
- * @since 0.02.000
+ * @since 0.1.0
  */
 public class AnnotationParameterValidator {
 
