@@ -21,3 +21,4 @@ Here you find some more detailed information about this artifact.
 ----
 mvn
 ----
+
