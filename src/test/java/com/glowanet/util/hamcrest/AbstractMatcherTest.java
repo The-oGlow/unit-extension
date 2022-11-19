@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThrows;
 
 /**
- * Base class for testing a {@link org.hamcrest.BaseMatcher}
+ * Base clazz for testing a {@link org.hamcrest.BaseMatcher}
  * For testing extended matcher, use {@link AbstractExtendedMatcherTest}
  *
  * @param <T> the type, the {@code o2T} uses
@@ -27,13 +27,13 @@ import static org.junit.Assert.assertThrows;
 public abstract class AbstractMatcherTest<T> {
 
     /**
-     * Class for testing a {@link Matcher} with a different clazz.
+     * Clazz for testing a {@link Matcher} with a different clazz.
      */
     protected static class AbstractMatcherTestDifferentClazz {
     }
 
     /**
-     * Class for testing a {@link Matcher} with a unknown type.
+     * Clazz for testing a {@link Matcher} with a unknown type.
      */
     protected static class UnknownType {
     }

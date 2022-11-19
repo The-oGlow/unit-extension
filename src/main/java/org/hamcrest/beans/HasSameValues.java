@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.notNullValue;
  * A matcher, which verifies, if two instances are totally equal.
  * In contrast to {@link org.hamcrest.beans.SamePropertyValuesAs} this matcher reports every difference and not only the first one.
  *
- * @param <T> the type of the class which will be checked
+ * @param <T> the type of the clazz which will be checked
  *
  * @see org.hamcrest.MatchersExtend
  * @since 0.1.0

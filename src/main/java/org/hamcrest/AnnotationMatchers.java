@@ -6,7 +6,7 @@ import org.hamcrest.annotation.HasMethodAnnotationParameter;
 import java.lang.annotation.Annotation;
 
 /**
- * Contains matchers, which checks if a class has an annotation and annotation-parameters.
+ * Contains matchers, which checks if a clazz has an annotation and annotation-parameters.
  *
  * @since 0.1.0
  */
@@ -25,7 +25,7 @@ public class AnnotationMatchers {
      * <pre>assertThat(objectCheese, hasMethodAnnotation("getCheese", CheeseAnnotation.class))</pre>
      *
      * @param methodName      the name of the method to look for
-     * @param annotationClazz the class of the annotation
+     * @param annotationClazz the clazz of the annotation
      * @param <T>             the type of {@code annotationClazz}
      *
      * @return newly created matcher
@@ -41,7 +41,7 @@ public class AnnotationMatchers {
      * <pre>assertThat(objectCheese, hasMethodAnnotationParameter("getCheese", CheeseAnnotation.class, "country", java.util.Locale.FRANCE.getClass()))</pre>
      *
      * @param methodName               the name of the method to look for
-     * @param annotationClazz          the class of the annotation
+     * @param annotationClazz          the clazz of the annotation
      * @param annotationParameterKey   the name of key for that annotation parameter
      * @param annotationParameterValue the value of the annotation parameter
      * @param <T>                      type of the values

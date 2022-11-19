@@ -13,9 +13,9 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.notNullValue;
 
 /*
- * Base class for testing all the classes which are used for public access the matcher.
+ * Base clazz for testing all the clazzes which are used for public access the matcher.
  */
-abstract public class AbstractPublicTest {
+public abstract class AbstractPublicTest {
 
     protected static final String                      methodName               = "fooMethod";
     protected static final Class<? extends Annotation> annotationClazz          = SimpleAnnotation.class;

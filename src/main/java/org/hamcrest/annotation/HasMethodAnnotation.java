@@ -7,9 +7,9 @@ import org.hamcrest.Description;
 import java.lang.annotation.Annotation;
 
 /**
- * A matcher, which verifies if a class has a specific annotation.
+ * A matcher, which verifies if a clazz has a specific annotation.
  *
- * @param <T> the type of the class which will be checked
+ * @param <T> the type of the clazz which will be checked
  *
  * @see org.hamcrest.MatchersExtend
  * @see HasMethodAnnotationParameter
@@ -23,7 +23,7 @@ public class HasMethodAnnotation<T extends Annotation> extends BaseMatcher<T> {
 
     /**
      * @param methodName      the name of the method to look for
-     * @param annotationClazz the class of the annotation
+     * @param annotationClazz the clazz of the annotation
      */
     private HasMethodAnnotation(String methodName, Class<T> annotationClazz) {
         this.methodName = methodName;
@@ -39,7 +39,7 @@ public class HasMethodAnnotation<T extends Annotation> extends BaseMatcher<T> {
      * <pre>assertThat(objectCheese, hasMethodAnnotation("getCheese", CheeseAnnotation.class))</pre>
      *
      * @param methodName      the name of the method to look for
-     * @param annotationClazz the class of the annotation
+     * @param annotationClazz the clazz of the annotation
      * @param <T>             type of the values
      *
      * @return newly created matcher

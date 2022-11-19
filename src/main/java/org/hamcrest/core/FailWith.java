@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.instanceOf;
 /**
  * A matcher, which verifies if a function has raised a specific exception.
  *
- * @param <E> the type of the class of the exception
+ * @param <E> the type of the clazz of the exception
  *
  * @since 0.1.0
  */
@@ -34,7 +34,7 @@ public class FailWith<E extends Throwable> extends BaseMatcher<IThrowingRunnable
      * For example:
      * <pre>assertThat(()-&gt;myFunction(), failWith(MyException.class))</pre>
      *
-     * @param expectedException the class of the exception
+     * @param expectedException the clazz of the exception
      * @param <E>               type of the exception
      *
      * @return newly created matcher

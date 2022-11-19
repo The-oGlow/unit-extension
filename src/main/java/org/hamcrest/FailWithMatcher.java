@@ -15,7 +15,7 @@ public class FailWithMatcher {
      * For example:
      * <pre>assertThat(()-&gt;myFunction(), failWith(MyException.class))</pre>
      *
-     * @param expectedException the class of the exception
+     * @param expectedException the clazz of the exception
      * @param <E>               type of the exception
      *
      * @return newly created matcher

@@ -6,7 +6,7 @@ import org.junit.function.IThrowingRunnable;
 import java.lang.annotation.Annotation;
 
 /**
- * Contains matchers, which are missing in the original class of {@link org.hamcrest.Matchers}.
+ * Contains matchers, which are missing in the original clazz of {@link org.hamcrest.Matchers}.
  *
  * @see org.hamcrest.Matchers
  * @since 0.1.0
@@ -84,7 +84,7 @@ public class MatchersExtend extends org.hamcrest.Matchers {
      * <pre>assertThat(objectCheese, hasMethodAnnotation("getCheese", CheeseAnnotation.class))</pre>
      *
      * @param methodName      the name of the method to look for
-     * @param annotationClazz the class of the annotation
+     * @param annotationClazz the clazz of the annotation
      * @param <T>             type of the values
      *
      * @return newly created matcher
@@ -101,7 +101,7 @@ public class MatchersExtend extends org.hamcrest.Matchers {
      * <pre>assertThat(objectCheese, hasMethodAnnotationParameter("getCheese", CheeseAnnotation.class, "country", java.util.Locale.FRANCE.getClass()))</pre>
      *
      * @param methodName               the name of the method to look for
-     * @param annotationClazz          the class of the annotation
+     * @param annotationClazz          the clazz of the annotation
      * @param annotationParameterKey   the name of key for that annotation parameter
      * @param annotationParameterValue the value of the annotation parameter
      * @param <T>                      type of the values
@@ -136,7 +136,7 @@ public class MatchersExtend extends org.hamcrest.Matchers {
      * For example:
      * <pre>assertThat(()-&gt;myFunction(), failWith(MyException.class))</pre>
      *
-     * @param expectedException the class of the expected exception
+     * @param expectedException the clazz of the expected exception
      * @param <E>               type of the expected exception
      *
      * @return newly created matcher
