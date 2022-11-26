@@ -12,51 +12,30 @@ on:
       - '.m2/**'
       - '.repo/**'
 
-
 env:
   # Github Additional Configuration
   GITHUB_REPO_NAME: ${{ github.event.repository.name }}
   GITHUB_ACTOR: ${{ github.actor }}
   GITHUB_PROJECT_DIR: ${{ github.workspace }}
-  GITHUB_TARGET_DIR: ${{ github.workspace }}/target
-  GITHUB_UPLOAD_DIR: ${{ github.workspace }}/staging
-  GITHUB_UPLOAD_NAME: ${{ github.event.repository.name }}.zip
   GITHUB_BRANCH_NAME: ${{ github.ref_name }}
-  GITHUB_DISTRIB_URL: https://maven.pkg.github.com
-  GITHUB_DISTRIB_REPO_SS: The-oGlow/Awesome-Snap-Shots
-  GITHUB_DISTRIB_REPO_REL: The-oGlow/Central-Awesome-Index
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_UPLOAD_DIR: ${{ github.workspace }}/target/staging
+  GITHUB_UPLOAD_NAME: ${GITHUB_REPO_NAME}.zip
   PCK_READ_TOKEN: ${{ secrets.PCK_READ_TOKEN }}
   PCK_WRITE_TOKEN: ${{ secrets.PCK_WRITE_TOKEN }}
 
   # Maven Common Configuration
   MVN_HOME_DIR: ~/.m2
-  MVN_REPO_JOB_DIR: ${{ github.workspace }}/.repo
-  MVN_SETT_OPTS: -V -B
-  MVN_SETS_OPTS: -V -B -s "${{ github.workspace}}/.m2/settings.xml"
-  MVN_REPO_OPTS: -Dmaven.repo.local="${{ github.workspace}}/.repo"
-  MVN_BUILD_OPTS: -fae -Dmaven.test.failure.ignore=true
-  MVN_CLI_OPTS: -ff
-  MVN_DEPLOY_OPTS: -Pdeploy-jfrog -DfastBuild -DretryFailedDeploymentCount=10
-
-  # Maven Sign Configuration
-  MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
-
-  # Maven Test Configuration
-  MVN_TEST_OPTS_N: -DskipTests=true -DskipITs=true -Dmaven.test.failure.ignore=true
-  MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=true
 
   # Sonarcloud Configuration
-  MVN_SONAR_OPTS: -Dsonar.qualitygate.wait=false -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-  SONAR_CACHE_DIR: ~/.sonar/cache
-  SONAR_HOST_URL: "https://sonarcloud.io"
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   # Codacy Configuration
-  MVN_CODACY_OPTS: -DcoverageReportFile=target/jacoco/comm/jacoco.xml -DprojectToken=${{ secrets.CODACY_PROJECT_TOKEN }} -DapiToken=${{ secrets.CODACY_API_TOKEN }}
+  CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+  CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
 
   # Coveralls Configuration
-  MVN_COVERALLS_OPTS: -Dbranch=${{ github.ref_name }} -DrepoToken=${{ secrets.COVERALLS_REPO_TOKEN }}
+  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
   # JFrog Configuration
   JF_WRITE_TOKEN: ${{ secrets.JF_WRITE_TOKEN }}
@@ -76,11 +55,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: show env
-        run: |
-          echo "**** show_env ****"
-          printenv | sort
-
       - name: setup JDK
         uses: actions/setup-java@v3.5.0
         with:
@@ -95,27 +69,8 @@ jobs:
           key: ${{ matrix.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ matrix.os }}-m2
 
-      - name: show settings
-        run: cat ${{ github.workspace}}/.m2/settings.xml
-
       - name: maven build
-        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} ${{ env.MVN_BUILD_OPTS }} help:active-profiles clean install
-
-      - name: show build
-        run: |
-          echo "**** show_build ****"
-          find "${{ env.GITHUB_PROJECT_DIR }}" -type d ! -regex ".+\.repo.*" ! -regex ".+\.git.*" ! -regex ".+\.sonar.*" -print
-
-      - name: prepare upload
-        env:
-          PU_JAR: ${{ env.GITHUB_TARGET_DIR }}/*.jar
-          PU_POM: ${{ env.GITHUB_PROJECT_DIR }}/pom.xml
-        run: |
-          mkdir "${{ env.GITHUB_UPLOAD_DIR }}"
-          ls -la "${{ env.GITHUB_PROJECT_DIR }}"
-          ls -la "${{ env.GITHUB_TARGET_DIR }}"
-          test -f "${{ env.PU_JAR }}" && cp -v "${{ env.PU_JAR }}" "${{ env.GITHUB_UPLOAD_DIR }}"
-          test -f "${{ env.PU_POM }}" && cp -v "${{ env.PU_POM }}" "${{ env.GITHUB_UPLOAD_DIR }}"
+        run: bash ${{ env.GITHUB_PROJECT_DIR}}/.mvn/.build.sh
 
       - name: upload artifact
         uses: actions/upload-artifact@v3.1.0
@@ -124,6 +79,3 @@ jobs:
           path: ${{ env.GITHUB_UPLOAD_DIR }}
           if-no-files-found: warn
           retention-days: 14
-
-      - name: deploy artifact
-        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_N }} ${{ env.MVN_DEPLOY_OPTS }} help:active-profiles deploy
