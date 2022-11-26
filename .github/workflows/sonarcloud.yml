@@ -9,7 +9,7 @@ on:
     paths-ignore:
       # - '.github/**'
       - '.run/**'
-      # - '.m2/**'
+      - '.m2/**'
       - '.repo/**'
 
 
@@ -22,6 +22,9 @@ env:
   GITHUB_UPLOAD_DIR: ${{ github.workspace }}/staging
   GITHUB_UPLOAD_NAME: ${{ github.event.repository.name }}.zip
   GITHUB_BRANCH_NAME: ${{ github.ref_name }}
+  GITHUB_DISTRIB_URL: https://maven.pkg.github.com
+  GITHUB_DISTRIB_REPO_SS: The-oGlow/Awesome-Snap-Shots
+  GITHUB_DISTRIB_REPO_REL: The-oGlow/Central-Awesome-Index
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   PCK_READ_TOKEN: ${{ secrets.PCK_READ_TOKEN }}
   PCK_WRITE_TOKEN: ${{ secrets.PCK_WRITE_TOKEN }}
@@ -35,11 +38,6 @@ env:
   MVN_BUILD_OPTS: -fae -Dmaven.test.failure.ignore=true
   MVN_CLI_OPTS: -ff
   MVN_DEPLOY_OPTS: -Pdeploy-jfrog -DfastBuild -DretryFailedDeploymentCount=10
-  MVN_DISTRIB_URL: https://maven.pkg.github.com
-  MVN_DISTRIB_REPO_SS: The-oGlow/Awesome-Snap-Shots
-  MVN_DISTRIB_REPO_REL: The-oGlow/Central-Awesome-Index
-  CHK_FILE: com/glowa-net/maven/parent/global-appl-pom/3-SNAPSHOT/maven-metadata.xml
-  CHK_FUNC: echo SUCCESS || echo FAIL
 
   # Maven Sign Configuration
   MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
@@ -73,13 +71,6 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      #      - name: validate deploy repos
-      #        run: |
-      #          curl -fH "Authorization: Bearer ${{ secrets.PCK_READ_TOKEN }}"  "${{ env.MVN_DISTRIB_URL }}/${{ env.MVN_DISTRIB_REPO_SS }}/${{ env.CHK_FILE }}" && ${{ env.CHK_FUNC }}
-      #          curl -fH "Authorization: Bearer ${{ secrets.PCK_WRITE_TOKEN }}" "${{ env.MVN_DISTRIB_URL }}/${{ env.MVN_DISTRIB_REPO_SS }}/${{ env.CHK_FILE }}" && ${{ env.CHK_FUNC }}
-      #          curl -f -u "${{ env.GITHUB_ACTOR }}:${{ secrets.PCK_WRITE_TOKEN }}" "${{ env.MVN_DISTRIB_URL }}/${{ env.MVN_DISTRIB_REPO_SS }}/${{ env.CHK_FILE }}" && ${{ env.CHK_FUNC }}
-      #          curl -f -u "${{ env.GITHUB_ACTOR }}:${{ secrets.GITHUB_TOKEN }}" "${{ env.MVN_DISTRIB_URL }}/${{ env.MVN_DISTRIB_REPO_SS }}/${{ env.CHK_FILE }}" && ${{ env.CHK_FUNC }}
-
       - name: checkout
         uses: actions/checkout@v3.0.2
         with:
@@ -103,16 +94,6 @@ jobs:
           path: ${{ env.MVN_HOME_DIR }}
           key: ${{ matrix.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ matrix.os }}-m2
-
-      #- name: maven settings
-      #  uses: s4u/maven-settings-action@v2.6.0
-      #  with:
-      #          servers: '[{"id": "coding.github.ss", "username": "${env.GITHUB_ACTOR}", "password": "${env.GITHUB_TOKEN}"}, {"id": "coding.github.ss.deploy", "username": "${env.GITHUB_ACTOR}", "password": "${env.GITHUB_TOKEN}"}]'
-      #  with:
-      #    servers: '[{ "id": "coding.github.ss",  "username": "${{ github.github_actor }}", "configuration": { "httpHeaders": { "property": { "name": "Authorization", "value": "Bearer ${{ secrets.PCK_READ_TOKEN }}" }}}}, { "id": "coding.github.ss.deploy",  "username": "${{ github.github_actor }}", "configuration": { "httpHeaders": { "property": { "name": "Authorization", "value": "Bearer ${{ secrets.PCK_WRITE_TOKEN }}" }}}}]'
-
-      #- name: show settings
-      #  run: cat ${{ env.MVN_HOME_DIR }}/settings.xml
 
       - name: show settings
         run: cat ${{ github.workspace}}/.m2/settings.xml
