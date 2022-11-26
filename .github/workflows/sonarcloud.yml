@@ -60,6 +60,9 @@ env:
   # Coveralls Configuration
   MVN_COVERALLS_OPTS: -Dbranch=${{ github.ref_name }} -DrepoToken=${{ secrets.COVERALLS_REPO_TOKEN }}
 
+  # JFrog Configuration
+  JF_WRITE_TOKEN: ${{ secrets.JF_WRITE_TOKEN }}
+
 jobs:
   sonarcloud:
     strategy:
