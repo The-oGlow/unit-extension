@@ -1,5 +1,6 @@
 package com.glowanet.reflect;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,9 +46,18 @@ public class Primitive {
     }
 
     /**
+     * @return list of all primitive java types and all object type
+     */
+    public static List<Class<?>> all() {
+        List<Class<?>> all = new ArrayList<>(PRIM2OBJ.keySet());
+        all.addAll(PRIM2OBJ.values());
+        return all;
+    }
+
+    /**
      * @return map of all primitive java types and their object type
      */
-    public static Map<Class<?>, Class<?>> all() {
+    public static Map<Class<?>, Class<?>> allMap() {
         return Map.copyOf(PRIM2OBJ);
     }
 

@@ -25,7 +25,7 @@ public class PrimitiveConversionIT {
         @Parameterized.Parameters(name = "{index}: prim:{0} => obj:{1}")
         public static List<Object[]> data() {
             List<Object[]> testData = new ArrayList<>();
-            for (Map.Entry<Class<?>, Class<?>> entry : Primitive.all().entrySet()) {
+            for (Map.Entry<Class<?>, Class<?>> entry : Primitive.allMap().entrySet()) {
                 testData.add(new Object[]{entry.getKey(), entry.getValue()});
             }
             testData.add(new Object[]{PrimitivePrimToObjIT.class, null});
@@ -58,7 +58,7 @@ public class PrimitiveConversionIT {
         @Parameterized.Parameters(name = "{index}: prim:{0} => obj:{1}")
         public static List<Object[]> data() {
             List<Object[]> testData = new ArrayList<>();
-            for (Map.Entry<Class<?>, Class<?>> entry : Primitive.all().entrySet()) {
+            for (Map.Entry<Class<?>, Class<?>> entry : Primitive.allMap().entrySet()) {
                 testData.add(new Object[]{entry.getValue(), entry.getKey()});
             }
             testData.add(new Object[]{PrimitiveObjToPrimIT.class, null});

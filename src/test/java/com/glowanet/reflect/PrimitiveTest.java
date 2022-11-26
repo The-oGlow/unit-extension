@@ -12,7 +12,8 @@ import static org.hamcrest.Matchers.hasSize;
 
 public class PrimitiveTest {
 
-    private static final int NO_OF_PRIMITIVES = 7;
+    private static final int NO_OF_PRIMITIVES_ALL = 14;
+    private static final int NO_OF_PRIMITIVES     = NO_OF_PRIMITIVES_ALL / 2;
 
     @Test
     public void testPrimitive() {
@@ -22,8 +23,15 @@ public class PrimitiveTest {
     }
 
     @Test
-    public void testPrimitivesAll() {
-        Map<Class<?>, Class<?>> actual = Primitive.all();
+    public void testPrimitiveAll() {
+        List<Class<?>> actual = Primitive.all();
+
+        assertThat(actual, hasSize(greaterThanOrEqualTo(NO_OF_PRIMITIVES_ALL)));
+    }
+
+    @Test
+    public void testPrimitivesAllMap() {
+        Map<Class<?>, Class<?>> actual = Primitive.allMap();
 
         assertThat(actual.entrySet(), hasSize(greaterThanOrEqualTo(NO_OF_PRIMITIVES)));
     }
@@ -39,7 +47,7 @@ public class PrimitiveTest {
     public void testSizAll() {
         int actual = Primitive.sizeAll();
 
-        assertThat(actual, greaterThanOrEqualTo(NO_OF_PRIMITIVES));
+        assertThat(actual, greaterThanOrEqualTo(NO_OF_PRIMITIVES_ALL));
     }
 
     @Test
