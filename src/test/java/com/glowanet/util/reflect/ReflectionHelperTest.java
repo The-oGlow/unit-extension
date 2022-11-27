@@ -385,5 +385,4 @@ public class ReflectionHelperTest {
 
         assertThat(actual, nullValue());
     }
-
 }

@@ -31,7 +31,7 @@ public class ReflectionHelper {
     }
 
     /**
-     * * Clazznstance an instantiated object
+     * @param instance an instantiated object
      *
      * @return list of fields, which have a getter, or an empty list
      *

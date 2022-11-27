@@ -24,9 +24,6 @@ MVN_REPO_JOB_DIR="${GITHUB_PROJECT_DIR}/.repo"
 MVN_SETT_OPTS="-V -B"
 MVN_SETS_OPTS="-V -B -s${GITHUB_PROJECT_DIR}/.m2/settings.xml"
 MVN_REPO_OPTS="-Dmaven.repo.local=\"${GITHUB_PROJECT_DIR}/.repo\""
-MVN_BUILD_OPTS="-fae"
-MVN_CLI_OPTS="-ff"
-MVN_DEPLOY_OPTS="-Pdeploy-jfrog -DfastBuild -DretryFailedDeploymentCount=5"
 
 # Maven Sign Configuration
 MVN_SIGN_OPTS="-P\!generate-gpgkey -P\!sign-jar"
@@ -34,6 +31,11 @@ MVN_SIGN_OPTS="-P\!generate-gpgkey -P\!sign-jar"
 # Maven Test Configuration
 MVN_TEST_OPTS_N="-DskipTests=true -DskipITs=true -Dmaven.test.failure.ignore=true"
 MVN_TEST_OPTS_Y="-DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=true"
+
+# Maven Goal Options
+MVN_CLI_OPTS=-ff
+MVN_BUILD_OPTS="${MVN_SETS_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} -fae"
+MVN_DEPLOY_OPTS="${MVN_SETS_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} -Pdeploy-jfrog -DfastBuild -DretryFailedDeploymentCount=5"
 
 # Sonarcloud Configuration
 SONAR_TOKEN=${SONAR_TOKEN}

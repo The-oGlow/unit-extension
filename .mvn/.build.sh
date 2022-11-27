@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-echo "Starting '${0}'"
+echo -e "\nStarting '${0}'\n"
 SCRIPT_FOLDER=$(dirname "$(realpath "$0")")
 OPSYS="linux"
-DEBUG=0
+DEBUG=1
+DEPLOY=1
 
 check_os() {
     if [[ "$TERM" =~ "cygwin" ]] || [[ "$(uname -a)" =~ "CYGWIN" ]]; then
@@ -14,10 +15,11 @@ check_os() {
 }
 
 helpme() {
-    printf "\n%s [-h][-d]" "$(basename "${0}")"
+    printf "\n%s [-h][-do]" "$(basename "${0}")"
     printf "\n\nOptions:"
-    printf "\n-d  = show more output"
     printf "\n-h  = show this help"
+    printf "\n-d  = deploy artifact"
+    printf "\n-o  = show more output"
 }
 
 show_env() {
@@ -39,27 +41,27 @@ prepare_upload() {
     echo -e "\n**** prepare upload ****\n"
     PU_JAR="${GITHUB_TARGET_DIR}/*.jar"
     PU_POM="${GITHUB_PROJECT_DIR}/pom.xml"
-    mkdir "${GITHUB_UPLOAD_DIR}"
-    ls -la "${GITHUB_PROJECT_DIR}"
-    ls -la "${GITHUB_TARGET_DIR}"
-    test -f "${PU_JAR}" && cp -v "${PU_JAR}" "${GITHUB_UPLOAD_DIR}"
-    test -f "${PU_POM}" && cp -v "${PU_POM}" "${GITHUB_UPLOAD_DIR}"
+    mkdir -p "${GITHUB_UPLOAD_DIR}"
+    test -d "${GITHUB_TARGET_DIR}" && cp -v ${PU_JAR} "${GITHUB_UPLOAD_DIR}"
+    test -f "${PU_POM}" && cp -v ${PU_POM} "${GITHUB_UPLOAD_DIR}"
 }
 
 build_artifact() {
     echo -e "\n**** Building '${GITHUB_REPO_NAME}' - START ****\n"
-    BA_OPTS="${MVN_SETS_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} ${MVN_BUILD_OPTS}"
     # shellcheck disable=SC2086
-    mvn ${BA_OPTS} help:active-profiles clean install
+    mvn ${MVN_BUILD_OPTS} help:active-profiles clean install
+    local RES_BA=$?
     echo -e "\n**** Building '${GITHUB_REPO_NAME}' - END ****\n"
+    return ${RES_BA}
 }
 
 deploy_artifact() {
     echo -e "\n**** Deploy '${GITHUB_REPO_NAME}' - START ****\n"
-    DA_OPTS="${MVN_SETS_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} ${MVN_DEPLOY_OPTS}"
     # shellcheck disable=SC2086
-    mvn ${DA_OPTS} help:active-profiles deploy
+    mvn ${MVN_DEPLOY_OPTS} help:active-profiles deploy
+    local RES_DA=$?
     echo -e "\n**** Deploy '${GITHUB_REPO_NAME}' - END ****\n"
+    return ${RES_DA}
 }
 
 #
@@ -69,31 +71,47 @@ main_flag=${1}
 
 # check os
 check_os
-# check parameter
+
+# 0. check parameter
 if [ "$main_flag" = "-h" ]; then
     helpme
     exit 0
 fi
-if [ "$main_flag" = "-d" ]; then
-    DEBUG=1
+if [ "$main_flag" = "-o" ] || [ "$main_flag" = "-do" ]; then
+    DEBUG=0
+fi
+if [ "$main_flag" = "-d" ] || [ "$main_flag" = "-do" ]; then
+    DEPLOY=0
 fi
 
-# load settings
+# 1. load settings
 if [ "${OPSYS}" != "linux" ]; then
     source "${SCRIPT_FOLDER}/.env-override.sh"
 fi
 source "${SCRIPT_FOLDER}/.env.sh"
 
-# main steps
-if [ ${DEBUG} -eq 1 ]; then
+# 2. show settings
+if [ 0 -eq ${DEBUG} ]; then
     show_env
     show_mvnsettings
 fi
+
+# 3. build & show result
 build_artifact
-if [ ${DEBUG} -eq 1 ]; then
+RC=$?
+if [ 0 -eq ${DEBUG} ]; then
     show_build
 fi
-prepare_upload
-deploy_artifact
+test 0 -ne ${RC} && exit ${RC}
 
-echo "Ending '${0}'"
+# 4. prep upload
+prepare_upload
+
+# 5. deploy
+if [ 0 -eq ${DEPLOY} ]; then
+    deploy_artifact
+    RC=$?
+    test 0 -ne ${RC} && exit ${RC}
+fi
+
+echo -e "\nEnding '${0}'\n"
