@@ -30,7 +30,7 @@ public class TestResultHelperErrorCollectorTest {
     static final Matcher<Collection<?>> MATCHER_SIZEOF_0   = Matchers.hasSize(ERRSIZE_0);
     static final Matcher<Collection<?>> MATCHER_SIZEOF_1   = Matchers.hasSize(ERRSIZE_1);
     static final Class<?>               EXCEPT_IAE         = IllegalArgumentException.class;
-    static final String                 EXCEPT_IAE_MSG     = null;
+    static final String                 EXCEPT_IAE_MSG     = "detailMsg";
 
     static class TestResultHelperTestClazz {
         public ErrorCollector collector = new ErrorCollector();
@@ -46,14 +46,20 @@ public class TestResultHelperErrorCollectorTest {
     public ErrorCollector prepErrorCollector(int errorSize) {
         ErrorCollector collector = prepErrorCollector();
         for (int i = 0; i < errorSize; i++) {
-            collector.addError(prepException(EXCEPT_IAE));
+            collector.addError(prepException(EXCEPT_IAE, EXCEPT_IAE_MSG));
         }
         return collector;
     }
 
-    public Throwable prepException(Class<?> throwableClazz) {
+    public Throwable prepException(Class<?> throwableClazz, String exceptMsg) {
         try {
-            return (Throwable) ConstructorUtils.invokeConstructor(EXCEPT_IAE, null, null);
+            Object[] args = new Object[]{};
+            Class<?>[] types = new Class[]{};
+            if (exceptMsg != null) {
+                args = new Object[]{exceptMsg};
+                types = new Class[]{String.class};
+            }
+            return (Throwable) ConstructorUtils.invokeConstructor(throwableClazz, args, types);
         } catch (InstantiationException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new Error(e);
         }
@@ -65,9 +71,9 @@ public class TestResultHelperErrorCollectorTest {
         };
     }
 
-    private ThrowingRunnable prepRunnableWithException() {
+    private ThrowingRunnable prepRunnableWithException(String exceptMsg) {
         return () -> {
-            throw prepException(EXCEPT_IAE);
+            throw prepException(EXCEPT_IAE, exceptMsg);
         };
     }
 
@@ -150,28 +156,25 @@ public class TestResultHelperErrorCollectorTest {
 
     @Test
     public void testVerifyException() {
-        ThrowingRunnable runnable = prepRunnableWithException();
+        ThrowingRunnable runnable = prepRunnableWithException(null);
         Class<?> expectedClazz = EXCEPT_IAE;
 
         Throwable actual = TestResultHelper.verifyException(runnable, expectedClazz);
 
         assertThat(actual, instanceOf(expectedClazz));
+        assertThat(actual.getMessage(), nullValue());
     }
 
     @Test
     public void testVerifyExceptionWithMsg() {
-        ThrowingRunnable runnable = prepRunnableWithException();
+        ThrowingRunnable runnable = prepRunnableWithException(EXCEPT_IAE_MSG);
         Class<?> expectedClazz = EXCEPT_IAE;
         String expectedMsg = EXCEPT_IAE_MSG;
 
         Throwable actual = TestResultHelper.verifyException(runnable, expectedClazz, expectedMsg);
 
         assertThat(actual, instanceOf(expectedClazz));
-        if (expectedMsg == null) {
-            assertThat(actual.getMessage(), nullValue());
-        } else {
-            assertThat(actual.getMessage(), containsString(expectedMsg));
-        }
+        assertThat(actual.getMessage(), containsString(expectedMsg));
     }
 
     @Test

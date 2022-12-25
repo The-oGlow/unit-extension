@@ -2,6 +2,7 @@ package com.glowanet.util.reflect;
 
 import com.glowanet.data.SimplePojo;
 import com.glowanet.data.SimpleSerializable;
+import com.glowanet.util.junit.TestResultHelper;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.After;
@@ -24,7 +25,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThrows;
 
 public class ReflectionHelperTest {
 
@@ -89,7 +89,7 @@ public class ReflectionHelperTest {
     }
 
     private void throwableAssErrValid(ThrowingRunnable actual) {
-        throwableValid(AssertionError.class, assertThrows("Throwable raised!", Throwable.class, actual));
+        throwableValid(AssertionError.class, TestResultHelper.verifyException(actual, Throwable.class));
     }
 
     @Test
@@ -316,14 +316,14 @@ public class ReflectionHelperTest {
         final Class<?> instanceClazz = ArrayList.class;
         final Class<?> stopClazz = BigDecimal.class;
 
-        final Throwable actual = assertThrows("Throwable raised!", Throwable.class, () -> ReflectionHelper.handleGetBeanInfo(instanceClazz, stopClazz));
+        final Throwable actual = TestResultHelper.verifyException(() -> ReflectionHelper.handleGetBeanInfo(instanceClazz, stopClazz), Throwable.class);
         assertValid(actual, containsString(java.beans.IntrospectionException.class.getName()), AssertionError.class);
     }
 
     @Test
     public void test_handleInvokeMethod_throws_NoSuchMethodException() throws IntrospectionException {
         PropertyDescriptor getter = new PropertyDescriptor(SIMPLE_STRING_NAME, pojo.getClass());
-        final Throwable actual = assertThrows("Throwable raised!", Throwable.class, () -> ReflectionHelper.handleInvokeMethod(getter, SIMPLE_STRING_CLAZZ));
+        final Throwable actual = TestResultHelper.verifyException(() -> ReflectionHelper.handleInvokeMethod(getter, SIMPLE_STRING_CLAZZ), Throwable.class);
 
         assertValid(actual, containsString(NoSuchMethodException.class.getName()), AssertionError.class);
     }

@@ -1,8 +1,11 @@
 package org.hamcrest.beans;
 
 import org.hamcrest.AbstractExtendedMatcherTest;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 
@@ -13,30 +16,45 @@ import static org.hamcrest.Matchers.containsString;
  */
 public class SamePropertiesValuesAsTest<T extends SamePropertiesValuesAsTest.ExampleBean> extends AbstractExtendedMatcherTest<T> {
 
-    static class ExampleBean {
-        static class Value {
-            public Value(Object value) {
-                this.value = value;
-            }
-
-            public final Object value;
-
-            @Override
-            public String toString() {
-                return "Value{" +
-                        "value=<" + value +
-                        ">}";
-            }
+    protected static class ExampleValue {
+        public ExampleValue(Object value) {
+            this.value = value;
         }
 
-        private final String stringProperty;
-        private final int    intProperty;
-        private final Value  valueProperty;
+        public final Object value;
 
-        public ExampleBean(String stringProperty, int intProperty, Value valueProperty) {
+        @Override
+        public String toString() {
+            return "ExampleValue{" +
+                    "value=<" + value +
+                    ">}";
+        }
+    }
+
+    protected static class ExampleBean implements Cloneable {
+        protected static final String FIELD_INT     = "intProperty";
+        protected static final String FIELD_STRING  = "stringProperty";
+        protected static final String FIELD_VALUE   = "valueProperty";
+        protected static final String FIELD_UNKNOWN = "notAProperty";
+
+        private final String       stringProperty;
+        private final int          intProperty;
+        private final ExampleValue valueProperty;
+
+        public ExampleBean(String stringProperty, int intProperty, ExampleValue valueProperty) {
             this.stringProperty = stringProperty;
             this.intProperty = intProperty;
             this.valueProperty = valueProperty;
+        }
+
+        @Override
+        public ExampleBean clone() {
+            try {
+                ExampleBean clone = (ExampleBean) super.clone();
+                return clone;
+            } catch (CloneNotSupportedException e) {
+                throw new AssertionError();
+            }
         }
 
         public String getStringProperty() {
@@ -47,7 +65,7 @@ public class SamePropertiesValuesAsTest<T extends SamePropertiesValuesAsTest.Exa
             return intProperty;
         }
 
-        public Value getValueProperty() {
+        public ExampleValue getValueProperty() {
             return valueProperty;
         }
 
@@ -61,56 +79,48 @@ public class SamePropertiesValuesAsTest<T extends SamePropertiesValuesAsTest.Exa
         }
     }
 
-    static class SubBeanWithNoExtraProperties extends ExampleBean {
-        public SubBeanWithNoExtraProperties(String stringProperty, int intProperty, Value valueProperty) {
+    protected static class SubBeanWithNoExtraProperties extends ExampleBean {
+        public SubBeanWithNoExtraProperties(String stringProperty, int intProperty, ExampleValue valueProperty) {
             super(stringProperty, intProperty, valueProperty);
         }
     }
 
-    static class SubBeanWithExtraProperty extends ExampleBean {
-        public SubBeanWithExtraProperty(String stringProperty, int intProperty, Value valueProperty) {
+    protected static class SubBeanWithExtraProperty extends ExampleBean {
+        protected static final String FIELD_EXTRA = "extraProperty";
+
+        public SubBeanWithExtraProperty(String stringProperty, int intProperty, ExampleValue valueProperty) {
             super(stringProperty, intProperty, valueProperty);
         }
 
         @SuppressWarnings("unused")
         public String getExtraProperty() {
-            return "extra";
+            return VAL_EXTRA;
         }
     }
 
-    //FIXME: This must be unified
-    protected static final String FIELD_INT    = "intProperty";
-    protected static final String FIELD_STRING = "stringProperty";
-    protected static final String FIELD_VALUE  = "valueProperty";
+    protected static final String DH                              = "\"";
+    protected static final String MSG_WAS_OBJECT                  = "%s was <%s>";
+    protected static final String MSG_WAS_STRING                  = "%s was \"%s\"";
+    protected static final String MSG_IS_INCOMPATIBLE_TYPE        = "is incompatible type: %s";
+    protected static final String MSG_HAS_EXTRA_PROPERTIES_CALLED = "has extra properties called [%s]";
+    protected static final String MSG_SAME_PROPERTY_VALUES_AS     = "same property values as ";
 
-    private static final ExampleBean.Value DEFAULT_OBJECT = new ExampleBean.Value("expected");
-    private static final String            DEFAULT_STRING = "same";
-    private static final int               DEFAULT_INT    = 1;
-    private static final ExampleBean       EXPECTED_BEAN  = new ExampleBean(DEFAULT_STRING, DEFAULT_INT, DEFAULT_OBJECT);
+    public static final    String VAL_EXPECTED               = "expected";
+    public static final    String VAL_ACTUAL                 = "actual";
+    public static final    String VAL_EXTRA                  = "extra";
+    protected static final String VAL_EXAMPLE_BEAN_TO_STRING = "ExampleBean{intProperty=<1>, stringProperty=\"same\", valueProperty=<ExampleValue{value=<expected>}>}";
 
-    private static final ExampleBean.Value DIFFERENT_OBJECT = new ExampleBean.Value("actual");
-    private static final String            DIFFERENT_STRING = "DIFFERENT";
-    private static final int               DIFFERENT_INT    = 2;
-    private static final ExampleBean       ACTUAL_BEAN      = new ExampleBean(DIFFERENT_STRING, DIFFERENT_INT, DIFFERENT_OBJECT);
+    protected static final ExampleValue DEFAULT_OBJECT = new ExampleValue(VAL_EXPECTED);
+    protected static final String       DEFAULT_STRING = "same";
+    protected static final int          DEFAULT_INT    = 1;
 
-    protected static final String TXT_MATCHED_PROPERTIES          = "matched properties";
-    protected static final String TXT_IS_INCOMPATIBLE_TYPE        = "is incompatible type:";
-    protected static final String TXT_DIFFERENT_PROPERTY          = "different property";
-    protected static final String TXT_IGNORED_PROPERTY            = "ignored property";
-    protected static final String TXT_SAME_PROPERTY_VALUES_AS     = "same property values as ";
-    protected static final String TXT_EXTRA_PROPERTY              = "extra property";
-    protected static final String TXT_HAS_EXTRA_PROPERTIES_CALLED = "has extra properties called";
+    protected static final ExampleValue DIFFERENT_OBJECT = new ExampleValue(VAL_ACTUAL);
+    protected static final String       DIFFERENT_STRING = "DIFFERENT";
+    protected static final int          DIFFERENT_INT    = 2;
 
-    protected static final String VAL_NOT_EXPECTED           = "not expected";
-    protected static final String VAL_NOT_A_PROPERTY         = "notAProperty";
-    protected static final String VAL_DIFFERENT              = "different";
-    protected static final String VAL_OTHER                  = "other";
-    protected static final String VAL_NOTSAME                = "Notsame";
-    protected static final String VAL_EXTRA_PROPERTY         = "extraProperty";
-    protected static final String VAL_EXAMPLE_BEAN           = "ExampleBean";
-    protected static final String VAL_EXAMPLE_BEAN_TO_STRING = "ExampleBean [intProperty: <1>, stringProperty: \"same\", valueProperty: <Value expected>]";
-
-    //FIXME: This must be unnified
+    protected static final ExampleBean EXPECTED_BEAN    = new ExampleBean(DEFAULT_STRING, DEFAULT_INT, DEFAULT_OBJECT);
+    protected static final ExampleBean ACTUAL_BEAN_SAME = new ExampleBean(DEFAULT_STRING, DEFAULT_INT, DEFAULT_OBJECT);
+    protected static final ExampleBean ACTUAL_BEAN      = new ExampleBean(DIFFERENT_STRING, DIFFERENT_INT, DIFFERENT_OBJECT);
 
     @Override
     protected Matcher<T> createMatcher() {
@@ -132,9 +142,9 @@ public class SamePropertiesValuesAsTest<T extends SamePropertiesValuesAsTest.Exa
     @Override
     protected Matcher<String> prepareMatcher_objectsAreDifferent_check() {
         return allOf( //
-                containsString(String.format("%s was <%s>,", FIELD_INT, DIFFERENT_INT)), //
-                containsString(String.format("%s was \"%s\",", FIELD_STRING, DIFFERENT_STRING)), //
-                containsString(String.format("%s was <%s>", FIELD_VALUE, DIFFERENT_OBJECT)) //
+                containsString(String.format(MSG_WAS_OBJECT, ExampleBean.FIELD_INT, DIFFERENT_INT)), //
+                containsString(String.format(MSG_WAS_STRING, ExampleBean.FIELD_STRING, DIFFERENT_STRING)), //
+                containsString(String.format(MSG_WAS_OBJECT, ExampleBean.FIELD_VALUE, DIFFERENT_OBJECT)) //
         );
     }
 
@@ -150,10 +160,7 @@ public class SamePropertiesValuesAsTest<T extends SamePropertiesValuesAsTest.Exa
 
     @Override
     protected Matcher<String> prepareDescriptionText_missmatchType_check() {
-        return allOf( //
-                containsString(TXT_IS_INCOMPATIBLE_TYPE), //
-                containsString(DIFFERENT_CLAZZ_SIMPLE_NAME) //
-        );
+        return containsString(String.format(MSG_IS_INCOMPATIBLE_TYPE, DIFFERENT_CLAZZ_SIMPLE_NAME));
     }
 
     /* Section for {@link org.hamcrest.TypeSafeMatcher} unit tests */
@@ -173,60 +180,16 @@ public class SamePropertiesValuesAsTest<T extends SamePropertiesValuesAsTest.Exa
         return null;
     }
 
-    public void test_reports_match_when_all_properties_match() {
-        assertMatches(TXT_MATCHED_PROPERTIES, SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN), ACTUAL_BEAN);
-    }
+    /* Section for individual unit tests */
 
-    public void test_reports_mismatch_when_actual_type_is_not_assignable_to_expected_type() {
-        assertMismatchDescription(TXT_IS_INCOMPATIBLE_TYPE + " " + VAL_EXAMPLE_BEAN, SamePropertiesValuesAs.samePropertiesValuesAs((Object) DEFAULT_OBJECT), ACTUAL_BEAN);
-    }
+    @Test
+    public void test_describeTo_with_IgnoringFields_hasIgnoringField() {
+        String[] ignoredProperies = new String[]{ExampleBean.FIELD_INT};
+        Matcher<T> matcher = SamePropertiesValuesAs.samePropertiesValuesAs(prepareArgumentInMatcher(), ignoredProperies);
 
-    public void test_reports_mismatch_on_two_properties_difference() {
-        assertMismatchDescription(FIELD_STRING + " was \"different\"", SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN), new ExampleBean(VAL_DIFFERENT, DEFAULT_INT, DEFAULT_OBJECT));
-        assertMismatchDescription(FIELD_INT + " was <3>", SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN), new ExampleBean(VAL_NOTSAME, DIFFERENT_INT, DEFAULT_OBJECT));
-        assertMismatchDescription(FIELD_VALUE + " was <Value other>", SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN), new ExampleBean(DEFAULT_STRING, DEFAULT_INT, new ExampleBean.Value(VAL_OTHER)));
-    }
-
-    public void test_reports_mismatch_on_first_property_difference() {
-        assertMismatchDescription(FIELD_STRING + " was \"different\"", SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN), new ExampleBean(VAL_DIFFERENT, DEFAULT_INT, DEFAULT_OBJECT));
-        assertMismatchDescription(FIELD_INT + " was <2>", SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN), new ExampleBean(DEFAULT_STRING, DIFFERENT_INT, DEFAULT_OBJECT));
-        assertMismatchDescription(FIELD_VALUE + " was <Value other>", SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN), new ExampleBean(DEFAULT_STRING, DEFAULT_INT, new ExampleBean.Value(VAL_OTHER)));
-    }
-
-    public void test_matches_beans_with_inheritance_but_no_extra_properties() {
-        assertMatches("sub type with same properties", SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN), new SubBeanWithNoExtraProperties(DEFAULT_STRING, DEFAULT_INT, DEFAULT_OBJECT));
-    }
-
-    public void test_rejects_subtype_that_has_extra_properties() {
-        assertMismatchDescription(TXT_HAS_EXTRA_PROPERTIES_CALLED + " [" + VAL_EXTRA_PROPERTY + "]", SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN),
-                new SubBeanWithExtraProperty(DEFAULT_STRING, DEFAULT_INT, DEFAULT_OBJECT));
-    }
-
-    public void test_ignores_extra_subtype_properties() {
-        final SubBeanWithExtraProperty withExtraProperty = new SubBeanWithExtraProperty(DEFAULT_STRING, DEFAULT_INT, DEFAULT_OBJECT);
-        assertMatches(TXT_EXTRA_PROPERTY, SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN, VAL_EXTRA_PROPERTY), withExtraProperty);
-    }
-
-    public void test_ignores_different_properties() {
-        final ExampleBean differentBean = new ExampleBean(VAL_DIFFERENT, DEFAULT_INT, DEFAULT_OBJECT);
-        assertMatches(TXT_DIFFERENT_PROPERTY, SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN, FIELD_STRING), differentBean);
-    }
-
-    public void test_accepts_missing_properties_to_ignore() {
-        assertMatches(TXT_IGNORED_PROPERTY, SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN, VAL_NOT_A_PROPERTY), ACTUAL_BEAN);
-    }
-
-    public void test_can_ignore_all_properties() {
-        final ExampleBean differentBean = new ExampleBean(VAL_DIFFERENT, DIFFERENT_INT, new ExampleBean.Value(VAL_NOT_EXPECTED));
-        assertMatches(TXT_DIFFERENT_PROPERTY, SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN, FIELD_STRING, FIELD_INT, FIELD_VALUE), differentBean);
-    }
-
-    public void testDescribesItself() {
-        assertDescription(TXT_SAME_PROPERTY_VALUES_AS + VAL_EXAMPLE_BEAN_TO_STRING,
-                SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN));
-
-        assertDescription(
-                TXT_SAME_PROPERTY_VALUES_AS + VAL_EXAMPLE_BEAN_TO_STRING + " ignoring [\"ignored1\", \"ignored2\"]",
-                SamePropertiesValuesAs.samePropertiesValuesAs(EXPECTED_BEAN, "ignored1", "ignored2"));
+        Description description = prepareDefaultDescription();
+        matcher.describeTo(description);
+        assertThat(description.toString(),
+                allOf(containsString(SamePropertiesValuesAs.SAME_PROPERTY_IGNORING), containsString(ExampleBean.FIELD_INT)));
     }
 }

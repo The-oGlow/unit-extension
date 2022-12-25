@@ -1,5 +1,6 @@
 package org.hamcrest.core;
 
+import com.glowanet.util.junit.TestResultHelper;
 import org.hamcrest.Description;
 import org.hamcrest.StringDescription;
 import org.junit.Before;
@@ -11,7 +12,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThrows;
 
 /**
  * @see IsBetween
@@ -94,9 +94,7 @@ public class IsBetweenTest {
 
     @Test
     public void testDescribeMismatchSafelyNullValueDescription() {
-        assertThrows("Exception raised!", NullPointerException.class, () ->
-                o2T.describeMismatchSafely(LBOUND, null)
-        );
+        TestResultHelper.verifyException(() -> o2T.describeMismatchSafely(LBOUND, null), NullPointerException.class);
     }
 
     @Test
@@ -129,8 +127,6 @@ public class IsBetweenTest {
 
     @Test
     public void testDescribeToNullValueDescription() {
-        assertThrows("Exception raised!", NullPointerException.class, () ->
-                o2T.describeTo(null)
-        );
+        TestResultHelper.verifyException(() -> o2T.describeTo(null), NullPointerException.class);
     }
 }

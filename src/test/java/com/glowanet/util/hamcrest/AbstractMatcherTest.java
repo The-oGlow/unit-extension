@@ -1,5 +1,6 @@
 package com.glowanet.util.hamcrest;
 
+import com.glowanet.util.junit.TestResultHelper;
 import org.hamcrest.AbstractExtendedMatcherTest;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -14,7 +15,6 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThrows;
 
 /**
  * Base clazz for testing a {@link org.hamcrest.BaseMatcher}
@@ -271,6 +271,8 @@ public abstract class AbstractMatcherTest<T> {
     }
 
     /**
+     * Tests, if the matcher is a specific type.
+     *
      * @param expectedClazz   the type of matcher
      * @param matcherInstance an matcherInstance to check for
      *
@@ -331,6 +333,11 @@ public abstract class AbstractMatcherTest<T> {
         assertThat(actual, o2T);
     }
 
+    /**
+     * @return a matcher, for the use in an unit test
+     *
+     * @see #testGeneric_testMatches_objectsAreDifferent_throw_assertError()
+     */
     protected abstract Matcher<String> prepareMatcher_objectsAreDifferent_check();
 
     /**
@@ -340,7 +347,7 @@ public abstract class AbstractMatcherTest<T> {
     public void testGeneric_testMatches_objectsAreDifferent_throw_assertError() {
         T argument = prepareArgumentToCompareWith();
 
-        Throwable actualThrowable = assertThrows("Throwable raised!", Throwable.class, () -> assertThat(argument, o2T));
+        Throwable actualThrowable = TestResultHelper.verifyException(() -> assertThat(argument, o2T), Throwable.class);
         verifyThrowable(actualThrowable, prepareMatcher_objectsAreDifferent_check());
     }
 
