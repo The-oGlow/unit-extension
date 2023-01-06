@@ -71,13 +71,27 @@ public class Primitive {
     /**
      * @param primClazz a java type
      *
-     * @return true={@code primClazz} is a primitive type, else true
+     * @return true={@code primClazz} is a primitive type, else false
      */
     public static boolean isPrimitive(Class<?> primClazz) {
+        return isPrimitive(primClazz, false);
+    }
+
+    /**
+     * @param primClazz     a java type
+     * @param bothDirection check in both directions
+     *
+     * @return true={@code primClazz} is a primitive type, else false
+     */
+    public static boolean isPrimitive(Class<?> primClazz, boolean bothDirection) {
         if (primClazz == null) {
             return false;
         } else {
-            return PRIM2OBJ.containsKey(primClazz);
+            boolean result = PRIM2OBJ.containsKey(primClazz);
+            if (bothDirection && !result) {
+                result = PRIM2OBJ.containsValue(primClazz);
+            }
+            return result;
         }
     }
 

@@ -65,6 +65,20 @@ public class PrimitiveTest {
     }
 
     @Test
+    public void testIsPrimitiveWithPrimitiveBothDirectionIsTrue() {
+        boolean actual = Primitive.isPrimitive(float.class, true);
+
+        assertThat(actual, equalTo(true));
+    }
+
+    @Test
+    public void testIsPrimitiveWithObjectBothDirectionIsTrue() {
+        boolean actual = Primitive.isPrimitive(Float.class, true);
+
+        assertThat(actual, equalTo(true));
+    }
+
+    @Test
     public void testPrimToObjInt2Integer() {
         Class<?> actual = Primitive.primToObj(int.class);
 

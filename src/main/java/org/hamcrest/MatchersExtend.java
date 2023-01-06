@@ -144,4 +144,34 @@ public class MatchersExtend extends org.hamcrest.Matchers {
     public static <E extends Throwable> Matcher<IThrowingRunnable<E>> failWith(Class<E> expectedException) {
         return org.hamcrest.FailWithMatcher.failWith(expectedException);
     }
+
+    /**
+     * Creates a matcher that matches when the examined object is an instance of the specified <code>type</code>,
+     * as determined by calling the {@link java.lang.Class#equals(Object)} method on that type, passing the
+     * the examined object.
+     *
+     * <p>The created matcher forces a relationship between specified type and the examined object, and should be
+     * used when it is necessary to make generics conform, for example in the JMock clause
+     * <code>with(any(Thing.class))</code></p>
+     *
+     * @param expectedClass the clazz against the object is compared
+     *
+     * @return newly created matcher
+     */
+    public static <T> Matcher<T> anyExact(Class<T> expectedClass) {
+        return org.hamcrest.core.IsInstanceOfExact.anyExact(expectedClass);
+    }
+
+    /**
+     * Creates a matcher that matches when the examined object is an instance of the specified <code>type</code>,
+     * as determined by calling the {@link java.lang.Class#equals(Object)} method on that type, passing the
+     * the examined object.
+     *
+     * @param expectedClass the clazz against the object is compared
+     *
+     * @return newly created matcher
+     */
+    public static <T> Matcher<T> isInstanceOfExact(Class<?> expectedClass) {
+        return org.hamcrest.core.IsInstanceOfExact.instanceOfExact(expectedClass);
+    }
 }
