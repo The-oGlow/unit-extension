@@ -9,7 +9,9 @@ import java.lang.annotation.Annotation;
  * Contains matchers, which checks if a clazz has an annotation and annotation-parameters.
  *
  * @since 0.1.0
+ * @deprecated
  */
+@Deprecated(forRemoval = true, since = "0.1.0")
 public class AnnotationMatchers {
 
     /**

@@ -3,6 +3,10 @@ package org.hamcrest;
 import org.hamcrest.core.FailWith;
 import org.junit.function.IThrowingRunnable;
 
+/**
+ * @deprecated
+ */
+@Deprecated(forRemoval = true, since = "0.1.0")
 public class FailWithMatcher {
 
     private FailWithMatcher() {
