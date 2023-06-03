@@ -37,7 +37,7 @@ env:
   MVN_REPO_OPTS: -Dmaven.repo.local="${{ github.workspace}}/.repo"
   MVN_BUILD_OPTS: -fae -Dmaven.test.failure.ignore=true
   MVN_CLI_OPTS: -ff
-  MVN_DEPLOY_OPTS: -Pdeploy-jfrog -DfastBuild -DretryFailedDeploymentCount=10
+  MVN_DEPLOY_OPTS: -Pdeploy-github -DfastBuild -DretryFailedDeploymentCount=10
 
   # Maven Sign Configuration
   MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
@@ -58,8 +58,6 @@ env:
   # Coveralls Configuration
   MVN_COVERALLS_OPTS: -Dbranch=${{ github.ref_name }} -DrepoToken=${{ secrets.COVERALLS_REPO_TOKEN }}
 
-  # JFrog Configuration
-  JF_WRITE_TOKEN: ${{ secrets.JF_WRITE_TOKEN }}
 
 jobs:
   sonarcloud:

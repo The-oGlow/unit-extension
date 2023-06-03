@@ -35,7 +35,7 @@ MVN_TEST_OPTS_Y="-DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=t
 # Maven Goal Options
 MVN_CLI_OPTS=-ff
 MVN_BUILD_OPTS="${MVN_SETS_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} -fae"
-MVN_DEPLOY_OPTS="${MVN_SETS_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} -Pdeploy-jfrog -DfastBuild -DretryFailedDeploymentCount=5"
+MVN_DEPLOY_OPTS="${MVN_SETS_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} -Pdeploy-github -DfastBuild -DretryFailedDeploymentCount=5"
 
 # Sonarcloud Configuration
 SONAR_TOKEN=${SONAR_TOKEN}
@@ -51,6 +51,3 @@ MVN_CODACY_OPTS="-DcoverageReportFile=\"target/jacoco/comm/jacoco.xml\" -Dprojec
 # Coveralls Configuration
 COVERALLS_REPO_TOKEN=${COVERALLS_REPO_TOKEN}
 MVN_COVERALLS_OPTS="-Dbranch=\"${GITHUB_BRANCH_NAME}\" -DrepoToken=\"${COVERALLS_REPO_TOKEN}\""
-
-# JFrog Configuration
-JF_WRITE_TOKEN=${JF_WRITE_TOKEN}
