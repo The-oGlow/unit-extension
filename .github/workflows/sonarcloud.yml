@@ -63,9 +63,9 @@ jobs:
   sonarcloud:
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        version: [11]
-        distribution: [adopt]
+        os: [ ubuntu-latest ]
+        version: [ 17 ]
+        distribution: [ adopt ]
     runs-on: ${{ matrix.os }}
 
     steps:
