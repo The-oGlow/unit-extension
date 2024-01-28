@@ -2,16 +2,17 @@ name: sonarcloud-analysis
 
 on:
   workflow_dispatch:
+  # schedule:
+  # - cron: '0 11 * * 1'
   push:
     branches:
       - master
       - develop
     paths-ignore:
-      # - '.github/**'
+      - '.github/workflows/maven.yml'
       - '.run/**'
       - '.m2/**'
       - '.repo/**'
-
 
 env:
   # Github Additional Configuration
@@ -19,12 +20,9 @@ env:
   GITHUB_ACTOR: ${{ github.actor }}
   GITHUB_PROJECT_DIR: ${{ github.workspace }}
   GITHUB_TARGET_DIR: ${{ github.workspace }}/target
-  GITHUB_UPLOAD_DIR: ${{ github.workspace }}/staging
-  GITHUB_UPLOAD_NAME: ${{ github.event.repository.name }}.zip
   GITHUB_BRANCH_NAME: ${{ github.ref_name }}
-  GITHUB_DISTRIB_URL: https://maven.pkg.github.com
-  GITHUB_DISTRIB_REPO_SS: The-oGlow/Awesome-Snap-Shots
-  GITHUB_DISTRIB_REPO_REL: The-oGlow/Central-Awesome-Index
+  GITHUB_UPLOAD_DIR: ${{ github.workspace }}/target/staging
+  GITHUB_UPLOAD_NAME: ${{ github.event.repository.name }}.zip
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   PCK_READ_TOKEN: ${{ secrets.PCK_READ_TOKEN }}
   PCK_WRITE_TOKEN: ${{ secrets.PCK_WRITE_TOKEN }}
@@ -32,82 +30,66 @@ env:
   # Maven Common Configuration
   MVN_HOME_DIR: ~/.m2
   MVN_REPO_JOB_DIR: ${{ github.workspace }}/.repo
+  MVN_SETTING_JOB_FILE: ${{ github.workspace }}/.m2/settings.xml
   MVN_SETT_OPTS: -V -B
-  MVN_SETS_OPTS: -V -B -s "${{ github.workspace}}/.m2/settings.xml"
-  MVN_REPO_OPTS: -Dmaven.repo.local="${{ github.workspace}}/.repo"
-  MVN_CMD_BUILD_OPTS: -fae -Dmaven.test.failure.ignore=true
-  MVN_CMD_CLI_OPTS: -ff
-  MVN_CMD_DEPLOY_OPTS: DdepGitlab -DfastBuild -DretryFailedDeploymentCount=10
-
-  # Maven Sign Configuration
-  MVN_SIGN_OPTS: -P!generate-gpgkey -P!sign-jar
-
-  # Maven Test Configuration
-  MVN_TEST_OPTS_N: -DskipTests=true -DskipITs=true -Dmaven.test.failure.ignore=true
-  MVN_TEST_OPTS_Y: -DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=true
-
-  # Sonarcloud Configuration
-  MVN_SONAR_OPTS: -Dsonar.qualitygate.wait=false -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-  SONAR_CACHE_DIR: ~/.sonar/cache
-  SONAR_HOST_URL: "https://sonarcloud.io"
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  MVN_SETS_OPTS: -V -B -s${{ github.workspace }}/.m2/settings.xml
+  MVN_REPO_OPTS: -Dmaven.repo.local=${{ github.workspace }}/.repo
 
   # Codacy Configuration
+  CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+  CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
   MVN_CODACY_OPTS: -DcoverageReportFile=target/jacoco/comm/jacoco.xml -DprojectToken=${{ secrets.CODACY_PROJECT_TOKEN }} -DapiToken=${{ secrets.CODACY_API_TOKEN }}
 
   # Coveralls Configuration
+  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
   MVN_COVERALLS_OPTS: -Dbranch=${{ github.ref_name }} -DrepoToken=${{ secrets.COVERALLS_REPO_TOKEN }}
-
 
 jobs:
   sonarcloud:
     strategy:
       matrix:
-        os: [ ubuntu-latest ]
-        version: [ 17 ]
-        distribution: [ adopt ]
+        os: [ubuntu-latest]
+        version: [17]
+        distribution: [adopt]
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: checkout
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
 
-      - name: show env
-        run: |
-          echo "**** show_env ****"
-          printenv | sort
-
       - name: setup JDK
-        uses: actions/setup-java@v3.5.0
+        uses: actions/setup-java@4.0.0
         with:
           java-version: '${{ matrix.version }}'
           distribution: '${{ matrix.distribution }}'
           architecture: x64
 
       - name: cache maven packages
-        uses: actions/cache@v3.0.8
+        uses: actions/cache@v4.0.0
         with:
-          path: ${{ env.MVN_HOME_DIR }}
+          path: ${{ env.MVN_REPO_JOB_DIR }}
           key: ${{ matrix.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ matrix.os }}-m2
 
-      - name: show settings
-        run: cat ${{ github.workspace}}/.m2/settings.xml
-
       - name: cache sonarcloud packages
-        uses: actions/cache@v3.0.8
+        uses: actions/cache@v4.0.0
         with:
           path: ${{ env.SONAR_CACHE_DIR }}
           key: ${{ matrix.os }}-sonar
-          restore-keys: ${{ matrix.os }}-sonar
+          restore-keys: ${{ matrix.os }}-sonar-${{ hashFiles('**/pom.xml') }}
 
-      - name: codacy coverage upload
-        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_CODACY_OPTS }} help:active-profiles verify com.gavinmogan:codacy-maven-plugin:coverage
+      - name: show_repo
+        run: |
+          mkdir -p ${{ env.MVN_REPO_JOB_DIR }}
+          du --max-depth=2 -h ${{ env.MVN_REPO_JOB_DIR }}
 
-      - name: coveralls scan
-        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_COVERALLS_OPTS }} help:active-profiles verify coveralls:report
+      #      - name: codacy coverage upload
+      #        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_CODACY_OPTS }} help:active-profiles verify com.gavinmogan:codacy-maven-plugin:coverage
+
+      #      - name: coveralls scan
+      #        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_COVERALLS_OPTS }} help:active-profiles verify coveralls:report
 
       - name: sonarcloud scan
-        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_SONAR_OPTS }} help:active-profiles verify sonar:sonar
+        run: mvn ${{ env.MVN_SETS_OPTS }} ${{ env.MVN_REPO_OPTS }} ${{ env.MVN_SIGN_OPTS }} ${{ env.MVN_TEST_OPTS_Y }} ${{ env.MVN_SONAR_OPTS }} help:active-profiles verify sonar:sonar

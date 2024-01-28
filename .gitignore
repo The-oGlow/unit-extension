@@ -324,3 +324,4 @@ target/
 
 .mvn/.dev-env.*
 !.mvn/.dev-env.tpl.*
+.repo/
