@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class ErrorCollectorNoExceptionIT {
+public class ErrorCollectorExtNoExceptionIT {
 
     @Rule
     public ErrorCollectorExt collector = new ErrorCollectorExt();

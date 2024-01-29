@@ -8,7 +8,7 @@ import org.junit.rules.ExpectedException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class ErrorCollectorOneExceptionIT {
+public class ErrorCollectorExtOneExceptionIT {
 
     @Rule
     public ErrorCollectorExt collector = new ErrorCollectorExt();
