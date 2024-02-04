@@ -30,7 +30,7 @@ env:
   # Gitlab Configuration
   GLAB_READ_TOKEN: ${{ secrets.GLAB_READ_TOKEN }}
   GLAB_WRITE_TOKEN: ${{ secrets.GLAB_WRITE_TOKEN }}
-
+  GLAB_DEPLOY_TOKEN: ${{ secrets.GLAB_DEPLOY_TOKEN }}
 
   # Maven Common Configuration
   MVN_HOME_DIR: ~/.m2
@@ -39,6 +39,9 @@ env:
   MVN_SETT_OPTS: -V -B
   MVN_SETS_OPTS: -V -B -s${{ github.workspace }}/.m2/settings.xml
   MVN_REPO_OPTS: -Dmaven.repo.local=${{ github.workspace }}/.repo
+
+  # Sonarcloud Configuration
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN}}
 
   # Codacy Configuration
   CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
