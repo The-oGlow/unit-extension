@@ -38,10 +38,20 @@ env:
   MVN_SETTING_JOB_FILE: ${{ github.workspace }}/.m2/settings.xml
   MVN_SETT_OPTS: -V -B
   MVN_SETS_OPTS: -V -B -s${{ github.workspace }}/.m2/settings.xml
-  MVN_REPO_OPTS: -Dmaven.repo.local=${{ github.workspace }}/.repo
+  MVN_REPO_OPTS: -DdepGitlab -Dmaven.repo.local=${{ github.workspace }}/.repo
+
+  # Maven Test Configuration
+  MVN_TEST_OPTS_N: "-DskipTests=true -DskipITs=true -Dmaven.test.failure.ignore=true"
+  MVN_TEST_OPTS_Y: "-DskipTests=false -DskipITs=false -Dmaven.test.failure.ignore=true"
+
+  # Maven Deploy Configuration
+  MVN_DEPLOY_OPTS: "-DfastBuild -DretryFailedDeploymentCount=5"
 
   # Sonarcloud Configuration
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN}}
+  SONAR_CACHE_DIR: "${HOME}/.sonar/cache"
+  SONAR_HOST_URL: "https://sonarcloud.io"
+  MVN_SONAR_OPTS: "-Dsonar.qualitygate.wait=false -Dsonar.login=\"${{ secrets.SONAR_TOKEN}}\""
 
   # Codacy Configuration
   CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
