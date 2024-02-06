@@ -28,9 +28,8 @@ env:
   PCK_WRITE_TOKEN: ${{ secrets.PCK_WRITE_TOKEN }}
 
   # Gitlab Configuration
-  GLAB_READ_TOKEN: ${{ secrets.GLAB_READ_TOKEN }}
-  GLAB_WRITE_TOKEN: ${{ secrets.GLAB_WRITE_TOKEN }}
-  GLAB_DEPLOY_TOKEN: ${{ secrets.GLAB_DEPLOY_TOKEN }}
+  GLABO_READ_TOKEN: ${{ secrets.GLABO_READ_TOKEN }}
+  GLABO_DEPLOY_TOKEN: ${{ secrets.GLABO_DEPLOY_TOKEN }}
 
   # Maven Common Configuration
   MVN_HOME_DIR: ~/.m2
@@ -51,7 +50,7 @@ env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN}}
   SONAR_CACHE_DIR: "${HOME}/.sonar/cache"
   SONAR_HOST_URL: "https://sonarcloud.io"
-  MVN_SONAR_OPTS: "-Dsonar.qualitygate.wait=false -Dsonar.login=\"${{ secrets.SONAR_TOKEN}}\""
+  MVN_SONAR_OPTS: "-Dsonar.qualitygate.wait=false -Dsonar.token=${{ secrets.SONAR_TOKEN}}"
 
   # Codacy Configuration
   CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}

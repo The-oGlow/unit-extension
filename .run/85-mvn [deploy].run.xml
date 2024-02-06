@@ -21,7 +21,7 @@
           <option name="passParentEnv" value="true" />
           <option name="runMavenInBackground" value="true" />
           <option name="skipTests" value="true" />
-          <option name="vmOptions" value="--illegal-access=permit" />
+          <option name="vmOptions" value="" />
         </MavenRunnerSettings>
       </option>
       <option name="myRunnerParameters">
