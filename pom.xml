@@ -141,13 +141,14 @@
                     <name>env.GITHUB_ACTOR</name>
                 </property>
             </activation>
-
-            <!--            <scm>-->
-            <!--                <connection>scm:git:https://github.com/The-oGlow/unit-extension.git</connection>-->
-            <!--                <developerConnection>scm:git:https://github.com/The-oGlow/unit-extension.git</developerConnection>-->
-            <!--                <url>${project.env.GH_PROJECT_URL}</url>-->
-            <!--                <tag>HEAD</tag>-->
-            <!--            </scm>-->
+            <!--
+                <scm>
+                    <connection>scm:git:https://github.com/The-oGlow/unit-extension.git</connection>
+                    <developerConnection>scm:git:https://github.com/The-oGlow/unit-extension.git</developerConnection>
+                    <url>${project.env.GH_PROJECT_URL}</url>
+                    <tag>HEAD</tag>
+                </scm>
+            -->
         </profile>
     </profiles>
 </project>
