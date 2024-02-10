@@ -1,6 +1,7 @@
 :hide-uri-scheme:
 :doctype: book
 
+:site_resource: .
 // project settings (from pom-file)
 // user data
 :proj_user: ollily
@@ -37,7 +38,6 @@
 //6569
 :proj_id_coveralls: -1
 //{proj_gitgroup}/{proj_module}
-
 // common settings - for all modules the same
 :cmmn_shields_hp: https://img.shields.io
 :cmmn_shields_badge_url: {cmmn_shields_hp}/badge
