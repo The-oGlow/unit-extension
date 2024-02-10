@@ -20,8 +20,9 @@ PCK_WRITE_TOKEN=${PCK_WRITE_TOKEN}
 
 # Maven Common Configuration
 MVN_HOME_DIR="${HOME}/.m2"
-MVN_REPO_JOB_DIR="${GITHUB_PROJECT_DIR}/.repo"
-MVN_SETTING_JOB_FILE="${GITHUB_PROJECT_DIR}/.m2/settings.xml"
+MVN_REPO_JOB_DIR="./.repo"
+MVN_SETTING_DIR="./.m2"
+MVN_SETTING_JOB_FILE="${MVN_SETTING_DIR}/settings.xml"
 MVN_SETT_OPTS="-V -B"
 MVN_SETS_OPTS="-V -B -s ${MVN_SETTING_JOB_FILE}"
 MVN_REPO_OPTS="-DdepGitlab -Dmaven.repo.local=${MVN_REPO_JOB_DIR}"
@@ -45,7 +46,8 @@ MVN_CMD_DEPLOY_OPTS="${MVN_SETS_OPTS} ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TE
 SONAR_TOKEN=${SONAR_TOKEN}
 SONAR_CACHE_DIR="${HOME}/.sonar/cache"
 SONAR_HOST_URL="https://sonarcloud.io"
-MVN_SONAR_OPTS="-Dsonar.qualitygate.wait=false -Dsonar.login=\"${SONAR_TOKEN}\""
+MVN_SONAR_OPTS="-DfastAnalyze -DskipTests -Dsonar.qualitygate.wait=false -Dsonar.token=${SONAR_TOKEN}"
+MVN_CMD_SONAR_OPTS="${MVN_SETS_OPTS} ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_SONAR_OPTS}"
 
 # Codacy Configuration
 CODACY_PROJECT_TOKEN=${CODACY_PROJECT_TOKEN}

@@ -1,47 +1,52 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="10-mvn [verify]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
+  <configuration default="false" name="10-mvn [verify]" type="MavenRunConfiguration" factoryName="Maven" folderName="artifact">
     <MavenSettings>
-      <option name="myGeneralSettings"/>
+      <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
         <MavenRunnerSettings>
-          <option name="delegateBuildToMaven" value="false"/>
+          <option name="delegateBuildToMaven" value="false" />
           <option name="environmentProperties">
-            <map/>
+            <map />
           </option>
-          <option name="jreName" value="#USE_PROJECT_JDK"/>
+          <option name="jreName" value="#USE_PROJECT_JDK" />
           <option name="mavenProperties">
             <map>
-              <entry key="skipITs" value="false"/>
+              <entry key="skipITs" value="false" />
             </map>
           </option>
-          <option name="passParentEnv" value="true"/>
-          <option name="runMavenInBackground" value="true"/>
-          <option name="skipTests" value="false"/>
-          <option name="vmOptions" value=""/>
+          <option name="passParentEnv" value="true" />
+          <option name="runMavenInBackground" value="true" />
+          <option name="skipTests" value="false" />
+          <option name="vmOptions" value="" />
         </MavenRunnerSettings>
       </option>
       <option name="myRunnerParameters">
         <MavenRunnerParameters>
+          <option name="cmdOptions" />
           <option name="profiles">
-            <set/>
+            <set />
           </option>
           <option name="goals">
             <list>
-              <option value="clean"/>
-              <option value="verify"/>
+              <option value="clean" />
+              <option value="verify" />
             </list>
           </option>
-          <option name="pomFileName"/>
+          <option name="multimoduleDir" />
+          <option name="pomFileName" />
           <option name="profilesMap">
             <map>
-            <entry key="sign-jar" value="false"/>
-                        </map>
-                    </option>
-                    <option name="resolveToWorkspace" value="true"/>
-                    <option name="workingDirPath" value="$PROJECT_DIR$"/>
-                </MavenRunnerParameters>
-            </option>
-        </MavenSettings>
-        <method v="2"/>
-    </configuration>
+              <entry key="sign-jar" value="false" />
+            </map>
+          </option>
+          <option name="projectsCmdOptionValues">
+            <list />
+          </option>
+          <option name="resolveToWorkspace" value="true" />
+          <option name="workingDirPath" value="$PROJECT_DIR$" />
+        </MavenRunnerParameters>
+      </option>
+    </MavenSettings>
+    <method v="2" />
+  </configuration>
 </component>

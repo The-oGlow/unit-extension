@@ -6,76 +6,76 @@ DEBUG=1
 DEPLOY=1
 
 check_os() {
-    if [[ "$TERM" =~ "cygwin" ]] || [[ "$(uname -a)" =~ "CYGWIN" ]]; then
-        OPSYS="cygwin"
-    fi
-    if [[ "$TERM" =~ "mingw" ]] || [[ "$(uname -a)" =~ "MINGW" ]]; then
-        OPSYS="mingw"
-    fi
+  if [[ "$TERM" =~ "cygwin" ]] || [[ "$(uname -a)" =~ "CYGWIN" ]]; then
+    OPSYS="cygwin"
+  fi
+  if [[ "$TERM" =~ "mingw" ]] || [[ "$(uname -a)" =~ "MINGW" ]]; then
+    OPSYS="mingw"
+  fi
 }
 
 helpme() {
-    printf "\n%s [-h][-do]" "$(basename "${0}")"
-    printf "\n\nOptions:"
-    printf "\n-h  = show this help"
-    printf "\n-d  = deploy artifact"
-    printf "\n-o  = show more output"
+  printf "\n%s [-h][-do]" "$(basename "${0}")"
+  printf "\n\nOptions:"
+  printf "\n-h  = show this help"
+  printf "\n-d  = deploy artifact"
+  printf "\n-o  = show more output"
 }
 
 show_env() {
-    echo -e "\n**** show_env ****\n"
-    printenv | sort
+  echo -e "\n**** show_env ****\n"
+  printenv | sort
 }
 
 show_mvnsettings() {
-    echo -e "\n**** show_mvnsettings ****\n"
-    echo "Show: ${MVN_SETTING_JOB_FILE}"
-    cat "${MVN_SETTING_JOB_FILE}"
+  echo -e "\n**** show_mvnsettings ****\n"
+  echo "Show: ${MVN_SETTING_JOB_FILE}"
+  cat "${MVN_SETTING_JOB_FILE}"
 }
 
 show_pom() {
-    echo -e "\n**** show_pom ****\n"
-    mvn "${MVN_CMD_CLI_OPTS}" help:effective-pom
+  echo -e "\n**** show_pom ****\n"
+  mvn "${MVN_CMD_CLI_OPTS}" help:effective-pom
 }
 
 show_build() {
-    echo -e "\n**** show_build ****\n"
-    find "${GITHUB_PROJECT_DIR}" -type d ! -regex ".+\.repo.*" ! -regex ".+\.git.*" ! -regex ".+\.sonar.*" -print
+  echo -e "\n**** show_build ****\n"
+  find "${GITHUB_PROJECT_DIR}" -type d ! -regex ".+\.repo.*" ! -regex ".+\.git.*" ! -regex ".+\.sonar.*" -print
 }
 
 show_repo() {
-    echo -e "\n**** show_repo ****\n"
-    echo "Show ${MVN_REPO_JOB_DIR}"
-    du --max-depth=2 -h "${MVN_REPO_JOB_DIR}"
+  echo -e "\n**** show_repo ****\n"
+  echo "Show ${MVN_REPO_JOB_DIR}"
+  du --max-depth=2 -h "${MVN_REPO_JOB_DIR}"
 }
 
 prepare_upload() {
-    echo -e "\n**** prepare upload ****\n"
-    PU_JAR="${GITHUB_TARGET_DIR}/*.jar"
-    PU_POM="${GITHUB_PROJECT_DIR}/pom.xml"
-    mkdir -p "${GITHUB_UPLOAD_DIR}"
-    test -d "${GITHUB_TARGET_DIR}" && cp -v ${PU_JAR} "${GITHUB_UPLOAD_DIR}"
-    test -f "${PU_POM}" && cp -v ${PU_POM} "${GITHUB_UPLOAD_DIR}"
+  echo -e "\n**** prepare upload ****\n"
+  PU_JAR="${GITHUB_TARGET_DIR}/*.jar"
+  PU_POM="${GITHUB_PROJECT_DIR}/pom.xml"
+  mkdir -p "${GITHUB_UPLOAD_DIR}"
+  test -d "${GITHUB_TARGET_DIR}" && cp -v ${PU_JAR} "${GITHUB_UPLOAD_DIR}"
+  test -f "${PU_POM}" && cp -v ${PU_POM} "${GITHUB_UPLOAD_DIR}"
 }
 
 build_artifact() {
-    echo -e "\n**** Building '${GITHUB_REPO_NAME}' - START ****\n"
-    echo "Options: ${MVN_CMD_BUILD_OPTS}"
-    # shellcheck disable=SC2086
-    mvn ${MVN_CMD_BUILD_OPTS} help:active-profiles clean install
-    local RES_BA=$?
-    echo -e "\n**** Building '${GITHUB_REPO_NAME}' - END ****\n"
-    return ${RES_BA}
+  echo -e "\n**** Building '${GITHUB_REPO_NAME}' - START ****\n"
+  echo "Options: ${MVN_CMD_BUILD_OPTS}"
+  # shellcheck disable=SC2086
+  mvn ${MVN_CMD_BUILD_OPTS} help:active-profiles clean install
+  local RES_BA=$?
+  echo -e "\n**** Building '${GITHUB_REPO_NAME}' - END ****\n"
+  return ${RES_BA}
 }
 
 deploy_artifact() {
-    echo -e "\n**** Deploy '${GITHUB_REPO_NAME}' - START ****\n"
-    echo "Options: ${MVN_CMD_DEPLOY_OPTS}"
-    # shellcheck disable=SC2086
-    mvn ${MVN_CMD_DEPLOY_OPTS} help:active-profiles deploy
-    local RES_DA=$?
-    echo -e "\n**** Deploy '${GITHUB_REPO_NAME}' - END ****\n"
-    return ${RES_DA}
+  echo -e "\n**** Deploy '${GITHUB_REPO_NAME}' - START ****\n"
+  echo "Options: ${MVN_CMD_DEPLOY_OPTS}"
+  # shellcheck disable=SC2086
+  mvn ${MVN_CMD_DEPLOY_OPTS} help:active-profiles deploy
+  local RES_DA=$?
+  echo -e "\n**** Deploy '${GITHUB_REPO_NAME}' - END ****\n"
+  return ${RES_DA}
 }
 
 #
@@ -88,35 +88,35 @@ check_os
 
 # 0. check parameter
 if [ "$main_flag" = "-h" ]; then
-    helpme
-    exit 0
+  helpme
+  exit 0
 fi
 if [ "$main_flag" = "-o" ] || [ "$main_flag" = "-do" ]; then
-    DEBUG=0
+  DEBUG=0
 fi
 if [ "$main_flag" = "-d" ] || [ "$main_flag" = "-do" ]; then
-    DEPLOY=0
+  DEPLOY=0
 fi
 
 # 1. load settings
 if [ "${OPSYS}" != "linux" ]; then
-    source "${SCRIPT_FOLDER}/.env-override.sh"
+  source "${SCRIPT_FOLDER}/.env-override.sh"
 fi
 source "${SCRIPT_FOLDER}/.env.sh"
 
 # 2. show settings
 if [ 0 -eq ${DEBUG} ]; then
-    show_env
-    show_mvnsettings
-    #show_pom
+  show_env
+  show_mvnsettings
+  #show_pom
 fi
 
 # 3. build & show result
 build_artifact
 RC=$?
 if [ 0 -eq ${DEBUG} ]; then
-    show_build
-    show_repo
+  show_build
+  show_repo
 fi
 test 0 -ne ${RC} && exit ${RC}
 
@@ -125,9 +125,9 @@ prepare_upload
 
 # 5. deploy
 if [ 0 -eq ${DEPLOY} ]; then
-    deploy_artifact
-    RC=$?
-    test 0 -ne ${RC} && exit ${RC}
+  deploy_artifact
+  RC=$?
+  test 0 -ne ${RC} && exit ${RC}
 fi
 
 echo -e "\nEnding '${0}'\n"

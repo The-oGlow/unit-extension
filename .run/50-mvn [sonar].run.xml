@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="50-mvn [sonar]" type="MavenRunConfiguration" factoryName="Maven" folderName="unit-extension">
+  <configuration default="false" name="50-mvn [sonar]" type="MavenRunConfiguration" factoryName="Maven" folderName="artifact">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -15,8 +15,7 @@
             <map>
               <entry key="maven.test.failure.ignore" value="true" />
               <entry key="skipITs" value="false" />
-              <entry key="skipTests" value="false" />
-              <entry key="sonar.login" value="${SONAR_TOKEN}" />
+              <entry key="sonar.token" value="${SONAR_TOKEN}" />
             </map>
           </option>
           <option name="passParentEnv" value="true" />
@@ -27,6 +26,7 @@
       </option>
       <option name="myRunnerParameters">
         <MavenRunnerParameters>
+          <option name="cmdOptions" />
           <option name="profiles">
             <set />
           </option>
@@ -36,9 +36,13 @@
               <option value="org.sonarsource.scanner.maven:sonar-maven-plugin:sonar" />
             </list>
           </option>
+          <option name="multimoduleDir" />
           <option name="pomFileName" />
           <option name="profilesMap">
             <map />
+          </option>
+          <option name="projectsCmdOptionValues">
+            <list />
           </option>
           <option name="resolveToWorkspace" value="true" />
           <option name="workingDirPath" value="$PROJECT_DIR$" />

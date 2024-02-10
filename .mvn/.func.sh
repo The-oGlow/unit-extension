@@ -11,14 +11,6 @@ check_os() {
   fi
 }
 
-helpme() {
-  printf "\n%s [-h][-do]" "$(basename "${0}")"
-  printf "\n\nOptions:"
-  printf "\n-h  = show this help"
-  printf "\n-d  = deploy artifact"
-  printf "\n-o  = show more output"
-}
-
 show_env() {
   echo -e "\n**** show_env ****\n"
   printenv | sort

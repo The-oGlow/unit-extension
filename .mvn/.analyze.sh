@@ -7,6 +7,16 @@ DEBUG=1
 #load functions
 source "${SCRIPT_FOLDER}/.func.sh"
 
+helpme() {
+  printf "\nSyntax:"
+  printf "\n  %s [-h|-os]" "$(basename "${0}")"
+  printf "\n\nOptions:"
+  printf "\n  -h = show this help"
+  printf "\n  -o = show more output"
+  printf "\n  -s = analyze with sonarcloud"
+  printf "\n"
+}
+
 analyze_sonar() {
   echo -e "\n**** Analyzing with Sonarcloud '${GITHUB_REPO_NAME}' - START ****\n"
   echo "Options: ${MVN_CMD_SONAR_OPTS}"
