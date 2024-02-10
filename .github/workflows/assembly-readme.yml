@@ -1,0 +1,34 @@
+name: assembly-readme
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - src/site/resources/project-readme.adoc
+    branches:
+      - master
+      - develop
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        version: [17]
+        distribution: [adopt]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: install asciidoctor-reducer
+        run: sudo gem install asciidoctor-reducer
+
+      - name: assembly readme.adoc
+        # to preserve preprocessor conditionals, add the --preserve-conditionals option
+        run: asciidoctor-reducer --preserve-conditionals -o readme.adoc src/site/resources/project-readme.adoc
+
+      - name: commit and push readme.adoc
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: readme.adoc

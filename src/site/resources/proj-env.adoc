@@ -4,21 +4,33 @@
 :proj_user_org: The-oGlow
 :proj_author: Oliver Glowa
 :proj_user_email: coding at glowa-net dot com
-:proj_vcs_url: https://gitlab.com
+:proj_vcs_url: https://github.com
 :proj_author_url: {proj_vcs_url}/{proj_user}[{proj_author}]
-:proj_year: 2020
 
 // organization
-:org_name: oGlow
-:org_url: http://www.glowa-net.com
-:org_email:
+:org_user: The-oGlow
+:org_author: The oGlow
+:org_team_user: oteam
+:org_team: The oTeam
+:org_url: http://coding.glowa-net.com
+:org_email: {proj_user_email}
+:org_vcs_url: {proj_vcs_url}
+:org_author_url: {org_vcs_url}/{org_user}[{org_author}]
+:org_team_url: {org_vcs_url}/orgs/{org_user}/teams/{org_team_user}[{org_team}]
 
 // module data
-:proj_gitgroup: the-oglow
+:proj_gitgroup: {org_user}
 :proj_group: com.glowa-net.maven.tools
 :proj_module: unit-extension
-:proj_version: [latest release]
-:proj_description: Some useful extensions for unit testings.
+:proj_mvn_type: jar
+:proj_version: [latest version]
+:proj_description: Some useful extensions for unit testings
+:proj_year: 2020
+:proj_id_gavid: -1
+//{proj_group}/{proj_module}
 :proj_id_codacy: dba747d3491447a5a0ccb938af70e6c1
 :proj_id_coverity: -1
-:proj_id_openssf: 6559
+:proj_id_openssf: -1
+//6569
+:proj_id_coveralls: -1
+//{proj_gitgroup}/{proj_module}

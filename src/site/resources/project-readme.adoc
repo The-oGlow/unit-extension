@@ -1,0 +1,103 @@
+:hide-uri-scheme:
+:doctype: book
+
+:site_resource: .
+include::{site_resource}/proj-env.adoc[opts=optional]
+include::{site_resource}/proj-common.adoc[opts=optional]
+
+:source-highlighter: highlight.js
+
+= {proj_module}
+:toc: preamble
+:toclevels: 2
+
+link:{proj_ps_github_latest_link}
+link:{proj_ps_github_license_link}
+link:{proj_ps_maven_latest_link} +
+link:{proj_ps_issues_link}
+link:{proj_ps_pulls_link}
+
+{proj_description}. +
+See link:{proj_user_url}[Homepage].
+
+== Installation
+
+=== Pre-Requirements
+
+Install link:https://maven.apache.org/install.html[Maven].
+
+=== Usage
+
+To use, set in your `pom.xml`:
+
+:dep_tag: dependency
+ifeval::["{proj_mvn_type}" == "pom"]
+:dep_tag: parent
+endif::[]
+
+.pom.xml
+[source,html,subs="attributes"]
+----
+&lt;{dep_tag}&gt;
+  &lt;groupId&gt;{proj_group}&lt;/groupId&gt;
+  &lt;artifactId&gt;{proj_module}&lt;/artifactId&gt;
+  &lt;version&gt;{proj_version}&lt;/version&gt;
+&lt;/{dep_tag}&gt;
+----
+
+== Instructions
+
+The detailed instructions for this artifact are found link:readme-project.adoc[here].
+
+== Project Status
+
+[%autowidth,frame=ends,valign=top,halign=center]
+|===
+| ^|Branch '{brnch_1}' ^|Branch '{brnch_2}'
+
+3+|*Build*
+|github.com
+|link:{proj_bs_brnch1_link}
+|link:{proj_bs_brnch2_link}
+3+|*Quality Information*
+|link:{cmmn_sonar_hp}[sonarcloud.io]
+2+^|link:{proj_qi_sonar_qg_link}
+|link:{cmmn_openssf_hp}[openSSF BP]
+2+^|link:{proj_qi_openssf_status_link}
+|link:{cmmn_codacy_hp}[codacy.com]
+|link:{proj_qi_codacy_brnch1_status_link}
+|link:{proj_qi_codacy_brnch2_status_link}
+|link:{cmmn_coverity_hp}[coverity.com]
+2+^|link:{proj_qi_coverity_brnch1_status_link}
+ifeval::["{proj_mvn_type}" != "pom"]
+3+|*Test Information*
+|link:{cmmn_sonar_hp}[sonarcloud.io]
+|link:{proj_ti_sonar_brnch1_tsd_link} +
+link:{proj_ti_sonar_brnch1_test_link} +
+link:{proj_ti_sonar_brnch1_coverage_link}
+|link:{proj_ti_sonar_brnch2_tsd_link} +
+link:{proj_ti_sonar_brnch2_test_link} +
+link:{proj_ti_sonar_brnch2_coverage_link}
+|link:{cmmn_coveralls_hp}[coveralls.io]
+|link:{proj_ti_coveralls_brnch1_link}
+|link:{proj_ti_coveralls_brnch2_link}
+|link:{cmmn_codacy_hp}[codacy.com]
+|link:{proj_ti_codacy_brnch1_link}
+|link:{proj_ti_codacy_brnch2_link}
+endif::[]
+|===
+
+link:{proj_qi_sonar_status_link}
+
+== Author
+
+{proj_author_url} from {org_team_url} of {org_author_url}.
+
+== License
+
+This project is released under the link:{proj_vcsid_url}/LICENSE[Apache License Version 2.0].
+Please see the link:{proj_vcsid_url}/LICENSE[license file] for more information.
+
+''''
+
+~{proj_cright_org}~

@@ -9,7 +9,7 @@ on:
       - master
       - develop
     paths-ignore:
-      - '.github/workflows/sonarcloud.yml'
+      - '.github/workflows/**'
       - '.run/**'
       - '.m2/**'
       - '.repo/**'
