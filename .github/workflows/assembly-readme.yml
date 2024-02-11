@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - src/site/resources/project-readme.adoc
+      - src/site/resources/project-*.adoc
     branches:
       - master
       - develop
