@@ -31,6 +31,4 @@
 :proj_id_codacy: dba747d3491447a5a0ccb938af70e6c1
 :proj_id_coverity: -1
 :proj_id_openssf: -1
-//6569
-:proj_id_coveralls: -1
-//{proj_gitgroup}/{proj_module}
+:proj_id_coveralls: {proj_gitgroup}/{proj_module}
