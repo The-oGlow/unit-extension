@@ -28,7 +28,7 @@ MVN_SETS_OPTS="-V -B -s ${MVN_SETTING_JOB_FILE}"
 MVN_REPO_OPTS="-DdepGitlab -Dmaven.repo.local=${MVN_REPO_JOB_DIR}"
 
 # Maven Sign Configuration
-MVN_SIGN_OPTS="-P\!generate-gpgkey -P\!sign-jar"
+MVN_SIGN_OPTS="-P\!generate-gpgkey,\!sign-jar"
 
 # Maven Test Configuration
 MVN_TEST_OPTS_N="-DskipTests=true -DskipITs=true -Dmaven.test.failure.ignore=true"
@@ -42,18 +42,29 @@ MVN_CMD_CLI_OPTS="${MVN_SETS_OPTS} ${MVN_REPO_OPTS} -ff"
 MVN_CMD_BUILD_OPTS="${MVN_SETS_OPTS} ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} -fae"
 MVN_CMD_DEPLOY_OPTS="${MVN_SETS_OPTS} ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_N} ${MVN_DEPLOY_OPTS}"
 
+# Common Analyze Configuration
+ANALYZE_COMMON_JACOCO_FILE="target/jacoco/comm/jacoco.xml"
+ANALYZE_COMMON_OPTS="-DfastAnalyze ${MVN_SETS_OPTS} ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS}"
+if [ "${ANALYZE_TYPE}" = "pom" ]; then
+  ANALYZE_COMMON_OPTS="${ANALYZE_COMMON_OPTS} ${MVN_TEST_OPTS_N} -Dsonar.tests= "
+else
+  ANALYZE_COMMON_OPTS="${ANALYZE_COMMON_OPTS} ${MVN_TEST_OPTS_Y}"
+fi
+
 # Sonarcloud Configuration
 SONAR_TOKEN=${SONAR_TOKEN}
 SONAR_CACHE_DIR="${HOME}/.sonar/cache"
 SONAR_HOST_URL="https://sonarcloud.io"
-MVN_SONAR_OPTS="-DfastAnalyze -DskipTests -Dsonar.qualitygate.wait=false -Dsonar.token=${SONAR_TOKEN}"
-MVN_CMD_SONAR_OPTS="${MVN_SETS_OPTS} ${MVN_REPO_OPTS} ${MVN_SIGN_OPTS} ${MVN_TEST_OPTS_Y} ${MVN_SONAR_OPTS}"
+MVN_SONAR_OPTS="-Dsonar.qualitygate.wait=false -Dsonar.token=${SONAR_TOKEN}"
+MVN_CMD_SONAR_OPTS="${ANALYZE_COMMON_OPTS} ${MVN_SONAR_OPTS}"
 
 # Codacy Configuration
 CODACY_PROJECT_TOKEN=${CODACY_PROJECT_TOKEN}
 CODACY_API_TOKEN=${CODACY_API_TOKEN}
-MVN_CODACY_OPTS="-DcoverageReportFile=\"target/jacoco/comm/jacoco.xml\" -DprojectToken=\"${CODACY_PROJECT_TOKEN}\" -DapiToken=\"${CODACY_API_TOKEN}\""
+MVN_CODACY_OPTS="-DprojectToken=${CODACY_PROJECT_TOKEN} -DapiToken=${CODACY_API_TOKEN}"
+MVN_CMD_CODACY_OPTS="${ANALYZE_COMMON_OPTS} ${MVN_CODACY_OPTS}"
 
 # Coveralls Configuration
 COVERALLS_REPO_TOKEN=${COVERALLS_REPO_TOKEN}
-MVN_COVERALLS_OPTS="-Dbranch=\"${GITHUB_BRANCH_NAME}\" -DrepoToken=\"${COVERALLS_REPO_TOKEN}\""
+MVN_COVERALLS_OPTS="-Dbranch=${GITHUB_BRANCH_NAME} -DrepoToken=${COVERALLS_REPO_TOKEN}"
+MVN_CMD_COVERALLS_OPTS="${ANALYZE_COMMON_OPTS} ${MVN_COVERALLS_OPTS}"
