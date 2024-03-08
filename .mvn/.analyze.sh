@@ -118,9 +118,9 @@ fi
 
 # 5. codacy & coveralls
 if [ "${ANALYZE_TYPE}" != "pom" ] && [ 0 -eq ${ANALYZE_COVERAGE} ]; then
-  # analyze_codacy
-  # RC=$?
-  # test 0 -ne ${RC} && exit ${RC}
+  analyze_codacy
+  RC=$?
+  test 0 -ne ${RC} && exit ${RC}
   analyze_coveralls
   RC=$?
   test 0 -ne ${RC} && exit ${RC}
