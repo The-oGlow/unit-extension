@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="51-mvn [codacy]" type="MavenRunConfiguration" factoryName="Maven" folderName="artifact">
+  <configuration default="false" name="51-mvn [codacy]" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -12,11 +12,11 @@
           <option name="mavenProperties">
             <map>
               <entry key="apiToken" value="${CODACY_API_TOKEN}" />
+			  <entry key="fastAnalyze" value="fastAnalyze" />
               <entry key="coverageReportFile" value="target/jacoco/comm/jacoco.xml" />
+              <entry key="fastAnalyze" value="fastAnalyze" />
               <entry key="maven.test.failure.ignore" value="true" />
-              <entry key="projectToken" value="${CPT_unit-extension}" />
-              <entry key="skipITs" value="false" />
-              <entry key="skipTests" value="false" />
+              <entry key="projectToken" value="${CPT_unit_extension}" />
             </map>
           </option>
           <option name="passParentEnv" value="true" />

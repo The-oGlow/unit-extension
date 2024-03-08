@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="81-mvn [signed-install-win]" type="ShConfigurationType" folderName="artifact-shell">
-    <option name="SCRIPT_TEXT" value="%USERPROFILE%\.sign-env.bat &amp; mvn -DskipTests -DskipITs sign-jar,generate-gpgkey,artifact-release clean install" />
+  <configuration default="false" name="80-sign [install-win]" type="ShConfigurationType" >
+    <option name="SCRIPT_TEXT" value="%USERPROFILE%\.sign-env.bat &amp;&amp; mvn -DskipTests -DskipITs -Pgenerate-gpgkey,artifact-release clean install" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="" />
     <option name="SCRIPT_OPTIONS" value="" />

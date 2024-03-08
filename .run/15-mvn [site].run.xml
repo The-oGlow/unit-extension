@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="85-mvn [deploy]" type="MavenRunConfiguration" factoryName="Maven" folderName="artifact">
+  <configuration default="false" name="15-mvn [site]" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -11,11 +11,7 @@
           <option name="jreName" value="#USE_PROJECT_JDK" />
           <option name="mavenProperties">
             <map>
-              <entry key="depGitlab" value="depGitlab" />
-              <entry key="dependency-check.skip" value="true" />
-              <entry key="license.skipCheckLicense" value="true" />
               <entry key="skipITs" value="true" />
-              <entry key="sonar.scm.disabled" value="true" />
             </map>
           </option>
           <option name="passParentEnv" value="true" />
@@ -32,15 +28,13 @@
           </option>
           <option name="goals">
             <list>
-              <option value="deploy" />
+              <option value="site" />
             </list>
           </option>
           <option name="multimoduleDir" />
           <option name="pomFileName" />
           <option name="profilesMap">
-            <map>
-              <entry key="artifact-release" value="true" />
-            </map>
+            <map />
           </option>
           <option name="projectsCmdOptionValues">
             <list />

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="50-mvn [sonar]" type="MavenRunConfiguration" factoryName="Maven" folderName="artifact">
+  <configuration default="false" name="50-mvn [sonar]" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -13,8 +13,8 @@
           <option name="jreName" value="#USE_PROJECT_JDK" />
           <option name="mavenProperties">
             <map>
+              <entry key="fastAnalyze" value="fastAnalyze" />
               <entry key="maven.test.failure.ignore" value="true" />
-              <entry key="skipITs" value="false" />
               <entry key="sonar.token" value="${SONAR_TOKEN}" />
             </map>
           </option>
