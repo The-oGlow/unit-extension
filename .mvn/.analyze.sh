@@ -22,6 +22,25 @@ helpme() {
   printf "\n"
 }
 
+check_parameter() {
+  if [ "${main_flag}" = "-h" ]; then
+    helpme
+    exit 0
+  fi
+  if [ "$main_flag" = "-o" ] || [ "$main_flag" = "-co" ] || [ "$main_flag" = "-os" ] || [ "$main_flag" = "-cos" ]; then
+    DEBUG=0
+  fi
+  if [ "$main_flag" = "-c" ] || [ "$main_flag" = "-co" ] || [ "$main_flag" = "-cs" ] || [ "$main_flag" = "-cos" ]; then
+    ANALYZE_COVERAGE=0
+  fi
+  if [ "$main_flag" = "-s" ] || [ "$main_flag" = "-cs" ] || [ "$main_flag" = "-os" ] || [ "$main_flag" = "-cos" ]; then
+    ANALYZE_SONAR=0
+  fi
+  if [ "${sec_flag}" = "-p" ]; then
+    ANALYZE_TYPE="pom"
+  fi
+}
+
 prepare_analyze() {
   echo -e "\n**** Prepare the artifact '${GITHUB_REPO_NAME}' - START ****\n"
   echo "Options: ${ANALYZE_COMMON_OPTS}"
@@ -67,35 +86,13 @@ sec_flag=${2}
 check_os
 
 # 0. check parameter
-if [ "${main_flag}" = "-h" ]; then
-  helpme
-  exit 0
-fi
-if [ "$main_flag" = "-o" ] || [ "$main_flag" = "-co" ] || [ "$main_flag" = "-os" ] || [ "$main_flag" = "-cos" ]; then
-  DEBUG=0
-fi
-if [ "$main_flag" = "-c" ] || [ "$main_flag" = "-co" ] || [ "$main_flag" = "-cs" ] || [ "$main_flag" = "-cos" ]; then
-  ANALYZE_COVERAGE=0
-fi
-if [ "$main_flag" = "-s" ] || [ "$main_flag" = "-cs" ] || [ "$main_flag" = "-os" ] || [ "$main_flag" = "-cos" ]; then
-  ANALYZE_SONAR=0
-fi
-if [ "${sec_flag}" = "-p" ]; then
-  ANALYZE_TYPE="pom"
-fi
+check_parameter
 
 # 1. load settings
-if [ "${OPSYS}" != "linux" ]; then
-  source "${SCRIPT_FOLDER}/.env-override.sh"
-fi
-source "${SCRIPT_FOLDER}/.env.sh"
+load_settings
 
 # 2. show settings
-if [ 0 -eq ${DEBUG} ]; then
-  show_env
-  # show_mvnsettings
-  show_pom
-fi
+show_settings
 
 # 3. prepare
 if [ 0 -eq ${ANALYZE_SONAR} ] || [ 0 -eq ${ANALYZE_COVERAGE} ]; then

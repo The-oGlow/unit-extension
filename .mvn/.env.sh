@@ -28,7 +28,7 @@ MVN_SETS_OPTS="-V -B -s ${MVN_SETTING_JOB_FILE}"
 MVN_REPO_OPTS="-DdepGitlab -Dmaven.repo.local=${MVN_REPO_JOB_DIR}"
 
 # Maven Sign Configuration
-MVN_SIGN_OPTS="-P\!generate-gpgkey,\!sign-jar"
+MVN_SIGN_OPTS="-P!generate-gpgkey,!sign-jar"
 
 # Maven Test Configuration
 MVN_TEST_OPTS_N="-DskipTests=true -DskipITs=true -Dmaven.test.failure.ignore=true"

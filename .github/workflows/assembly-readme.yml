@@ -5,7 +5,6 @@ on:
     paths:
       - src/site/resources/project-*.adoc
     branches:
-      - master
       - develop
 
 jobs:

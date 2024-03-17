@@ -1,9 +1,7 @@
-name: maven-build
+name: code-analysis
 
 on:
   workflow_dispatch:
-  # schedule:
-  # - cron: '0 10 * * 1'
   push:
     branches:
       - master
@@ -50,7 +48,7 @@ env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN}}
   SONAR_CACHE_DIR: "${HOME}/.sonar/cache"
   SONAR_HOST_URL: "https://sonarcloud.io"
-  MVN_SONAR_OPTS: "-Dsonar.qualitygate.wait=false -Dsonar.token=\"${{ secrets.SONAR_TOKEN}}\""
+  MVN_SONAR_OPTS: "-Dsonar.qualitygate.wait=false -Dsonar.token=${{ secrets.SONAR_TOKEN}}"
 
   # Codacy Configuration
   CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
@@ -62,7 +60,7 @@ env:
   MVN_COVERALLS_OPTS: -Dbranch=${{ github.ref_name }} -DrepoToken=${{ secrets.COVERALLS_REPO_TOKEN }}
 
 jobs:
-  build:
+  sonarcloud:
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -87,16 +85,23 @@ jobs:
         uses: actions/cache@v4.0.0
         with:
           path: ${{ env.MVN_REPO_JOB_DIR }}
-          key: ${{ matrix.os }}-build-m2
-          restore-keys: ${{ matrix.os }}-build
+          key: ${{ matrix.os }}-{{env.GITHUB_REPO_NAME}}-analyze-m2
+          restore-keys: ${{ matrix.os }}-analyze-m2, ${{ matrix.os }}-analyze
 
-      - name: maven build
-        run: bash ${{ env.GITHUB_PROJECT_DIR}}/.mvn/.build.sh -do
-
-      - name: upload artifact
-        uses: actions/upload-artifact@v4.3.0
+      - name: cache sonarcloud packages
+        uses: actions/cache@v4.0.0
         with:
-          name: ${{ env.GITHUB_UPLOAD_NAME }}
-          path: ${{ env.GITHUB_UPLOAD_DIR }}
-          if-no-files-found: warn
-          retention-days: 3
+          path: ${{ env.SONAR_CACHE_DIR }}
+          key: ${{ matrix.os }}-{{env.GITHUB_REPO_NAME}}-analyze-sonar
+          restore-keys: ${{ matrix.os }}-analyze-sonar, ${{ matrix.os }}-analyze
+
+      - name: show_repo
+        run: |
+          mkdir -p ${{ env.MVN_REPO_JOB_DIR }}
+          du --max-depth=2 -h ${{ env.MVN_REPO_JOB_DIR }}
+
+      - name: sonarcloud scan
+        run: bash ${{ env.GITHUB_PROJECT_DIR}}/.mvn/.analyze.sh -os
+
+      - name: codacy & coveralls scan
+        run: bash ${{ env.GITHUB_PROJECT_DIR}}/.mvn/.analyze.sh -co

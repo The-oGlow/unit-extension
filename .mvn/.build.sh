@@ -5,14 +5,8 @@ OPSYS="linux"
 DEBUG=1
 DEPLOY=1
 
-check_os() {
-  if [[ "$TERM" =~ "cygwin" ]] || [[ "$(uname -a)" =~ "CYGWIN" ]]; then
-    OPSYS="cygwin"
-  fi
-  if [[ "$TERM" =~ "mingw" ]] || [[ "$(uname -a)" =~ "MINGW" ]]; then
-    OPSYS="mingw"
-  fi
-}
+#load functions
+source "${SCRIPT_FOLDER}/.func.sh"
 
 helpme() {
   printf "\n%s [-h][-do]" "$(basename "${0}")"
@@ -22,31 +16,17 @@ helpme() {
   printf "\n-o  = show more output"
 }
 
-show_env() {
-  echo -e "\n**** show_env ****\n"
-  printenv | sort
-}
-
-show_mvnsettings() {
-  echo -e "\n**** show_mvnsettings ****\n"
-  echo "Show: ${MVN_SETTING_JOB_FILE}"
-  cat "${MVN_SETTING_JOB_FILE}"
-}
-
-show_pom() {
-  echo -e "\n**** show_pom ****\n"
-  mvn "${MVN_CMD_CLI_OPTS}" help:effective-pom
-}
-
-show_build() {
-  echo -e "\n**** show_build ****\n"
-  find "${GITHUB_PROJECT_DIR}" -type d ! -regex ".+\.repo.*" ! -regex ".+\.git.*" ! -regex ".+\.sonar.*" -print
-}
-
-show_repo() {
-  echo -e "\n**** show_repo ****\n"
-  echo "Show ${MVN_REPO_JOB_DIR}"
-  du --max-depth=2 -h "${MVN_REPO_JOB_DIR}"
+check_parameter() {
+  if [ "$main_flag" = "-h" ]; then
+    helpme
+    exit 0
+  fi
+  if [ "$main_flag" = "-o" ] || [ "$main_flag" = "-do" ]; then
+    DEBUG=0
+  fi
+  if [ "$main_flag" = "-d" ] || [ "$main_flag" = "-do" ]; then
+    DEPLOY=0
+  fi
 }
 
 prepare_upload() {
@@ -54,8 +34,8 @@ prepare_upload() {
   PU_JAR="${GITHUB_TARGET_DIR}/*.jar"
   PU_POM="${GITHUB_PROJECT_DIR}/pom.xml"
   mkdir -p "${GITHUB_UPLOAD_DIR}"
-  test -d "${GITHUB_TARGET_DIR}" && cp -v ${PU_JAR} "${GITHUB_UPLOAD_DIR}"
-  test -f "${PU_POM}" && cp -v ${PU_POM} "${GITHUB_UPLOAD_DIR}"
+  test -d "${GITHUB_TARGET_DIR}" && cp -v "${PU_JAR}" "${GITHUB_UPLOAD_DIR}"
+  test -f "${PU_POM}" && cp -v "${PU_POM}" "${GITHUB_UPLOAD_DIR}"
 }
 
 build_artifact() {
@@ -87,29 +67,13 @@ main_flag=${1}
 check_os
 
 # 0. check parameter
-if [ "$main_flag" = "-h" ]; then
-  helpme
-  exit 0
-fi
-if [ "$main_flag" = "-o" ] || [ "$main_flag" = "-do" ]; then
-  DEBUG=0
-fi
-if [ "$main_flag" = "-d" ] || [ "$main_flag" = "-do" ]; then
-  DEPLOY=0
-fi
+check_parameter
 
 # 1. load settings
-if [ "${OPSYS}" != "linux" ]; then
-  source "${SCRIPT_FOLDER}/.env-override.sh"
-fi
-source "${SCRIPT_FOLDER}/.env.sh"
+load_settings
 
 # 2. show settings
-if [ 0 -eq ${DEBUG} ]; then
-  show_env
-  show_mvnsettings
-  #show_pom
-fi
+show_settings
 
 # 3. build & show result
 build_artifact
