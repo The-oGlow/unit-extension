@@ -85,14 +85,14 @@ jobs:
         uses: actions/cache@v4.0.0
         with:
           path: ${{ env.MVN_REPO_JOB_DIR }}
-          key: ${{ matrix.os }}-{{env.GITHUB_REPO_NAME}}-analyze-m2
+          key: ${{ matrix.os }}-${{env.GITHUB_REPO_NAME}}-analyze-m2
           restore-keys: ${{ matrix.os }}-analyze-m2, ${{ matrix.os }}-analyze
 
       - name: cache sonarcloud packages
         uses: actions/cache@v4.0.0
         with:
           path: ${{ env.SONAR_CACHE_DIR }}
-          key: ${{ matrix.os }}-{{env.GITHUB_REPO_NAME}}-analyze-sonar
+          key: ${{ matrix.os }}-${{env.GITHUB_REPO_NAME}}-analyze-sonar
           restore-keys: ${{ matrix.os }}-analyze-sonar, ${{ matrix.os }}-analyze
 
       - name: show_repo
