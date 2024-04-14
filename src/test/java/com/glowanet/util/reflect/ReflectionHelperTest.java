@@ -19,32 +19,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 
 public class ReflectionHelperTest {
 
-    public static final String   SIMPLE_STRING_NAME  = "simpleString";
+    public static final String SIMPLE_STRING_NAME = "simpleString";
     public static final Class<?> SIMPLE_STRING_CLAZZ = String.class;
-    public static final String   SIMPLE_STRING_VALUE = "simpleText";
-    public static final String   GET_SIMPLE_STRING   = "getSimpleString";
+    public static final String SIMPLE_STRING_VALUE = "simpleText";
+    public static final String GET_SIMPLE_STRING = "getSimpleString";
 
-    public static final String   SIMPLE_INT_NAME  = "simpleInt";
+    public static final String SIMPLE_INT_NAME = "simpleInt";
     public static final Class<?> SIMPLE_INT_CLAZZ = int.class;
-    public static final int      SIMPLE_INT_VALUE = 127;
+    public static final int SIMPLE_INT_VALUE = 127;
 
-    public static final String   CONST_FLOAT_NAME  = "CONST_FLOAT";
+    public static final String CONST_FLOAT_NAME = "CONST_FLOAT";
     public static final Class<?> CONST_FLOAT_CLAZZ = Float.class;
-    public static final Float    CONST_FLOAT_VALUE = 111f;
+    public static final Float CONST_FLOAT_VALUE = 111f;
 
     public static final String NOT_FOUND = "notFound";
 
     private SimplePojo pojo;
-    private String     differentPojo;
+    private String differentPojo;
 
     @Before
     public void setUp() {
@@ -384,5 +379,33 @@ public class ReflectionHelperTest {
         Object actual = ReflectionHelper.newInstance(typeClazz, parameterTypes, initArgs);
 
         assertThat(actual, nullValue());
+    }
+
+
+    static class ReflectionHelper_HackTheConstructor_Clazz {
+
+        private final int param;
+
+        ReflectionHelper_HackTheConstructor_Clazz(int param) {
+            this.param = param;
+        }
+
+        public int getParam() {
+            return param;
+        }
+    }
+
+    @Test
+    public void testHackTheConstructor() {
+        Class<?> typeClazz = ReflectionHelper_HackTheConstructor_Clazz.class;
+        Object[] initArgs = {5};
+        Class<?>[] parameterTypes = {int.class};
+
+        Object actual = ReflectionHelper.hackTheConstructor(typeClazz, initArgs, parameterTypes);
+
+        assertThat(actual, notNullValue());
+        assertThat(actual, instanceOf(ReflectionHelper_HackTheConstructor_Clazz.class));
+        assertThat(((ReflectionHelper_HackTheConstructor_Clazz) actual).getParam(), equalTo(5));
+
     }
 }

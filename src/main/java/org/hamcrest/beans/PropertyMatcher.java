@@ -14,17 +14,17 @@ import static org.hamcrest.beans.PropertyUtil.NO_ARGUMENTS;
 
 class PropertyMatcher<T> extends DiagnosingMatcher<T> {
     static final String COULD_NOT_INVOKE = "Could not invoke %s on %s";
-    static final String LIST_EQU         = "=";
+    static final String LIST_EQU = "=";
 
-    private final Method          readMethod;
+    private final Method readMethod;
     private final Matcher<Object> matcher;
-    private final String          propertyName;
+    private final String propertyName;
 
     private PropertyMatcher(PropertyDescriptor descriptor, Object expectedObject) {
         this.propertyName = descriptor.getDisplayName();
         this.readMethod = descriptor.getReadMethod();
         if (this.readMethod != null) {
-            this.matcher = equalTo(readProperty(this.readMethod, expectedObject));
+            this.matcher = equalTo(readProperty(this.readMethod, expectedObject)); //NOSONAR java:S1699
         } else {
             this.matcher = not(Matchers.anything());
         }
@@ -33,7 +33,6 @@ class PropertyMatcher<T> extends DiagnosingMatcher<T> {
     /**
      * @param descriptor     the descriptor for this property
      * @param expectedObject the expected value for this property
-     *
      * @return a new created matcher
      */
     public static PropertyMatcher<Object> matchProperty(PropertyDescriptor descriptor, Object expectedObject) {
