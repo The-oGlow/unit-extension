@@ -63,33 +63,33 @@ jobs:
   sonarcloud:
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        version: [17]
-        distribution: [adopt]
+        os: [ ubuntu-latest ]
+        version: [ 17 ]
+        distribution: [ adopt ]
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
 
       - name: setup JDK
-        uses: actions/setup-java@v4.0.0
+        uses: actions/setup-java@v4.7.0
         with:
           java-version: '${{ matrix.version }}'
           distribution: '${{ matrix.distribution }}'
           architecture: x64
 
       - name: cache maven packages
-        uses: actions/cache@v4.0.0
+        uses: actions/cache@v4.2.3
         with:
           path: ${{ env.MVN_REPO_JOB_DIR }}
           key: ${{ matrix.os }}-${{env.GITHUB_REPO_NAME}}-analyze-m2
           restore-keys: ${{ matrix.os }}-analyze-m2, ${{ matrix.os }}-analyze
 
       - name: cache sonarcloud packages
-        uses: actions/cache@v4.0.0
+        uses: actions/cache@v4.2.3
         with:
           path: ${{ env.SONAR_CACHE_DIR }}
           key: ${{ matrix.os }}-${{env.GITHUB_REPO_NAME}}-analyze-sonar

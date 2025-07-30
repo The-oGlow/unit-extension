@@ -124,10 +124,10 @@ ifeval::["{proj_id_openssf}" != "-1"]
 endif::[]
 
 // build status
-:proj_bs_brnch1_img: {cmmn_badge_github_status_url}/{proj_vcsid}/maven.yml?branch={brnch_1}&label={brnch_1}{cmmn_img_github_style}[title="Pipeline status on {brnch_1} branch"]
-:proj_bs_brnch2_img: {cmmn_badge_github_status_url}/{proj_vcsid}/maven.yml?branch={brnch_2}&label={brnch_2}{cmmn_img_github_style}[title="Pipeline status on {brnch_2} branch"]
-:proj_bs_brnch1_link: {proj_github_wflow_url}/maven.yml?query=branch%3A{brnch_1}[image:{proj_bs_brnch1_img}]
-:proj_bs_brnch2_link: {proj_github_wflow_url}/maven.yml?query=branch%3A{brnch_2}[image:{proj_bs_brnch2_img}]
+:proj_bs_brnch1_img: {cmmn_badge_github_status_url}/{proj_vcsid}/build.yml?branch={brnch_1}&label={brnch_1}{cmmn_img_github_style}[title="Pipeline status on {brnch_1} branch"]
+:proj_bs_brnch2_img: {cmmn_badge_github_status_url}/{proj_vcsid}/build.yml?branch={brnch_2}&label={brnch_2}{cmmn_img_github_style}[title="Pipeline status on {brnch_2} branch"]
+:proj_bs_brnch1_link: {proj_github_wflow_url}/build.yml?query=branch%3A{brnch_1}[image:{proj_bs_brnch1_img}]
+:proj_bs_brnch2_link: {proj_github_wflow_url}/build.yml?query=branch%3A{brnch_2}[image:{proj_bs_brnch2_img}]
 
 // test information
 // ti sonarqube
