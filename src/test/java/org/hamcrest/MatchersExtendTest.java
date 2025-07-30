@@ -7,6 +7,7 @@ import org.hamcrest.beans.HasSameValues;
 import org.hamcrest.core.FailWith;
 import org.hamcrest.core.IsBetween;
 import org.hamcrest.core.IsBetweenWithBound;
+import org.hamcrest.core.IsInstanceOfExact;
 import org.junit.Test;
 
 /**
@@ -61,4 +62,17 @@ public class MatchersExtendTest extends AbstractPublicTest {
         actual = MatchersExtend.failWith(IllegalArgumentException.class);
         verifyMatcher(FailWith.class);
     }
+
+    @Test
+    public void testAnyExcact_return_aMatcher() {
+        actual = MatchersExtend.anyExact(expectedBean.getClass());
+        verifyMatcher(IsInstanceOfExact.class);
+    }
+
+    @Test
+    public void testIsInstanceOfExact_return_aMatcher() {
+        actual = MatchersExtend.isInstanceOfExact(expectedBean.getClass());
+        verifyMatcher(IsInstanceOfExact.class);
+    }
+
 }

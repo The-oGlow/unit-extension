@@ -1,23 +1,23 @@
 package com.glowanet.reflect;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Representing all primitive types and their corrosponding object type.
  */
+@SuppressWarnings("java:S6411")
 public class Primitive {
 
     /**
      * Assignment of primitive type to its object type
      *
-     * @see #typesOfPrimitive()
+     * @see #primitives()
      * @see #primToObj(Class)
      * @see #objToPrim(Class)
      */
-    protected static final Map<Class<?>, Class<?>> PRIM2OBJ = Map.of( //NOSONAR java:S6411
+    private static final Map<Class<?>, Class<?>> PRIM2OBJ = Map.of(
             Boolean.TYPE, Boolean.class,
             Integer.TYPE, Integer.class,
             Double.TYPE, Double.class,
@@ -27,18 +27,6 @@ public class Primitive {
             Byte.TYPE, Byte.class
     );
 
-    /**
-     * List of all primitive types.
-     *
-     * @see #typesOfPrimitiveAll()
-     */
-    protected static final List<Class<?>> PRIM_ALL;
-
-    static {
-        PRIM_ALL = new ArrayList<>(PRIM2OBJ.keySet());
-        PRIM_ALL.addAll(PRIM2OBJ.values());
-    }
-
     private Primitive() {
         //nothing2do
     }
@@ -46,7 +34,7 @@ public class Primitive {
     /**
      * @return list of all primitive java types only
      */
-    public static List<Class<?>> typesOfPrimitive() {
+    public static List<Class<?>> primitives() {
         return List.copyOf(PRIM2OBJ.keySet());
     }
 
@@ -54,33 +42,56 @@ public class Primitive {
      * @return the amount of primitive types
      */
     public static int size() {
-        return typesOfPrimitive().size();
+        return primitives().size();
     }
 
     /**
-     * @return list of all primitive java types and their object type
+     * @return list of all primitive java types and all object type
      */
-    public static List<Class<?>> typesOfPrimitiveAll() {
-        return Collections.unmodifiableList(PRIM_ALL);
+    public static List<Class<?>> all() {
+        List<Class<?>> all = new ArrayList<>(PRIM2OBJ.keySet());
+        all.addAll(PRIM2OBJ.values());
+        return all;
+    }
+
+    /**
+     * @return map of all primitive java types and their object type
+     */
+    public static Map<Class<?>, Class<?>> allMap() {
+        return Map.copyOf(PRIM2OBJ);
     }
 
     /**
      * @return the amount of primitive types and their object types
      */
     public static int sizeAll() {
-        return typesOfPrimitiveAll().size();
+        return all().size();
     }
 
     /**
      * @param primClazz a java type
      *
-     * @return true={@code primClazz} is a primitive type, else true
+     * @return true={@code primClazz} is a primitive type, else false
      */
     public static boolean isPrimitive(Class<?> primClazz) {
+        return isPrimitive(primClazz, false);
+    }
+
+    /**
+     * @param primClazz     a java type
+     * @param bothDirection check in both directions
+     *
+     * @return true={@code primClazz} is a primitive type, else false
+     */
+    public static boolean isPrimitive(Class<?> primClazz, boolean bothDirection) {
         if (primClazz == null) {
             return false;
         } else {
-            return PRIM2OBJ.containsKey(primClazz);
+            boolean result = PRIM2OBJ.containsKey(primClazz);
+            if (bothDirection && !result) {
+                result = PRIM2OBJ.containsValue(primClazz);
+            }
+            return result;
         }
     }
 
@@ -90,11 +101,11 @@ public class Primitive {
      * @return the corrosponding object type or null
      */
     public static Class<?> primToObj(Class<?> primClazz) {
-        if (primClazz == null) {
-            return null;
-        } else {
-            return PRIM2OBJ.get(primClazz);
+        Class<?> result = null;
+        if (primClazz != null) {
+            result = PRIM2OBJ.get(primClazz);
         }
+        return result;
     }
 
     /**
@@ -103,15 +114,30 @@ public class Primitive {
      * @return the corrosponding primitive type or null
      */
     public static Class<?> objToPrim(Class<?> objClazz) {
-        if (objClazz == null) {
-            return null;
-        } else {
+        Class<?> result = null;
+        if (objClazz != null) {
             for (Map.Entry<Class<?>, Class<?>> entry : PRIM2OBJ.entrySet()) {
                 if (entry.getValue().equals(objClazz)) {
-                    return entry.getKey();
+                    result = entry.getKey();
                 }
             }
-            return null;
         }
+        return result;
+    }
+
+    /**
+     * @param objPrimClazz the primitive or object type
+     *
+     * @return the switched object or primitive type or null
+     */
+    public static Class<?> viceVersa(Class<?> objPrimClazz) {
+        Class<?> result = null;
+        if (objPrimClazz != null) {
+            result = objToPrim(objPrimClazz);
+            if (result == null) {
+                result = primToObj(objPrimClazz);
+            }
+        }
+        return result;
     }
 }

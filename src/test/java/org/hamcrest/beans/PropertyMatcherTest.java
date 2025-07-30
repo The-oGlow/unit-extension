@@ -1,6 +1,7 @@
 package org.hamcrest.beans;
 
 import com.glowanet.data.SimplePojo;
+import com.glowanet.util.junit.TestResultHelper;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
@@ -22,7 +23,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThrows;
 
 public class PropertyMatcherTest {
 
@@ -131,9 +131,6 @@ public class PropertyMatcherTest {
 
         Method method = (Method) ReflectionTestUtils.getField(o2T, "readMethod");
 
-        Throwable actual = assertThrows("Throwable raised!", Throwable.class, () -> o2T.readProperty(method, target));
-
-        assertThat(actual, instanceOf(IllegalArgumentException.class));
+        TestResultHelper.verifyException(() -> o2T.readProperty(method, target), IllegalArgumentException.class);
     }
-
 }

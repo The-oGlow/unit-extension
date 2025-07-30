@@ -1,10 +1,11 @@
 :hide-uri-scheme:
 :doctype: book
 
+:site_resource: .
 // project settings (from pom-file)
 // user data
 :proj_user: ollily
-:proj_user_org: the-oglow
+:proj_user_org: The-oGlow
 :proj_author: Oliver Glowa
 :proj_user_email: coding at glowa-net dot com
 :proj_vcs_url: https://github.com
@@ -32,11 +33,11 @@
 :proj_id_gavid: -1
 //{proj_group}/{proj_module}
 :proj_id_codacy: dba747d3491447a5a0ccb938af70e6c1
-:proj_id_coverity: {proj_user_org}-{proj_module}
-:proj_id_openssf: 6569
+:proj_id_coverity: -1
+:proj_id_openssf: -1
 //6569
-:proj_id_coveralls: {proj_gitgroup}/{proj_module}
-
+:proj_id_coveralls: -1
+//{proj_gitgroup}/{proj_module}
 // common settings - for all modules the same
 :cmmn_shields_hp: https://img.shields.io
 :cmmn_shields_badge_url: {cmmn_shields_hp}/badge
@@ -58,7 +59,7 @@
 :cmmn_img_github_style: &{cmmn_github_ref}{cmmn_shields_img_style}
 :cmmn_github_workflow_link: actions/workflows
 :cmmn_badge_github_url: {cmmn_shields_hp}/github
-:cmmn_badge_github_status_url: {cmmn_badge_github_url}/workflow/status
+:cmmn_badge_github_status_url: {cmmn_badge_github_url}/actions/workflow/status
 :cmmn_badge_github_issues_url: {cmmn_badge_github_url}/issues
 :cmmn_badge_github_pulls_url: {cmmn_badge_github_url}/issues-pr
 
@@ -150,8 +151,10 @@ endif::[]
 :proj_qi_codacy_brnch1_status_link: {cmmn_notsupp_link}
 :proj_qi_codacy_brnch2_status_link: {cmmn_notsupp_link}
 ifeval::["{proj_id_codacy}" != "-1"]
-:proj_qi_codacy_brnch1_status_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}/dashboard?branch={brnch_1}[image:{cmmn_badge_codacy_grade_url}/{proj_id_codacy}/{brnch_1}?{cmmn_img_codacy_style}[title="Codacy Scan Status {brnch_1}"]]
-:proj_qi_codacy_brnch2_status_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}/dashboard?branch={brnch_2}[image:{cmmn_badge_codacy_grade_url}/{proj_id_codacy}/{brnch_2}?{cmmn_img_codacy_style}[title="Codacy Scan Status {brnch_2}"]]
+:proj_qi_codacy_brnch1_status_img: {cmmn_badge_codacy_grade_url}/{proj_id_codacy}/{brnch_1}?{cmmn_img_codacy_style}[title="Codacy Scan Status {brnch_1}"]
+:proj_qi_codacy_brnch2_status_img: {cmmn_badge_codacy_grade_url}/{proj_id_codacy}/{brnch_2}?{cmmn_img_codacy_style}[title="Codacy Scan Status {brnch_2}"]
+:proj_qi_codacy_brnch1_status_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}/dashboard?branch={brnch_1}[image:{proj_qi_codacy_brnch1_status_img}]
+:proj_qi_codacy_brnch2_status_link: {cmmn_codacy_dash_gh_url}/{proj_vcsid}/dashboard?branch={brnch_2}[image:{proj_qi_codacy_brnch2_status_img}]
 endif::[]
 
 // qa openssf
@@ -161,8 +164,10 @@ ifeval::["{proj_id_openssf}" != "-1"]
 endif::[]
 
 // build status
-:proj_bs_brnch1_link: {proj_github_wflow_url}/maven.yml?query=branch%3A{brnch_1}[image:{cmmn_badge_github_status_url}/{proj_vcsid}/maven-build/{brnch_1}?label={brnch_1}{cmmn_img_github_style}[title="Pipeline status on {brnch_1} branch"]]
-:proj_bs_brnch2_link: {proj_github_wflow_url}/maven.yml?query=branch%3A{brnch_2}[image:{cmmn_badge_github_status_url}/{proj_vcsid}/maven-build/{brnch_2}?label={brnch_2}{cmmn_img_github_style}[title="Pipeline status on {brnch_2} branch"]]
+:proj_bs_brnch1_img: {cmmn_badge_github_status_url}/{proj_vcsid}/maven.yml?branch={brnch_1}&label={brnch_1}{cmmn_img_github_style}[title="Pipeline status on {brnch_1} branch"]
+:proj_bs_brnch2_img: {cmmn_badge_github_status_url}/{proj_vcsid}/maven.yml?branch={brnch_2}&label={brnch_2}{cmmn_img_github_style}[title="Pipeline status on {brnch_2} branch"]
+:proj_bs_brnch1_link: {proj_github_wflow_url}/maven.yml?query=branch%3A{brnch_1}[image:{proj_bs_brnch1_img}]
+:proj_bs_brnch2_link: {proj_github_wflow_url}/maven.yml?query=branch%3A{brnch_2}[image:{proj_bs_brnch2_img}]
 
 // test information
 // ti sonarqube

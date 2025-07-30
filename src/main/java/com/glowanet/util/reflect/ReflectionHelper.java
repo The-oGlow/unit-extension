@@ -11,6 +11,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -20,7 +21,7 @@ import java.util.List;
 import static org.junit.Assert.fail;
 
 /**
- * Utility Helper for accessing class information without the use of Spring's "ReflectionTestUtils".
+ * Utility Helper for accessing clazz information without the use of Spring's "ReflectionTestUtils".
  *
  * @since 0.1.0
  */
@@ -333,7 +334,7 @@ public class ReflectionHelper {
                 //noinspection unchecked
                 return (I) ConstructorUtils.invokeConstructor(typeClazz);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
-                return null;
+                return hackTheConstructor(typeClazz, null, null);
             }
         }
     }
@@ -354,7 +355,7 @@ public class ReflectionHelper {
                 //noinspection unchecked
                 return (I) ConstructorUtils.invokeConstructor(typeClazz, initargs, parameterTypes);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
-                return null;
+                return hackTheConstructor(typeClazz, initargs, parameterTypes);
             }
         }
     }
@@ -370,6 +371,29 @@ public class ReflectionHelper {
         isInstanceSet(instance, getter);
         isParamSet(instance, getter);
         return handleInvokeMethod(getter, instance);
+    }
+
+    /**
+     * @param typeClazz      the clazz of the new instance
+     * @param parameterTypes the clazzes of the parameters
+     * @param initargs       the init values of the parameters
+     * @param <I>            the generic type of the new instance
+     *
+     * @return a new instance
+     */
+    static <I> I hackTheConstructor(Class<?> typeClazz, Object[] initargs, Class<?>[] parameterTypes) {
+        if (typeClazz != null) {
+            try {
+                Constructor<?> typeClazzDeclaredConstructor = typeClazz.getDeclaredConstructor(parameterTypes);
+                if (!Modifier.isPublic(typeClazzDeclaredConstructor.getModifiers())) {
+                    typeClazzDeclaredConstructor.trySetAccessible();
+                }
+                return (I) typeClazzDeclaredConstructor.newInstance(initargs);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) { //NOSONAR java:S1166
+                return null;
+            }
+        }
+        return null;
     }
 
     /**

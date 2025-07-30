@@ -3,6 +3,10 @@ package org.hamcrest;
 import org.hamcrest.core.FailWith;
 import org.junit.function.IThrowingRunnable;
 
+/**
+ * @deprecated
+ */
+@Deprecated(forRemoval = true, since = "0.1.0")
 public class FailWithMatcher {
 
     private FailWithMatcher() {
@@ -13,9 +17,9 @@ public class FailWithMatcher {
      * Creates a matcher, that matches when the examined {@link org.junit.function.ThrowingRunnable} has raised the {@code expectedException}.
      * <p>
      * For example:
-     * <pre>assertThat(()->myFunction(), failWith(MyException.class))</pre>
+     * <pre>assertThat(()-&gt;myFunction(), failWith(MyException.class))</pre>
      *
-     * @param expectedException the class of the exception
+     * @param expectedException the clazz of the exception
      * @param <E>               type of the exception
      *
      * @return newly created matcher

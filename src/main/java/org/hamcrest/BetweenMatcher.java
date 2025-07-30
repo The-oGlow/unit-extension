@@ -7,7 +7,9 @@ import org.hamcrest.core.IsBetweenWithBound;
  * Contains matchers, which checks if a value is in a specific range.
  *
  * @since 0.1.0
+ * @deprecated
  */
+@Deprecated(forRemoval = true, since = "0.1.0")
 public class BetweenMatcher {
 
     /**

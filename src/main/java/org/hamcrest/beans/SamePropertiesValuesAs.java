@@ -6,7 +6,6 @@ import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,20 +15,19 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.beans.PropertyUtil.NO_ARGUMENTS;
 import static org.hamcrest.beans.PropertyUtil.propertyDescriptorsFor;
 
 public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
 
-    private static final String      DELIMITER        = ", ";
-    static final         Description DESC_DESCRIPTION = new StringDescription();
+    static final Description DESC_DESCRIPTION = new StringDescription();
 
     static final String HAS_EXTRA_PROPERTIES_CALLED = "has extra properties called %s "; // trailing space is needed
     static final String IS_INCOMPATIBLE_TYPE        = "is incompatible type: %s";
-    static final String COULD_NOT_INVOKE            = "Could not invoke %s on %s";
     static final String SAME_PROPERTY_VALUES_AS     = "same property values as %s";
+    static final String SAME_PROPERTY_IGNORING      = " ignoring ";
     static final String LIST_START                  = "{";
     static final String LIST_END                    = "}";
+    static final String LIST_DELIMITER              = ", ";
 
     private final T                        expectedBean;
     private final Set<String>              propertyNames;
@@ -63,11 +61,11 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
     @Override
     public void describeTo(Description description) {
         description.appendText(String.format(SAME_PROPERTY_VALUES_AS, expectedBean.getClass().getSimpleName())) //
-                .appendList(LIST_START, DELIMITER, LIST_END, propertyMatchers);
+                .appendList(LIST_START, LIST_DELIMITER, LIST_END, propertyMatchers);
 
         if (!ignoredFields.isEmpty()) {
-            description.appendText(" ignoring ") //
-                    .appendValueList(LIST_START, DELIMITER, LIST_END, ignoredFields);
+            description.appendText(SAME_PROPERTY_IGNORING) //
+                    .appendValueList(LIST_START, LIST_DELIMITER, LIST_END, ignoredFields);
         }
     }
 
@@ -77,7 +75,7 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
         for (Matcher<?> propertyMatcher : propertyMatchers) {
             if (!propertyMatcher.matches(actual)) {
                 if (idxLoop > 0) {
-                    mismatchDescription.appendText(DELIMITER);
+                    mismatchDescription.appendText(LIST_DELIMITER);
                 }
                 propertyMatcher.describeMismatch(actual, mismatchDescription);
                 idxLoop++;
@@ -97,10 +95,11 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
     }
 
     private boolean hasNoExtraProperties(Object actual, Description mismatchDescription) {
-        Set<String> actualPropertyNames = propertyNamesFrom(propertyDescriptorsFor(actual, Object.class), ignoredFields);
-        actualPropertyNames.removeAll(propertyNames);
-        if (!actualPropertyNames.isEmpty()) {
-            mismatchDescription.appendText(String.format(HAS_EXTRA_PROPERTIES_CALLED, actualPropertyNames));
+        Set<String> ignoredPropertiesInThisObject = propertyNamesFrom(propertyDescriptorsFor(actual, Object.class), ignoredFields);
+        ignoredPropertiesInThisObject.removeAll(propertyNames);
+        if (!ignoredPropertiesInThisObject.isEmpty()) {
+            // Found properties, which are not in the ignore list from object construction
+            mismatchDescription.appendText(String.format(HAS_EXTRA_PROPERTIES_CALLED, ignoredPropertiesInThisObject));
             return false;
         }
         return true;
@@ -116,6 +115,12 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
         return result;
     }
 
+    /**
+     * @param descriptors   array of property descriptors
+     * @param ignoredFields list of ignoring fields
+     *
+     * @return set of the property descriptor names which are ignored
+     */
     private static Set<String> propertyNamesFrom(PropertyDescriptor[] descriptors, List<String> ignoredFields) {
         HashSet<String> result = new HashSet<>();
         for (PropertyDescriptor propertyDescriptor : descriptors) {
@@ -128,13 +133,5 @@ public class SamePropertiesValuesAs<T> extends DiagnosingMatcher<T> {
 
     private static boolean isIgnored(List<String> ignoredFields, PropertyDescriptor propertyDescriptor) {
         return !ignoredFields.contains(propertyDescriptor.getDisplayName());
-    }
-
-    protected Object readProperty(Method method, Object target) {
-        try {
-            return method.invoke(target, NO_ARGUMENTS);
-        } catch (Exception e) { //NOSONAR java:S2221
-            throw new IllegalArgumentException(String.format(COULD_NOT_INVOKE, method, target), e);
-        }
     }
 }

@@ -6,7 +6,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         PrimitiveTest.class,
-        PrimitiveConversionTest.class
+        PrimitiveConversionIT.class
 })
 public class PrimitiveSuite {
     //nothing2do

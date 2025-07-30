@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assume.assumeThat;
 
 /**
- * Base class for the use of testing extended matcher, like
+ * Base clazz for the use of testing extended matcher, like
  * <ul>
  *     <li>{@link org.hamcrest.DiagnosingMatcher}</li>
  *     <li>{@link org.hamcrest.TypeSafeMatcher}</li>
@@ -31,7 +31,7 @@ public abstract class AbstractExtendedMatcherTest<T> extends AbstractMatcherTest
     public ExcludeFromTestingRule excludeFromTestingRule = new ExcludeFromTestingRule();
 
     private static final Logger LOGGER = LogManager.getLogger();
-    
+
     /**
      * @return the {@code o2T} as {@link TypeSafeMatcher} to test against
      *

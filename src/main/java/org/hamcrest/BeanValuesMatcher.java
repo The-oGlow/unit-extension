@@ -2,6 +2,10 @@ package org.hamcrest;
 
 import org.hamcrest.beans.HasSameValues;
 
+/**
+ * @deprecated
+ */
+@Deprecated(forRemoval = true, since = "0.1.0")
 public class BeanValuesMatcher {
 
     /**
