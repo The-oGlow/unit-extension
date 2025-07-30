@@ -86,7 +86,9 @@ jobs:
         with:
           path: ${{ env.MVN_REPO_JOB_DIR }}
           key: ${{ matrix.os }}-${{env.GITHUB_REPO_NAME}}-build-m2
-          restore-keys: ${{ matrix.os }}-build-m2,${{ matrix.os }}-build
+          restore-keys: |
+            ${{ matrix.os }}-build-m2
+            ${{ matrix.os }}-build
 
       - name: maven build
         run: bash ${{ env.GITHUB_PROJECT_DIR}}/.mvn/.build.sh -do
