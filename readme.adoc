@@ -1,3 +1,4 @@
+endif::[]
 :hide-uri-scheme:
 :doctype: book
 
@@ -32,12 +33,12 @@
 :proj_year: 2020
 :proj_id_gavid: -1
 //{proj_group}/{proj_module}
-:proj_id_codacy: dba747d3491447a5a0ccb938af70e6c1
+:proj_id_codacy: -1
+//dba747d3491447a5a0ccb938af70e6c1
 :proj_id_coverity: -1
 :proj_id_openssf: -1
 //6569
-:proj_id_coveralls: -1
-//{proj_gitgroup}/{proj_module}
+:proj_id_coveralls: {proj_gitgroup}/{proj_module}
 // common settings - for all modules the same
 :cmmn_shields_hp: https://img.shields.io
 :cmmn_shields_badge_url: {cmmn_shields_hp}/badge
@@ -272,7 +273,7 @@ link:{proj_ti_sonar_brnch2_test_link} +
 link:{proj_ti_sonar_brnch2_coverage_link} +
 link:{proj_ti_sonar_brnch2_violations_link}
 |link:{cmmn_coveralls_hp}[coveralls.io]
-|link:{proj_ti_coveralls_brnch1_link}
+|link{proj_ti_coveralls_brnch1_link}
 |link:{proj_ti_coveralls_brnch2_link}
 |link:{cmmn_codacy_hp}[codacy.com]
 |link:{proj_ti_codacy_brnch1_link}
